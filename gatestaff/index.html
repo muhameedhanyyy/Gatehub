@@ -1,104 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GateHub - Live Monitoring</title>
-  <meta name="description" content="Real-time vehicle monitoring and management system">
-  <meta name="keywords" content="toll management, vehicle tracking, real-time monitoring">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GateHub - Live Monitoring</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #60a5fa;
+            --accent: #9ca3af;
+            --background-light: #f3f4f6;
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+        }
 
-  <!-- Favicons -->
-  <link rel="icon" href="assets/img/favicon.png">
-  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <!-- Vendor CSS -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
 
-  <!-- Main CSS -->
-  <link href="assets/css/style.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+        .status-active {
+            background-color: #10b981;
+        }
+
+        .alert-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .alert-critical {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body>
-  <header class="header">
-    <div class="header__container">
-        <div class="header__brand">
-            <img src="assets/logo.jpg" alt="GateHub Logo" class="header__logo">
-            <h1 class="header__title">GateHub - Live Monitoring</h1>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm p-4">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full">
+                <span class="ml-2 text-xl font-bold text-gray-800">GateHub - Live Monitoring</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-4">
+                    <span id="live-timestamp" class="text-gray-600"></span>
+                    <a href="addFines.html" class="btn-gradient px-4 py-2 rounded-full">
+                        <i class="fas fa-plus mr-2"></i>Add Fine
+                    </a>
+                    <a href="settings.html" class="text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-cog text-xl"></i>
+                    </a>
+                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" 
+                         alt="Profile" 
+                         class="h-10 w-10 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Real-Time Vehicle Section -->
+        <div class="dashboard-card">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-car mr-3 text-[var(--primary)]"></i>
+                Real-Time Vehicle Details
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">License Plate</p>
+                    <p class="text-xl font-bold" id="license-plate">ABC 1234</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Vehicle Model</p>
+                    <p class="text-xl font-bold" id="vehicle-details">Toyota Camry 2022</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Owner's Name</p>
+                    <p class="text-xl font-bold" id="owner-name">John Doe</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                    <p class="text-sm text-gray-600">Last Entry Time</p>
+                    <p class="font-medium" id="entry-timestamp">2023-10-25 14:30:45</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Gate Number</p>
+                    <p class="font-medium" id="gate-number">GATE-05</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Current Status</p>
+                    <p class="font-medium">
+                        <span class="status-indicator status-active"></span>
+                        Active
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <nav class="header__nav">
-            <ul class="nav__list">
-                <li class="nav__item"><span id="live-timestamp" class="timestamp"></span> </li>
-               
-            </ul>
-        </nav>
+        <!-- Recent Vehicles Table -->
+        <div class="dashboard-card">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-history mr-3 text-[var(--primary)]"></i>
+                Recent Vehicle Activity
+            </h2>
 
-        <div class="header__utilities">
-          <a href="addFines.html" class="nav__link">Add Fine</a>
-            <a href="settings.html" class="nav__link">
-                <i class="fas fa-cog"></i>
-            </a>
-            <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" 
-                 alt="Profile" 
-                 class="header__avatar">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="py-3 px-4 text-left">License Plate</th>
+                            <th class="py-3 px-4 text-left">Vehicle Model</th>
+                            <th class="py-3 px-4 text-left">Timestamp</th>
+                            <th class="py-3 px-4 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-vehicles-table">
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4">XYZ 5678</td>
+                            <td class="py-3 px-4">Honda Accord</td>
+                            <td class="py-3 px-4">2023-10-25 14:25:30</td>
+                            <td class="py-3 px-4">
+                                <span class="alert-badge alert-critical">Alert</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</header>
 
-  <main>
-    <section class="section" aria-labelledby="real-time-heading">
-      <h2 id="real-time-heading" class="section__title">Real-Time Vehicle Details</h2>
-      <div class="vehicle-info">
-        <p><strong>License Plate:</strong> <span id="license-plate">---</span></p>
-        <p><strong>Vehicle Details:</strong> <span id="vehicle-details">---</span></p>
-        <p><strong>Owner’s Name:</strong> <span id="owner-name">---</span></p>
-        <p><strong>Timestamp:</strong> <span id="entry-timestamp">---</span></p>
-        <p><strong>Gate Number:</strong> <span id="gate-number">---</span></p>
-      </div>
-      <div class="recent-vehicles">
-        <h3 class="section__subtitle">Recently Passed Vehicles</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>License Plate</th>
-              <th>Vehicle Model</th>
-              <th>Timestamp</th>
-              <th>Alerts</th>
-            </tr>
-          </thead>
-          <tbody id="recent-vehicles-table">
-            <!-- Dynamic rows will be added here -->
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <!-- Alerts Section -->
+        <div class="dashboard-card">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-exclamation-triangle mr-3 text-red-500"></i>
+                Active Alerts
+            </h2>
 
-    <section id="alerts" class="section" aria-labelledby="alerts-heading">
-      <h2 id="alerts-heading" class="section__title">Alerts</h2>
-      <div class="alert-card alert--critical">
-        <p class="alert__type">Expired License</p>
-        <p class="alert__details">ABC123, Toyota Camry</p>
-        <span class="alert__timestamp">12:44:32 PM</span>
-        <div class="alert__actions">
-          <button class="btn btn--investigate">Investigate</button>
-          <button class="btn btn--escalate">Escalate</button>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+                    <div>
+                        <p class="font-medium">Expired License</p>
+                        <p class="text-sm text-gray-600">ABC123 - Toyota Camry</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="btn-gradient px-4 py-2 rounded-full">
+                            <i class="fas fa-search mr-2"></i>Investigate
+                        </button>
+                        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300">
+                            Escalate
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
-  </main>
+    </main>
 
-  <script src="script.js"></script>
+    <script>
+        // Update timestamp every second
+        function updateTimestamp() {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            document.getElementById('live-timestamp').textContent = 
+                new Date().toLocaleDateString('en-US', options);
+        }
+        setInterval(updateTimestamp, 1000);
+        updateTimestamp();
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const plates = ['ABC 1234', 'XYZ 5678', 'DEF 9012', 'GHI 3456'];
+            const models = ['Toyota Camry', 'Honda Accord', 'Ford F-150', 'BMW X5'];
+            
+            // Update current vehicle
+            document.getElementById('license-plate').textContent = 
+                plates[Math.floor(Math.random() * plates.length)];
+            document.getElementById('vehicle-details').textContent = 
+                `${models[Math.floor(Math.random() * models.length)]} 2022`;
+            
+            // Add to recent vehicles
+            const tbody = document.getElementById('recent-vehicles-table');
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-gray-50';
+            newRow.innerHTML = `
+                <td class="py-3 px-4">${plates[Math.floor(Math.random() * plates.length)]}</td>
+                <td class="py-3 px-4">${models[Math.floor(Math.random() * models.length)]}</td>
+                <td class="py-3 px-4">${new Date().toLocaleTimeString()}</td>
+                <td class="py-3 px-4">
+                    <span class="alert-badge ${Math.random() > 0.5 ? 'alert-critical' : 'bg-green-100 text-green-800'}">
+                        ${Math.random() > 0.5 ? 'Alert' : 'Normal'}
+                    </span>
+                </td>
+            `;
+            tbody.insertBefore(newRow, tbody.firstChild);
+        }, 5000);
+    </script>
 </body>
-
 </html>

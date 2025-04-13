@@ -4,41 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GateHub - Add Fine</title>
-  <link rel="stylesheet" href="addFines.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #60a5fa;
+      --accent: #9ca3af;
+      --background-light: #f3f4f6;
+      --text-primary: #374151;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
-<body>
-  <!-- Header Section -->
-  <header>
-    <div class="logo">
-      <img src="assets/logo.jpg" alt="GateHub Logo">
-      <h1>GateHub - Add Fine</h1>
-    </div>
-    <nav>
-      <div class="nav-left">
-        <a href="index.html" class="nav-link">Dashboard</a>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm p-4">
+    <div class="container mx-auto flex items-center justify-between">
+      <div class="flex items-center">
+        <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full">
+        <span class="ml-2 text-xl font-bold text-gray-800">GateHub - Add Fine</span>
       </div>
-    </nav>
-    <div class="profile">
-      <span id="timestamp">12:45 PM, October 25, 2023</span>
-      <img src="assets/messages-3.jpg" alt="Profile Avatar" class="avatar">
+      <div class="flex items-center space-x-6">
+        <a href="index.html" class="btn-gradient px-4 py-2 rounded-full">dashboard</a>
+        <div class="flex items-center space-x-4">
+          <span id="timestamp" class="text-gray-600"></span>
+          <img src="assets/messages-3.jpg" 
+               alt="Profile" 
+               class="h-10 w-10 rounded-full">
+        </div>
+      </div>
     </div>
   </header>
 
-
-  
-
   <!-- Main Content -->
-  <main>
-    <section id="add-fine-form">
-      <h2>Add Fine</h2>
-      <form id="fine-form">
-        <div class="form-group">
-          <label for="license-plate">License Plate:</label>
-          <input type="text" id="license-plate" required>
+  <main class="container mx-auto px-4 py-8">
+    <div class="form-card">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-file-invoice-dollar mr-3 text-[var(--primary)]"></i>
+        Add New Fine
+      </h2>
+      
+      <form id="fine-form" class="space-y-6">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">License Plate</label>
+          <input type="text" 
+                 id="license-plate" 
+                 class="input-field" 
+                 placeholder="ABC 1234"
+                 required>
         </div>
-        <div class="form-group">
-          <label for="fine-reason">Reason:</label>
-          <select id="fine-reason" required>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Reason</label>
+          <select id="fine-reason" class="input-field" required>
             <option value="">Select a reason</option>
             <option value="Speeding">Speeding</option>
             <option value="Toll Evasion">Toll Evasion</option>
@@ -46,19 +101,89 @@
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="fine-amount">Fine Amount:</label>
-          <input type="number" id="fine-amount" required>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Fine Amount</label>
+          <input type="number" 
+                 id="fine-amount" 
+                 class="input-field" 
+                 placeholder="Enter amount"
+                 required>
         </div>
-        <div class="form-group">
-          <label for="notes">Notes:</label>
-          <textarea id="notes" rows="4"></textarea>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes" 
+                    class="input-field" 
+                    rows="4"
+                    placeholder="Additional details..."></textarea>
         </div>
-        <button type="submit">Submit Fine</button>
+
+        <button type="submit" class="btn-gradient w-full">
+          <i class="fas fa-paper-plane mr-2"></i>Submit Fine
+        </button>
       </form>
-    </section>
+    </div>
   </main>
 
-  <script src="addFines.js"></script>
+  <!-- Toast Notification -->
+  <div id="toast" class="hidden fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg"></div>
+
+  <script>
+    // Update timestamp
+    function updateTimestamp() {
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+      };
+      document.getElementById('timestamp').textContent = 
+        new Date().toLocaleDateString('en-US', options);
+    }
+    setInterval(updateTimestamp, 1000);
+    updateTimestamp();
+
+    // Form handling
+    document.getElementById('fine-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Simulate submission
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Fine submitted successfully!';
+      toast.className = 'fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg bg-green-100 border border-green-400 text-green-700 animate-slide-in';
+      
+      setTimeout(() => {
+        toast.className += ' animate-slide-out';
+        setTimeout(() => toast.className = 'hidden', 500);
+      }, 3000);
+
+      // Reset form
+      e.target.reset();
+    });
+  </script>
+
+  <style>
+    @keyframes slide-in {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes slide-out {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+
+    .animate-slide-in {
+      animation: slide-in 0.3s ease-out;
+    }
+
+    .animate-slide-out {
+      animation: slide-out 0.3s ease-in forwards;
+    }
+  </style>
 </body>
 </html>

@@ -60,7 +60,7 @@
                       <select class="form-select" id="loginRole" required>
                         <option selected disabled value="">Select Role</option>
                         <option value="admin">Admin</option>
-                        <option value="gate-staff">Gate Staff</option>
+                        <option value="gatestaff">Gate Staff</option>
                       </select>
                       <div class="invalid-feedback">Please select your role.</div>
                     </div>
@@ -137,7 +137,7 @@
         loginBtn.textContent = 'Logging in...';
   
         try {
-          const response = await fetch('http://gatehub.runasp.net/api/Admin/login', {
+          const response = await fetch('http://gatehub.runasp.net/api/GateStaff/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

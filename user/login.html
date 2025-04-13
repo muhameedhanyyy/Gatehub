@@ -117,6 +117,42 @@
     <!-- Bootstrap JS (Optional, for interactive components) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+    async function authenticate(nationalId, password) {
+        try {
+            const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    natId: nationalId,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Invalid credentials');
+            }
+
+            const result = await response.json();
+            // You can now store the token and redirect the user
+            console.log(result); // result.tokenString contains the JWT
+
+            // Example: store token and redirect
+            localStorage.setItem('token', result.tokenString);
+            // Redirect to dashboard
+            window.location.href = 'personal_information.html';
+            return true;
+
+        } catch (err) {
+            console.error('Authentication failed:', err.message);
+            return false;
+        }
+    }
+
+
         const loginForm = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -166,7 +202,7 @@
             // Simulate server validation (replace with actual API call)
             try {
                 // Mock API call - replace this with real authentication
-                const isAuthenticated = await mockAuthentication(nationalId, password);
+                const isAuthenticated = await authenticate(nationalId, password);
                 
                 if (isAuthenticated) {
                     alert('Login successful! Redirecting...');

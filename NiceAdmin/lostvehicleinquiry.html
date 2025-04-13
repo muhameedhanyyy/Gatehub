@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Lost Vehicle Inquiry</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+      <section class="section lost-vehicle min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
+
+              <!-- Logo -->
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="assets/img/logo.png" alt="Logo">
+                  <span class="d-none d-lg-block">GateHub</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <!-- Add Lost Vehicle Button -->
+              <div class="d-flex justify-content-between w-100 mb-3">
+                <h5 class="card-title">Lost Vehicle Records</h5>
+                <a href="addlostvehicle.html" class="btn btn-primary">Add Lost Vehicle</a>
+              </div>
+
+              <!-- Search Card -->
+              <div class="card mb-3 w-100">
+                <div class="card-body">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Lost Vehicle Inquiry</h5>
+                    <p class="text-center small">Search for a lost vehicle by entering the license plate number</p>
+                  </div>
+
+                  <!-- Search Form -->
+                  <form class="row g-3 needs-validation" novalidate>
+                    <div class="col-12">
+                      <label for="vehiclePlate" class="form-label">License Plate</label>
+                      <input type="text" name="vehiclePlate" class="form-control" id="vehiclePlate" placeholder="Enter license plate" required>
+                      <div class="invalid-feedback">Please enter the license plate.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Search</button>
+                    </div>
+                  </form>
+                  <!-- End Search Form -->
+
+                </div>
+              </div><!-- End Search Card -->
+
+              <!-- Lost Vehicle Results Table -->
+              <div class="card mb-3 w-100">
+                <div class="card-body">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">License Plate</th>
+                        <th scope="col">Vehicle Type</th>
+                        <th scope="col">Reported Date</th>
+                        <th scope="col">Last Seen</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Sample Lost Vehicles -->
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>ABC-1234</td>
+                        <td>SUV</td>
+                        <td>2024-01-12</td>
+                        <td>Gate 5 (Downtown)</td>
+                        <td><span class="badge bg-danger">Active</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>XYZ-5678</td>
+                        <td>Sedan</td>
+                        <td>2023-12-30</td>
+                        <td>Gate 3 (Highway)</td>
+                        <td><span class="badge bg-success">Recovered</span></td>
+                      </tr>
+                      <!-- Add more rows dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div><!-- End Lost Vehicle Results Table -->
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

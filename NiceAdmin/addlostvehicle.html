@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Add Lost Vehicle</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+      <section class="section add-lost-vehicle min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+
+              <!-- Page Title -->
+              <div class="d-flex justify-content-between align-items-center pb-4">
+                <h2 class="page-title">Add Lost Vehicle</h2>
+                <a href="lostvehicleinquiry.html" class="btn btn-secondary">Back to Lost Vehicle Inquiry</a>
+              </div>
+
+              <!-- Add Lost Vehicle Form -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Enter Vehicle Details</h5>
+
+                  <form class="row g-3 needs-validation" novalidate>
+                    <div class="col-12">
+                      <label for="licensePlate" class="form-label">License Plate</label>
+                      <input type="text" name="licensePlate" class="form-control" id="licensePlate" placeholder="Enter License Plate" required>
+                      <div class="invalid-feedback">Please enter the license plate.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="vehicleType" class="form-label">Vehicle Type</label>
+                      <select name="vehicleType" class="form-select" id="vehicleType" required>
+                        <option selected disabled value="">Select Vehicle Type</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="Truck">Truck</option>
+                        <option value="Motorbike">Motorbike</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a vehicle type.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="lastSeenLocation" class="form-label">Last Seen Location</label>
+                      <input type="text" name="lastSeenLocation" class="form-control" id="lastSeenLocation" placeholder="Enter Last Seen Location" required>
+                      <div class="invalid-feedback">Please enter the last seen location.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="reportedDate" class="form-label">Reported Date</label>
+                      <input type="date" name="reportedDate" class="form-control" id="reportedDate" required>
+                      <div class="invalid-feedback">Please select the reported date.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="additionalNotes" class="form-label">Additional Notes</label>
+                      <textarea name="additionalNotes" class="form-control" id="additionalNotes" rows="4" placeholder="Enter any additional information"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Add Vehicle</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- End Add Lost Vehicle Form -->
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

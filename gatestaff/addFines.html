@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GateHub - Add Fine</title>
+  <link rel="stylesheet" href="addFines.css">
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <div class="logo">
+      <img src="assets/logo.jpg" alt="GateHub Logo">
+      <h1>GateHub - Add Fine</h1>
+    </div>
+    <nav>
+      <div class="nav-left">
+        <a href="index.html" class="nav-link">Dashboard</a>
+      </div>
+    </nav>
+    <div class="profile">
+      <span id="timestamp">12:45 PM, October 25, 2023</span>
+      <img src="assets/messages-3.jpg" alt="Profile Avatar" class="avatar">
+    </div>
+  </header>
+
+
+  
+
+  <!-- Main Content -->
+  <main>
+    <section id="add-fine-form">
+      <h2>Add Fine</h2>
+      <form id="fine-form">
+        <div class="form-group">
+          <label for="license-plate">License Plate:</label>
+          <input type="text" id="license-plate" required>
+        </div>
+        <div class="form-group">
+          <label for="fine-reason">Reason:</label>
+          <select id="fine-reason" required>
+            <option value="">Select a reason</option>
+            <option value="Speeding">Speeding</option>
+            <option value="Toll Evasion">Toll Evasion</option>
+            <option value="Manual Detection">Manual Detection</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fine-amount">Fine Amount:</label>
+          <input type="number" id="fine-amount" required>
+        </div>
+        <div class="form-group">
+          <label for="notes">Notes:</label>
+          <textarea id="notes" rows="4"></textarea>
+        </div>
+        <button type="submit">Submit Fine</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="addFines.js"></script>
+</body>
+</html>

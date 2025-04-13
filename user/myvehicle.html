@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vehicle - GateHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Use existing style variables from previous pages */
+        :root {
+            --primary: #3b82f6;
+            --secondary: #60a5fa;
+            --accent: #9ca3af;
+            --background-light: #f3f4f6;
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        .vehicle-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-paid {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-pending {
+            background-color: #fef9c3;
+            color: #ca8a04;
+        }
+
+        .status-overdue {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        #update-vehicle-modal .input-field {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: white;
+        color: var(--text-primary);
+        font-size: 0.85rem;
+    }
+
+    #update-vehicle-modal .input-field:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    #update-vehicle-modal .language-select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: white;
+        font-size: 0.85rem;
+    }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header (Same as other pages) -->
+    <header class="bg-white shadow-sm p-4">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <nav class="flex space-x-6">
+                    <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
+                    <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
+                    <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Vehicle Details Card -->
+        <div class="vehicle-card">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-car mr-3 text-[var(--primary)]"></i>
+                    My Vehicle Details
+                </h2>
+                <button class="btn-gradient px-4 py-2">
+                    <i class="fas fa-edit mr-2"></i>Update Info
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                    <p class="text-sm text-gray-600">Make & Model</p>
+                    <p class="font-medium">Toyota Camry 2022</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Vehicle Year</p>
+                    <p class="font-medium">2022</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">VIN Number</p>
+                    <p class="font-medium">1HGCM82633A123456</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Registration Expiry</p>
+                    <p class="font-medium">2024-12-31</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Insurance Status</p>
+                    <p class="font-medium text-green-600">Active</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fees and Violations History -->
+        <div class="vehicle-card">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-history mr-3 text-[var(--primary)]"></i>
+                Payment History & Violations
+            </h2>
+
+            <div class="overflow-x-auto">
+                <table class="history-table">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Fees -->
+                        <tr class="hover:bg-gray-50">
+                            <td>2023-10-15</td>
+                            <td>Parking Fee</td>
+                            <td>Shanghai Downtown</td>
+                            <td>$2.00</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td>2023-10-12</td>
+                            <td>Toll Charge</td>
+                            <td>Huangpu Bridge</td>
+                            <td>$5.00</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                        
+                        <!-- Violations -->
+                        <tr class="hover:bg-gray-50">
+                            <td>2023-09-28</td>
+                            <td>Speeding</td>
+                            <td>Jing'an District</td>
+                            <td>$150.00</td>
+                            <td><span class="status-badge status-overdue">Overdue</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td>2023-09-15</td>
+                            <td>Parking Violation</td>
+                            <td>Xuhui Area</td>
+                            <td>$75.00</td>
+                            <td><span class="status-badge status-paid">Paid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Total Fees</p>
+                    <p class="text-xl font-bold">$232.00</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Paid Amount</p>
+                    <p class="text-xl font-bold">$77.00</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Pending Payments</p>
+                    <p class="text-xl font-bold">$155.00</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-600">Overdue Payments</p>
+                    <p class="text-xl font-bold">$150.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Violation Details Section -->
+        <div class="vehicle-card">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-exclamation-triangle mr-3 text-red-500"></i>
+                Recent Violations
+            </h2>
+
+            <div class="space-y-4">
+                <div class="violation-item p-4 border-b">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-medium">Speeding Violation</h3>
+                            <p class="text-sm text-gray-600">2023-09-28 | Jing'an District</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-red-600 font-medium">$150.00</p>
+                            <span class="status-badge status-overdue">Appeal Pending</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Exceeded speed limit by 20km/h (Camera ID: SH-4587)</p>
+                </div>
+
+                <div class="violation-item p-4 border-b">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-medium">Parking Violation</h3>
+                            <p class="text-sm text-gray-600">2023-09-15 | Xuhui Area</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-green-600 font-medium">$75.00</p>
+                            <span class="status-badge status-paid">Resolved</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Parked in no-stopping zone (Officer ID: 2458)</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="update-vehicle-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-6 border-b">
+                <h3 class="text-xl font-bold">
+                    <i class="fas fa-car mr-2 text-[var(--primary)]"></i>
+                    Update Vehicle Information
+                </h3>
+                <button onclick="closeUpdateModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+    
+            <!-- Modal Body -->
+            <div class="p-6">
+                <form id="vehicle-update-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-gray-600">Make & Model</label>
+                        <input type="text" id="vehicle-make" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">Vehicle Year</label>
+                        <input type="number" id="vehicle-year" class="input-field" min="1900" max="2099" required>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">VIN Number</label>
+                        <input type="text" id="vehicle-vin" class="input-field" pattern="[A-HJ-NPR-Z0-9]{17}" required>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">Registration Expiry</label>
+                        <input type="date" id="vehicle-expiry" class="input-field" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-sm text-gray-600">Insurance Status</label>
+                        <select id="vehicle-insurance" class="language-select">
+                            <option value="active">Active</option>
+                            <option value="expired">Expired</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+    
+            <!-- Modal Footer -->
+            <div class="flex justify-end space-x-3 p-6 border-t">
+                <button onclick="closeUpdateModal()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">
+                    Cancel
+                </button>
+                <button onclick="submitVehicleUpdate()" class="btn-gradient px-6 py-2 rounded-full">
+                    <i class="fas fa-save mr-2"></i>Update Details
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Add JavaScript for interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click functionality to table rows
+            document.querySelectorAll('.history-table tbody tr').forEach(row => {
+                row.addEventListener('click', () => {
+                    // Implement view details functionality
+                    alert('View details for: ' + row.cells[1].textContent);
+                });
+            });
+
+            // Add accordion functionality to violation items
+            document.querySelectorAll('.violation-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('bg-gray-50');
+                });
+            });
+        });
+        function showUpdateModal() {
+        const modal = document.getElementById('update-vehicle-modal');
+        const currentData = {
+            make: 'Toyota Camry 2022',
+            year: '2022',
+            vin: '1HGCM82633A123456',
+            expiry: '2024-12-31',
+            insurance: 'active'
+        };
+
+        // Populate form fields
+        document.getElementById('vehicle-make').value = currentData.make;
+        document.getElementById('vehicle-year').value = currentData.year;
+        document.getElementById('vehicle-vin').value = currentData.vin;
+        document.getElementById('vehicle-expiry').value = currentData.expiry;
+        document.getElementById('vehicle-insurance').value = currentData.insurance;
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeUpdateModal() {
+        document.getElementById('update-vehicle-modal').classList.add('hidden');
+    }
+
+    // Form Validation and Submission
+    function submitVehicleUpdate() {
+        const form = document.getElementById('vehicle-update-form');
+        const formData = {
+            make: document.getElementById('vehicle-make').value.trim(),
+            year: document.getElementById('vehicle-year').value.trim(),
+            vin: document.getElementById('vehicle-vin').value.trim(),
+            expiry: document.getElementById('vehicle-expiry').value,
+            insurance: document.getElementById('vehicle-insurance').value
+        };
+
+        // Simple validation
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Update display data
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(1) p:last-child').textContent = formData.make;
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(2) p:last-child').textContent = formData.year;
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(3) p:last-child').textContent = formData.vin;
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(4) p:last-child').textContent = formData.expiry;
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(5) p:last-child').textContent = 
+            formData.insurance.charAt(0).toUpperCase() + formData.insurance.slice(1);
+        document.querySelector('.vehicle-card h2 + div > div:nth-child(5) p:last-child').className = 
+            `font-medium ${formData.insurance === 'active' ? 'text-green-600' : 'text-red-600'}`;
+
+        closeUpdateModal();
+        showToast('success', 'Vehicle information updated successfully!');
+    }
+
+    // Add click handler to Update Info button
+    document.querySelector('.btn-gradient').addEventListener('click', (e) => {
+        e.preventDefault();
+        showUpdateModal();
+    });
+    </script>
+</body>
+</html>

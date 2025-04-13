@@ -1,0 +1,145 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700"
+    />
+
+    <title>Galileo Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Custom CSS for the Login button -->
+    <style>
+      .btn-login {
+        background: linear-gradient(135deg, #7C9AFC, #5B7FFB); /* Lighter gradient */
+    border: none;
+    color: white;
+    padding: 10px 20px; /* Slightly larger padding */
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      }
+      .btn-login:hover {
+        background: linear-gradient(135deg, #5B7FFB, #7C9AFC); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+      }
+      .btn-login:active {
+        transform: translateY(0); /* Reset lift effect on click */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Reset shadow on click */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#F9FAFA] group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#EEEFF2] px-10 py-3">
+          <div class="flex items-center gap-4 text-[#1C1D22]">
+            <div class="size-12">
+              <img src="assets/logo.jpg" alt="">
+            </div>
+            <h2 class="text-[#1C1D22] text-lg font-bold leading-tight tracking-[-0.015em]">GateHub</h2>
+          </div>
+          <div class="flex flex-1 justify-end gap-8">
+            <div class="flex gap-2"> 
+              <button class="btn-login" onclick="window.location.href='login.html';">
+                <i class="fas fa-sign-in-alt"></i>
+                <span class="truncate">Log in</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="@container">
+              <div class="@[480px]:p-4">
+                <div
+                  class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
+                  style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/sdxl10/1c96178c-9f3d-4096-9390-be9246dd844a.png");'
+                >
+                  <div class="flex flex-col gap-2 text-left">
+                    <h1
+                      class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]"
+                    >
+                      Welcome to the AI-powered Smart City Gate System
+                    </h1>
+                    <h2 class="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
+                      Experience the future of traffic management and public safety
+                    </h2>
+                  </div>
+                  <div  class=" flex flex-wrap gap-3 justify-start">
+                    <button class="btn-login" onclick="window.location.href='login.html';">
+                      <i class="fas fa-sign-in-alt"></i>
+                      <span class="truncate">Login</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-10 px-4 py-10 @container">
+              <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-4">
+                  <h1
+                    class="text-[#1C1D22] tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]"
+                  >
+                    Explore our system features
+                  </h1>
+                  <p class="text-[#1C1D22] text-base font-normal leading-normal max-w-[720px]">From traffic management to public safety, we've got you covered</p>
+                </div>
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#607AFB] text-[#F9FAFA] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] w-fit"
+                >
+                  <span class="truncate">Learn more</span>
+                </button>
+              </div>
+              <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3">
+                <div class="flex flex-col gap-3 pb-3">
+                  <div
+                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/565eb596-0797-41b0-bd79-4b01be300395.png");'
+                  ></div>
+                  <div>
+                    <p class="text-[#1C1D22] text-base font-medium leading-normal">Traffic Management</p>
+                    <p class="text-[#3C3F4A] text-sm font-normal leading-normal">Efficient traffic flow with AI-powered gates</p>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-3 pb-3">
+                  <div
+                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/bafb9a53-26b8-412f-a80c-3dc444099e3b.png");'
+                  ></div>
+                  <div>
+                    <p class="text-[#1C1D22] text-base font-medium leading-normal">Public Safety</p>
+                    <p class="text-[#3C3F4A] text-sm font-normal leading-normal">Enhanced public safety with real-time monitoring</p>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-3 pb-3">
+                  <div
+                    class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+                    style='background-image: url("https://cdn.usegalileo.ai/sdxl10/9e5fbb46-2242-481a-92f4-c2a48ac392a5.png");'
+                  ></div>
+                  <div>
+                    <p class="text-[#1C1D22] text-base font-medium leading-normal">System Dashboard</p>
+                    <p class="text-[#3C3F4A] text-sm font-normal leading-normal">Stay in control with our intuitive dashboard</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h2 class="text-[#1C1D22] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">Why choose our system?</h2>
+            <p class="text-[#1C1D22] text-base font-normal leading-normal pb-3 pt-1 px-4">
+              Our AI-powered Smart City Gate System is designed to revolutionize traffic management and public safety. With real-time monitoring, instant notifications, and
+              seamless integration, we ensure a smooth and secure city experience.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

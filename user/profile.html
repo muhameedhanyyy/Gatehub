@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <!-- Custom CSS for additional styling -->
+    <style>
+      .btn-primary {
+        background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .form-input {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px 12px;
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        border-color: #7C9AFC;
+        box-shadow: 0 0 0 3px rgba(124, 154, 252, 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm flex items-center justify-between p-4">
+      <div class="flex items-center">
+        <img alt="GateHub logo" class="h-10 w-10 rounded-full" src="assets/logo.jpg"/>
+        <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="btn-primary" onclick="window.location.href='index.html';">
+          <i class="fas fa-info-circle mr-2"></i>
+          About Us
+        </button>
+        <i class="fas fa-bell text-xl text-gray-600 cursor-pointer hover:text-gray-800"></i>
+        <img alt="User profile picture" class="h-10 w-10 rounded-full" src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg"/>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex justify-center mt-10 px-4">
+      <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Profile</h1>
+        <h2 class="text-lg font-semibold mb-2 text-gray-700">Password</h2>
+        <p class="text-gray-500 mb-6">You can change your password every 30 Days.</p>
+        <form>
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-2 text-gray-700" for="current-password">Current Password</label>
+            <input class="form-input w-full" id="current-password" placeholder="••••••••••••" type="password"/>
+          </div>
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-2 text-gray-700" for="new-password">New Password</label>
+            <input class="form-input w-full" id="new-password" placeholder="••••••••••••" type="password"/>
+          </div>
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-2 text-gray-700" for="confirm-password">Confirm New Password</label>
+            <input class="form-input w-full" id="confirm-password" placeholder="••••••••••••" type="password"/>
+          </div>
+          <button class="btn-primary w-full" type="submit">
+            Save Changes
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

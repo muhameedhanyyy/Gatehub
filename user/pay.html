@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pay</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .selected {
+            background-color: #f0f8ff; /* Light blue background for selected rows */
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #7C9AFC, #5B7FFB); /* Gradient for buttons */
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #5B7FFB, #7C9AFC); /* Reverse gradient on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Custom checkbox styling */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #7C9AFC;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .custom-checkbox:checked {
+            background-color: #7C9AFC;
+            border-color: #7C9AFC;
+        }
+        .custom-checkbox:checked::after {
+            content: "✔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+        /* Prettier objection button */
+        .objection-button {
+            background-color: #7C9AFC;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .objection-button:hover {
+            background-color: #5B7FFB;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm p-4">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <nav class="flex space-x-6">
+                    <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
+                    <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
+                    <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                   <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
+                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-8">
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Account Balance:</span>
+                    <span class="text-2xl font-bold text-blue-600">$<span id="account-balance">100.00</span></span>
+                </div>
+            </div>
+            <h1 class="text-2xl font-bold mb-6">Pending Fees</h1>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="py-3 px-4 text-left">
+                                <input type="checkbox" class="custom-checkbox" id="select-all">
+                            </th>
+                            <th class="py-3 px-4 text-left">Fee</th>
+                            <th class="py-3 px-4 text-left">Time</th>
+                            <th class="py-3 px-4 text-left">Location</th>
+                            <th class="py-3 px-4 text-left">Amount</th>
+                            <th class="py-3 px-4 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fee-row hover:bg-gray-50">
+                            <td class="border px-4 py-3">
+                                <input type="checkbox" class="custom-checkbox fee-selector">
+                            </td>
+                            <td class="border px-4 py-3">1. Parking fee</td>
+                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">$2.00</td>
+                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                        </tr>
+                        <tr class="fee-row hover:bg-gray-50">
+                            <td class="border px-4 py-3">
+                                <input type="checkbox" class="custom-checkbox fee-selector">
+                            </td>
+                            <td class="border px-4 py-3">2. Parking fee</td>
+                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">$2.00</td>
+                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                        </tr>
+                        <tr class="fee-row hover:bg-gray-50">
+                            <td class="border px-4 py-3">
+                                <input type="checkbox" class="custom-checkbox fee-selector">
+                            </td>
+                            <td class="border px-4 py-3">3. Parking fee</td>
+                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">$2.00</td>
+                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                        </tr>
+                        <tr class="fee-row hover:bg-gray-50">
+                            <td class="border px-4 py-3">
+                                <input type="checkbox" class="custom-checkbox fee-selector">
+                            </td>
+                            <td class="border px-4 py-3">4. Parking fee</td>
+                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">$2.00</td>
+                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-4">Summary</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>Total Money of Selected Fees</div>
+                    <div class="font-bold">$<span id="selected-total">0.00</span></div>
+                    <div>All Fees</div>
+                    <div class="font-bold">$20.00</div>
+                    <div>User's Balance</div>
+                    <div class="font-bold">$100.00</div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-8 flex space-x-4">
+                <button class="btn-gradient px-6 py-2 rounded-full">Pay</button>
+                <button class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Cancel</button>
+                <button class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600" onclick="window.location.href='recharge.html'">Recharge</button>
+            </div>
+        </div>
+    </main>
+    <!-- Add this modal markup at the end of body -->
+    <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md transform transition-all">
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal" class="hidden">
+            <div class="text-center">
+                <i class="fas fa-question-circle text-4xl text-blue-500 mb-4"></i>
+                <h3 class="text-xl font-bold mb-4">Confirm Payment</h3>
+                <p class="mb-6">You're about to pay <span class="font-bold" id="payment-amount"></span></p>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="confirmPayment()" class="btn-gradient px-6 py-2 rounded-full">Confirm</button>
+                    <button onclick="hideModal()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="hidden">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
+                <h3 class="text-xl font-bold mb-4">Payment Successful!</h3>
+                <p class="mb-6">Your payment of <span class="font-bold" id="success-amount"></span> has been processed</p>
+                <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Close</button>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div id="error-modal" class="hidden">
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-bold mb-4" id="error-title"></h3>
+                <p class="mb-6" id="error-message"></p>
+                <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update the JavaScript with this code -->
+<script>
+    // Modal handling functions
+    function showModal(modalId) {
+        document.getElementById('modal-container').classList.remove('hidden');
+        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+            modal.classList.add('hidden');
+        });
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function hideModal() {
+        document.getElementById('modal-container').classList.add('hidden');
+    }
+
+    function showError(title, message) {
+        document.getElementById('error-title').textContent = title;
+        document.getElementById('error-message').textContent = message;
+        showModal('error-modal');
+    }
+
+    // Payment handling
+    function confirmPayment() {
+        const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+        const currentBalance = parseFloat(document.getElementById('account-balance').textContent);
+        
+        // Update balance
+        document.getElementById('account-balance').textContent = (currentBalance - selectedTotal).toFixed(2);
+        
+        // Reset selection
+        document.getElementById('select-all').checked = false;
+        document.querySelectorAll('.fee-selector').forEach(checkbox => {
+            checkbox.checked = false;
+            checkbox.closest('.fee-row').classList.remove('selected');
+        });
+        document.getElementById('selected-total').textContent = '0.00';
+        
+        hideModal();
+        document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+        showModal('success-modal');
+    }
+
+    // Update pay button click handler
+    document.querySelector('.btn-gradient').addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+        const currentBalance = parseFloat(document.getElementById('account-balance').textContent);
+
+        if (selectedTotal === 0) {
+            showError('No Fees Selected', 'Please select at least one fee to pay');
+            return;
+        }
+
+        if (selectedTotal > currentBalance) {
+            showError('Insufficient Balance', 'Please recharge your account to proceed with payment');
+            return;
+        }
+
+        document.getElementById('payment-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+        showModal('confirmation-modal');
+    });
+
+    // Keep the existing checkbox and total update logic
+    // ... (previous checkbox code remains the same)
+</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('select-all');
+            const feeSelectors = document.querySelectorAll('.fee-selector');
+            const feeRows = document.querySelectorAll('.fee-row');
+            const selectedTotal = document.getElementById('selected-total');
+
+            selectAll.addEventListener('change', function() {
+                feeSelectors.forEach(selector => selector.checked = selectAll.checked);
+                feeRows.forEach(row => row.classList.toggle('selected', selectAll.checked));
+                updateTotal();
+            });
+
+            feeSelectors.forEach((selector, index) => {
+                selector.addEventListener('change', function() {
+                    feeRows[index].classList.toggle('selected', selector.checked);
+                    updateTotal();
+                });
+            });
+
+            function updateTotal() {
+                let total = 0;
+                feeSelectors.forEach((selector, index) => {
+                    if (selector.checked) {
+                        total += 2.00; // Assuming each fee is $2.00
+                    }
+                });
+                selectedTotal.textContent = total.toFixed(2);
+            }
+        });
+        
+    </script>
+</body>
+</html>

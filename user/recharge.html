@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge Account - GateHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .payment-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .payment-card:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+        }
+        .payment-card.selected {
+            border-color: #3b82f6;
+            background-color: #f0f6ff;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm p-4">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <nav class="flex space-x-6">
+                    <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
+                    <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
+                    <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                   <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
+                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Navigation (Same as previous pages) -->
+    
+    <main class="container mx-auto px-4 py-8 max-w-md">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-wallet mr-2 text-blue-500"></i>Recharge Account
+            </h1>
+
+            <!-- Balance Display -->
+            <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                <p class="text-sm text-gray-600">Current Balance</p>
+                <p class="text-2xl font-bold text-blue-600">$0.00</p>
+            </div>
+
+            <!-- Recharge Amount -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Recharge Amount
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                    <input type="number" 
+                           class="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="0.00"
+                           step="0.01">
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="mb-8">
+                <h3 class="text-sm font-medium text-gray-700 mb-4">
+                    Select Payment Method
+                </h3>
+                
+                <div class="grid gap-3">
+                    <label class="payment-card cursor-pointer">
+                        <div class="flex items-center p-4 rounded-lg">
+                            <input type="radio" name="payment-method" class="hidden">
+                            <div class="flex items-center w-full">
+                                <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                                    <i class="fas fa-credit-card text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Credit/Debit Card</p>
+                                    <p class="text-sm text-gray-600">Visa, Mastercard, Amex</p>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-card cursor-pointer">
+                        <div class="flex items-center p-4 rounded-lg">
+                            <input type="radio" name="payment-method" class="hidden">
+                            <div class="flex items-center w-full">
+                                <div class="bg-green-100 p-2 rounded-lg mr-4">
+                                    <i class="fas fa-mobile-alt text-green-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Mobile Wallet</p>
+                                    <p class="text-sm text-gray-600">Apple Pay, vodafone cash</p>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Confirm Button -->
+            <button class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg
+                          hover:from-blue-600 hover:to-blue-700 transition-all font-medium
+                          flex items-center justify-center">
+                <i class="fas fa-check-circle mr-2"></i>Confirm Recharge
+            </button>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('main');
+            const amountInput = document.querySelector('input[type="number"]');
+            const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
+            const confirmBtn = document.querySelector('button');
+            let amountError = null;
+            let paymentError = null;
+        
+            // Create error message elements
+            function createErrorElements() {
+                amountError = document.createElement('div');
+                amountError.className = 'text-red-600 text-sm mt-2 hidden';
+                amountInput.parentElement.parentElement.appendChild(amountError);
+        
+                paymentError = document.createElement('div');
+                paymentError.className = 'text-red-600 text-sm mt-2 mb-4 hidden';
+                document.querySelector('h3').insertAdjacentElement('afterend', paymentError);
+            }
+        
+            // Validate amount input
+            function validateAmount() {
+                const value = parseFloat(amountInput.value);
+                let isValid = true;
+        
+                if (isNaN(value) || value <= 0) {
+                    amountInput.classList.add('border-red-500');
+                    amountError.textContent = 'Please enter a valid amount greater than 0';
+                    amountError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    amountInput.classList.remove('border-red-500');
+                    amountError.classList.add('hidden');
+                }
+        
+                return isValid;
+            }
+        
+            // Validate payment method
+            function validatePaymentMethod() {
+                const isSelected = [...paymentMethods].some(method => method.checked);
+                
+                if (!isSelected) {
+                    paymentError.textContent = 'Please select a payment method';
+                    paymentError.classList.remove('hidden');
+                    document.querySelectorAll('.payment-card').forEach(card => {
+                        card.classList.add('border-red-500');
+                    });
+                    return false;
+                }
+        
+                paymentError.classList.add('hidden');
+                document.querySelectorAll('.payment-card').forEach(card => {
+                    card.classList.remove('border-red-500');
+                });
+                return true;
+            }
+        
+            // Real-time amount validation
+            amountInput.addEventListener('input', () => {
+                validateAmount();
+            });
+        
+            // Payment method selection validation
+            document.querySelectorAll('input[name="payment-method"]').forEach(method => {
+                method.addEventListener('change', () => {
+                    validatePaymentMethod();
+                });
+            });
+        
+            // Form submission handler
+            confirmBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const isAmountValid = validateAmount();
+                const isPaymentValid = validatePaymentMethod();
+        
+                if (isAmountValid && isPaymentValid) {
+                    // Simulate successful submission
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = `
+                        <i class="fas fa-spinner fa-spin mr-2"></i>
+                        Processing...
+                    `;
+        
+                    // Simulate API call
+                    setTimeout(() => {
+                        alert('Recharge successful!');
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerHTML = `
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Confirm Recharge
+                        `;
+                        form.reset();
+                    }, 2000);
+                }
+            });
+        
+            // Initialize error elements
+            createErrorElements();
+        
+            // Payment card selection styling
+            document.querySelectorAll('.payment-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.payment-card').forEach(c => {
+                        c.classList.remove('selected');
+                        c.style.borderColor = 'transparent';
+                    });
+                    card.classList.add('selected');
+                    card.style.borderColor = '#3b82f6';
+                });
+            });
+        });
+        </script>
+</body>
+</html>

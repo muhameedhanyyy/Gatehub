@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GateHub - Live Monitoring</title>
+  <meta name="description" content="Real-time vehicle monitoring and management system">
+  <meta name="keywords" content="toll management, vehicle tracking, real-time monitoring">
+
+  <!-- Favicons -->
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Vendor CSS -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__container">
+        <div class="header__brand">
+            <img src="assets/logo.jpg" alt="GateHub Logo" class="header__logo">
+            <h1 class="header__title">GateHub - Live Monitoring</h1>
+        </div>
+
+        <nav class="header__nav">
+            <ul class="nav__list">
+                <li class="nav__item"><span id="live-timestamp" class="timestamp"></span> </li>
+               
+            </ul>
+        </nav>
+
+        <div class="header__utilities">
+          <a href="addFines.html" class="nav__link">Add Fine</a>
+            <a href="settings.html" class="nav__link">
+                <i class="fas fa-cog"></i>
+            </a>
+            <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" 
+                 alt="Profile" 
+                 class="header__avatar">
+        </div>
+    </div>
+</header>
+
+  <main>
+    <section class="section" aria-labelledby="real-time-heading">
+      <h2 id="real-time-heading" class="section__title">Real-Time Vehicle Details</h2>
+      <div class="vehicle-info">
+        <p><strong>License Plate:</strong> <span id="license-plate">---</span></p>
+        <p><strong>Vehicle Details:</strong> <span id="vehicle-details">---</span></p>
+        <p><strong>Owner’s Name:</strong> <span id="owner-name">---</span></p>
+        <p><strong>Timestamp:</strong> <span id="entry-timestamp">---</span></p>
+        <p><strong>Gate Number:</strong> <span id="gate-number">---</span></p>
+      </div>
+      <div class="recent-vehicles">
+        <h3 class="section__subtitle">Recently Passed Vehicles</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>License Plate</th>
+              <th>Vehicle Model</th>
+              <th>Timestamp</th>
+              <th>Alerts</th>
+            </tr>
+          </thead>
+          <tbody id="recent-vehicles-table">
+            <!-- Dynamic rows will be added here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="alerts" class="section" aria-labelledby="alerts-heading">
+      <h2 id="alerts-heading" class="section__title">Alerts</h2>
+      <div class="alert-card alert--critical">
+        <p class="alert__type">Expired License</p>
+        <p class="alert__details">ABC123, Toyota Camry</p>
+        <span class="alert__timestamp">12:44:32 PM</span>
+        <div class="alert__actions">
+          <button class="btn btn--investigate">Investigate</button>
+          <button class="btn btn--escalate">Escalate</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

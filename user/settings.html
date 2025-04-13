@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Settings - GateHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6; /* Light blue */
+            --secondary: #60a5fa; /* Lighter blue */
+            --accent: #9ca3af; /* Gray */
+            --background-light: #f3f4f6; /* Light gray background */
+            --text-primary: #374151; /* Dark gray */
+            --text-secondary: #6b7280; /* Medium gray */
+            --border-color: #e5e7eb; /* Light border */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .settings-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            padding: 1rem; /* Reduced padding */
+        }
+
+        .settings-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px; /* Reduced padding */
+            border: 1px solid var(--border-color);
+            border-radius: 6px; /* Reduced radius */
+            background-color: white;
+            color: var(--text-primary);
+            font-size: 0.85rem; /* Smaller font size */
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 36px; /* Reduced width */
+            height: 18px; /* Reduced height */
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background-color: var(--border-color);
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            height: 14px; /* Reduced size */
+            width: 14px; /* Reduced size */
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 2px;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translate(18px, -50%);
+        }
+
+        .btn-glow {
+            display: inline-block;
+            padding: 8px 16px; /* Reduced padding */
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            border-radius: 6px; /* Reduced radius */
+            font-size: 0.9rem; /* Reduced font size */
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 5px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-glow:hover {
+            background-color: var(--secondary);
+        }
+
+        .language-select {
+            width: 100%;
+            padding: 8px; /* Reduced padding */
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: white;
+            font-size: 0.85rem; /* Reduced font size */
+        }
+        .border-red-500 {
+        border-color: #ef4444 !important;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .fa-spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes slide-in {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+    }
+
+    @keyframes slide-out {
+        from { transform: translateX(0); }
+        to { transform: translateX(100%); }
+    }
+
+    .animate-slide-in {
+        animation: slide-in 0.3s ease-out;
+    }
+
+    .animate-slide-out {
+        animation: slide-out 0.3s ease-in forwards;
+    }
+
+    .z-50 {
+        z-index: 50;
+    }
+    
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-sm p-4">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <nav class="flex space-x-6">
+                    <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
+                    <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
+                    <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
+                    <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-6 max-w-lg space-y-4"> <!-- Reduced padding -->
+        <header class="flex items-center space-x-3">
+            <i class="fas fa-cog text-2xl text-[var(--primary)]"></i> <!-- Smaller icon -->
+            <h1 class="text-2xl font-semibold text-gray-800">Account Settings</h1> <!-- Reduced font size -->
+        </header>
+
+        <!-- Security Section -->
+        <div class="settings-card">
+            <h2 class="text-lg font-medium text-gray-800 mb-3">
+                <i class="fas fa-shield-alt mr-2 text-[var(--primary)]"></i>Security
+            </h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-sm text-gray-600">Current Password</label>
+                    <input type="password" id="current-password" class="input-field" placeholder="••••••••">
+                    <div id="current-password-error" class="text-red-500 text-xs mt-1 hidden"></div>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">New Password</label>
+                    <input type="password" id="new-password" class="input-field" placeholder="••••••••">
+                    <div id="new-password-error" class="text-red-500 text-xs mt-1 hidden"></div>
+                </div>
+                <button id="update-password-btn" class="btn-glow w-full">
+                    <i class="fas fa-save mr-2"></i>Update Password
+                </button>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="settings-card">
+            <h2 class="text-lg font-medium text-gray-800 mb-3">
+                <i class="fas fa-bell mr-2 text-[var(--accent)]"></i>Notifications
+            </h2>
+
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-700">Toll Notifications</p>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-700">Receipts</p>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Section -->
+        <!-- In the Language Section -->
+<div class="settings-card">
+    <h2 class="text-lg font-medium text-gray-800 mb-3">
+        <i class="fas fa-globe mr-2 text-[var(--primary)]"></i>Language
+    </h2>
+    <select id="language-select" class="language-select">
+        <option value="">Select Language</option>
+        <option value="en">English</option>
+        <option value="es">العربية</option>
+    </select>
+    <button id="save-pref-btn" class="btn-glow w-full mt-3">Save Preferences</button>
+</div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Password Update Validation
+            const updatePasswordBtn = document.getElementById('update-password-btn');
+            const currentPassword = document.getElementById('current-password');
+            const newPassword = document.getElementById('new-password');
+            const currentPassError = document.getElementById('current-password-error');
+            const newPassError = document.getElementById('new-password-error');
+        
+            updatePasswordBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let isValid = true;
+        
+                // Reset errors
+                currentPassError.classList.add('hidden');
+                newPassError.classList.add('hidden');
+                currentPassword.classList.remove('border-red-500');
+                newPassword.classList.remove('border-red-500');
+        
+                // Current password validation
+                if (currentPassword.value.trim() === '') {
+                    currentPassError.textContent = 'Current password is required';
+                    currentPassError.classList.remove('hidden');
+                    currentPassword.classList.add('border-red-500');
+                    isValid = false;
+                }
+        
+                // New password validation
+                const newPassValue = newPassword.value.trim();
+                if (newPassValue === '') {
+                    newPassError.textContent = 'New password is required';
+                    newPassError.classList.remove('hidden');
+                    newPassword.classList.add('border-red-500');
+                    isValid = false;
+                } else if (newPassValue.length < 8) {
+                    newPassError.textContent = 'Password must be at least 8 characters';
+                    newPassError.classList.remove('hidden');
+                    newPassword.classList.add('border-red-500');
+                    isValid = false;
+                } else if (newPassValue === currentPassword.value.trim()) {
+                    newPassError.textContent = 'New password must be different from current password';
+                    newPassError.classList.remove('hidden');
+                    newPassword.classList.add('border-red-500');
+                    isValid = false;
+                }
+        
+                if (isValid) {
+                    // Simulate API call
+                    updatePasswordBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Updating...`;
+                    updatePasswordBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        showToast('success', 'Password updated successfully!');
+                        updatePasswordBtn.innerHTML = `<i class="fas fa-save mr-2"></i>Update Password`;
+                        updatePasswordBtn.disabled = false;
+                        currentPassword.value = '';
+                        newPassword.value = '';
+                    }, 1500);
+                }
+            });
+        
+            // Language Preference Validation
+            const languageSelect = document.getElementById('language-select');
+            const savePrefBtn = document.getElementById('save-pref-btn');
+            
+            savePrefBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                if (languageSelect.value === '') {
+                    showToast('error', 'Please select a language');
+                    languageSelect.classList.add('border-red-500');
+                    return;
+                }
+                languageSelect.classList.remove('border-red-500');
+        
+                // Simulate save action
+                savePrefBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Saving...`;
+                savePrefBtn.disabled = true;
+                
+                setTimeout(() => {
+                    showToast('success', 'Preferences saved successfully!');
+                    savePrefBtn.innerHTML = `Save Preferences`;
+                    savePrefBtn.disabled = false;
+                }, 1000);
+            });
+        
+            // Notification Toggles
+            document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('change', () => {
+                    const status = toggle.checked ? 'enabled' : 'disabled';
+                    const label = toggle.closest('.flex').querySelector('p').textContent.trim();
+                    showToast('success', `${label} ${status}`);
+                });
+            });
+        
+            // Toast Notification System
+            function showToast(type, message) {
+                const toast = document.createElement('div');
+                toast.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg flex items-center 
+                                 ${type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 
+                                  'bg-red-100 border border-red-400 text-red-700'} 
+                                 animate-slide-in z-50`;
+                
+                toast.innerHTML = `
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('animate-slide-out');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3000);
+            }
+        });
+        </script>
+        
+</body>
+</html>

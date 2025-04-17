@@ -1,298 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Login - GateHub</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --secondary: #60a5fa;
-      --accent: #9ca3af;
-      --background-light: #f3f4f6;
-      --text-primary: #374151;
-      --text-secondary: #6b7280;
-      --border-color: #e5e7eb;
-    }
-  
-    body {
-      background-color: var(--background-light);
-      font-family: 'Open Sans', sans-serif;
-    }
-  
-    .login-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-      max-width: 400px;
-      margin: 2rem auto;
-    }
-  
-    .input-field {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-  
-    .input-field:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-  
-    .btn-gradient {
-      background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-    }
-  
-    .btn-gradient:hover {
-      background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
-      transform: translateY(-2px);
-    }
-  
-    .form-check-input:checked {
-      background-color: var(--primary);
-      border-color: var(--primary);
-    }
-  
-    .invalid-feedback {
-      color: #dc2626;
-      font-size: 0.875rem;
-      margin-top: 0.25rem;
-    }
-  
-    .was-validated .form-control:invalid {
-      border-color: #dc2626;
-    }
-  
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-  
-    .logo-text {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    .logo-container img {
-    width: 60px;  /* Fixed width */
-    height: 60px; /* Fixed height */
-    object-fit: cover; /* Ensures image doesn't stretch */
-    border-radius: 12px; /* Matches your card radius */
-    transition: transform 0.3s ease; /* Smooth hover effect */
-}
-
-.logo-container img:hover {
-    transform: scale(1.05); /* Subtle hover animation */
-}
-
-/* If you need to make it responsive for mobile */
-@media (max-width: 768px) {
-    .logo-container img {
-        width: 50px;
-        height: 50px;
-    }
-}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GateHub - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .login-card {
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container min-vh-100 d-flex align-items-center">
+        <div class="w-100">
+            <!-- Logo with inline text -->
+            <div class="text-center mb-5 d-flex align-items-center justify-content-center">
+                <img src="assets/logo.jpg" alt="GateHub Logo" class="logo">
+                <h1 class="h3 mt-0 ms-2 font-weight-normal">GateHub</h1>
+            </div>
 
-  <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="login-card">
-      <div class="logo-container">
-        <img src="assets/logo.jpg" alt="Logo" class="h-12 w-12">
-        <span class="logo-text">GateHub</span>
-      </div>
-  
-      <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Login to Your Account</h2>
-        <p class="text-gray-600 mt-2">Select your role and enter your credentials</p>
-      </div>
-  
-      <form class="space-y-4" novalidate>
-        <!-- Role Selection -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Login As</label>
-          <select class="input-field" id="loginRole" required>
-            <option selected disabled value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="gatestaff">Gate Staff</option>
-          </select>
-          <div class="invalid-feedback">Please select your role</div>
+            <!-- Login Card -->
+            <div class="card login-card">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-4">Login to Your Account</h2>
+                    <p class="text-center text-muted mb-4">Select your role and enter your credentials to login</p>
+
+                    <form class="needs-validation" novalidate>
+                        <!-- Role Selection -->
+                        <div class="mb-4">
+                            <label class="form-label">Login As</label>
+                            <select class="form-select" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="staff">Gate Staff</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a role</div>
+                        </div>
+
+                        <!-- National ID -->
+                        <div class="mb-4">
+                            <label class="form-label">National ID</label>
+                            <input type="text" class="form-control" required 
+                                   pattern="[0-9]{14}" 
+                                   title="14-digit National ID">
+                            <div class="invalid-feedback">Please enter a valid 14-digit National ID</div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" required 
+                                   minlength="8">
+                            <div class="invalid-feedback">Password must be at least 8 characters</div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input">
+                            <label class="form-check-label">Remember me</label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button class="btn btn-primary w-100" type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
         </div>
-  
-        <!-- National ID -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">National ID</label>
-          <input type="text" class="input-field" id="yourNational ID" required>
-          <div class="invalid-feedback">Please enter your National ID</div>
-        </div>
-  
-        <!-- Password -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-          <input type="password" class="input-field" id="yourPassword" required>
-          <div class="invalid-feedback">Please enter your password</div>
-        </div>
-  
-        <!-- Remember Me -->
-        <div class="flex items-center gap-2">
-          <input type="checkbox" id="rememberMe" class="form-check-input">
-          <label for="rememberMe" class="text-sm text-gray-600">Remember me</label>
-        </div>
-  
-        <!-- Login Button -->
-        <button type="submit" class="btn-gradient w-full">
-          <span class="login-text">Login</span>
-          <span class="loading hidden">
-            <i class="fas fa-spinner fa-spin"></i>
-          </span>
-        </button>
-      </form>
     </div>
-  </div>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form validation
+        (() => {
+          'use strict'
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginForm = document.querySelector('form');
-      const loginBtn = loginForm.querySelector('button[type="submit"]');
-  
-      loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-  
-        // Grab form values
-        const role = document.getElementById('loginRole').value;
-        const natId = document.getElementById('yourNational ID').value;
-        const password = document.getElementById('yourPassword').value;
-  
-        // Basic client-side validation
-        if (!role || !natId || !password) {
-          alert("Please fill all fields and select a role.");
-          return;
-        }
-  
-        // Disable button while submitting
-        loginBtn.disabled = true;
-        loginBtn.textContent = 'Logging in...';
-  
-        try {
-          const response = await fetch('http://gatehub.runasp.net/api/GateStaff/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              role,
-              natId,
-              password
-            })
-          });
-  
-          if (response.ok) {
-            const data = await response.json();
-            alert("Login successful!");
-  
-            // Optionally store token and redirect
-            localStorage.setItem("token", data.tokenString);
-            // localStorage.setItem("role", data.role);
-            // localStorage.setItem("user", JSON.stringify(data.user));
-            // Redirect based on role
-            // window.location.href = 'dashboard.html';
-  
-          } else {
-            const errMsg = await response.text();
-            alert("Login failed: " + errMsg);
-          }
-        } catch (error) {
-          console.error("Login error:", error);
-          alert("An error occurred. Please try again.");
-        } finally {
-          loginBtn.disabled = false;
-          loginBtn.textContent = 'Login';
-        }
-      });
-    });
-    document.querySelector('form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const button = form.querySelector('button[type="submit"]');
-    const loginText = button.querySelector('.login-text');
-    const loading = button.querySelector('.loading');
+          const forms = document.querySelectorAll('.needs-validation')
 
-    if (!form.checkValidity()) {
-      form.classList.add('was-validated');
-      return;
-    }
+          Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
 
-    // Show loading state
-    loginText.classList.add('hidden');
-    loading.classList.remove('hidden');
-    button.disabled = true;
-
-    try {
-      // Your existing API call
-      const response = await fetch('http://gatehub.runasp.net/api/GateStaff/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          role: document.getElementById('loginRole').value,
-          natId: document.getElementById('yourNational ID').value,
-          password: document.getElementById('yourPassword').value
-        })
-      });
-
-      // Handle response
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
-      // Reset button state
-      loginText.classList.remove('hidden');
-      loading.classList.add('hidden');
-      button.disabled = false;
-    }
-  });
-  </script>
-  
-
+              form.classList.add('was-validated')
+            }, false)
+          })
+        })()
+    </script>
 </body>
-
 </html>

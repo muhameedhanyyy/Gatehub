@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/logo.jpg" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -35,7 +35,6 @@
 
   <main>
     <div class="container">
-
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
@@ -43,22 +42,25 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <span class="d-none d-lg-block">GateHub</span>
+                  <img src="assets/img/logo.jpg" alt="" class="me-2">
+                  <span class="d-none d-lg-block fw-bold">GateHub</span>
                 </a>
               </div><!-- End Logo -->
 
               <div class="card mb-3">
-
                 <div class="card-body">
-
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Vehicle Owner Inquiry</h5>
                     <p class="text-center small">Enter vehicle owner details to retrieve their information</p>
                   </div>
 
+                  <!-- Error Message -->
+                  <div id="ownerNotFoundError" class="alert alert-danger text-center" style="display: none;">
+                    Owner not found. Please verify the name and National ID.
+                  </div>
+
                   <!-- Inquiry Form -->
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" novalidate id="ownerInquiryForm">
                     <div class="col-6">
                       <label for="ownerName" class="form-label">Owner Name</label>
                       <input type="text" name="ownerName" class="form-control" id="ownerName" required>
@@ -75,91 +77,127 @@
                       <button class="btn btn-primary w-100" type="submit">Search</button>
                     </div>
                   </form>
-                  <!-- End Inquiry Form -->
-
                 </div>
               </div>
 
               <!-- Inquiry Results Table -->
-<div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">Owner Details</h5>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Owner Name</th>
-            <th scope="col">National ID</th>
-            <th scope="col">Phone Number</th>
-            <th scope="col">Registered Vehicles</th>
-            <th scope="col">Total Fines</th>
-            <th scope="col">Account Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Sample Owner Data -->
-          <tr>
-            <th scope="row">1</th>
-            <td>احمد عثمان</td>
-            <td>12345678901234</td>
-            <td>+201234567890</td>
-            <td>2</td>
-            <td>15,300 LE</td>
-            <td><span class="badge bg-success">Active</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <h5 class="card-title mt-4">Owned Vehicles</h5>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Vehicle Plate</th>
-            <th scope="col">Vehicle Type</th>
-            <th scope="col">Registration Status</th>
-            <th scope="col">Last Gate Passed</th>
-            <th scope="col">Outstanding Fines</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Sample Vehicle Data -->
-          <tr>
-            <th scope="row">1</th>
-            <td>ABC-1234</td>
-            <td>SUV</td>
-            <td><span class="badge bg-success">Registered</span></td>
-            <td>Gate 5 (Downtown)</td>
-            <td>500 LE</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>XYZ-5678</td>
-            <td>Sedan</td>
-            <td><span class="badge bg-warning">Pending Renewal</span></td>
-            <td>Gate 3 (Highway)</td>
-            <td>1,500 LE</td>
-          </tr>
-          <!-- Add more rows dynamically -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- End Inquiry Results Table -->
-  
-
-              <div class="credits">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Owner Details</h5>
+                  <table class="table table-bordered" id="ownerTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Owner Name</th>
+                        <th scope="col">National ID</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Registered Vehicles</th>
+                        <th scope="col">Total Fines</th>
+                        <th scope="col">Account Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>احمد عثمان</td>
+                        <td>12345678901234</td>
+                        <td>+201234567890</td>
+                        <td>2</td>
+                        <td>15,300 LE</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <h5 class="card-title mt-4">Owned Vehicles</h5>
+                  <table class="table table-bordered" id="vehiclesTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Vehicle Plate</th>
+                        <th scope="col">Vehicle Type</th>
+                        <th scope="col">Registration Status</th>
+                        <th scope="col">Last Gate Passed</th>
+                        <th scope="col">Outstanding Fines</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>ABC-1234</td>
+                        <td>SUV</td>
+                        <td><span class="badge bg-success">Registered</span></td>
+                        <td>Gate 5 (Downtown)</td>
+                        <td>500 LE</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>XYZ-5678</td>
+                        <td>Sedan</td>
+                        <td><span class="badge bg-warning">Pending Renewal</span></td>
+                        <td>Gate 3 (Highway)</td>
+                        <td>1,500 LE</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
             </div>
           </div>
         </div>
-
       </section>
-
     </div>
-  </main><!-- End #main -->
+</main>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('ownerInquiryForm');
+    const errorDiv = document.getElementById('ownerNotFoundError');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        if (form.checkValidity()) {
+            const ownerName = document.getElementById('ownerName').value.trim();
+            const nationalID = document.getElementById('ownerNationalID').value.trim();
+            let found = false;
+
+            // Check owner table
+            document.querySelectorAll('#ownerTable tbody tr').forEach(row => {
+                const rowName = row.cells[1].textContent.trim();
+                const rowID = row.cells[2].textContent.trim();
+                
+                if (rowName === ownerName && rowID === nationalID) {
+                    found = true;
+                    row.classList.add('table-success');
+                    errorDiv.style.display = 'none';
+                } else {
+                    row.classList.remove('table-success');
+                }
+            });
+
+            if (!found) {
+                errorDiv.style.display = 'block';
+                // Hide vehicles table if owner not found
+                document.querySelectorAll('#vehiclesTable tbody tr').forEach(row => {
+                    row.style.display = 'none';
+                });
+            } else {
+                // Show vehicles table when owner is found
+                document.querySelectorAll('#vehiclesTable tbody tr').forEach(row => {
+                    row.style.display = '';
+                });
+            }
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+});
+</script>
+
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

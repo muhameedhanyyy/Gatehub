@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/logo.jpg" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -40,8 +40,8 @@
               <!-- Logo -->
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="Logo">
-                  <span class="d-none d-lg-block">GateHub</span>
+                  <img src="assets/img/logo.jpg" alt="Logo" class="me-2">
+                  <span class="d-none d-lg-block fw-bold">GateHub</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -59,8 +59,13 @@
                     <p class="text-center small">Search for a lost vehicle by entering the license plate number</p>
                   </div>
 
+                  <!-- Error Message -->
+                  <div id="vehicleNotFoundError" class="alert alert-danger text-center" style="display: none;">
+                    Vehicle not found in lost records. Please check the license plate.
+                  </div>
+
                   <!-- Search Form -->
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" novalidate id="lostVehicleForm">
                     <div class="col-12">
                       <label for="vehiclePlate" class="form-label">License Plate</label>
                       <input type="text" name="vehiclePlate" class="form-control" id="vehiclePlate" placeholder="Enter license plate" required>
@@ -71,15 +76,13 @@
                       <button class="btn btn-primary w-100" type="submit">Search</button>
                     </div>
                   </form>
-                  <!-- End Search Form -->
-
                 </div>
               </div><!-- End Search Card -->
 
               <!-- Lost Vehicle Results Table -->
               <div class="card mb-3 w-100">
                 <div class="card-body">
-                  <table class="table table-bordered">
+                  <table class="table table-bordered" id="lostVehiclesTable">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -108,7 +111,6 @@
                         <td>Gate 3 (Highway)</td>
                         <td><span class="badge bg-success">Recovered</span></td>
                       </tr>
-                      <!-- Add more rows dynamically -->
                     </tbody>
                   </table>
                 </div>
@@ -119,9 +121,47 @@
         </div>
       </section>
     </div>
-  </main><!-- End #main -->
-
+</main>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('lostVehicleForm');
+    const errorDiv = document.getElementById('vehicleNotFoundError');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        if (form.checkValidity()) {
+            const plate = document.getElementById('vehiclePlate').value.trim().toUpperCase();
+            let found = false;
+
+            // Clear previous highlights
+            document.querySelectorAll('#lostVehiclesTable tbody tr').forEach(row => {
+                row.classList.remove('table-success');
+            });
+
+            // Search in table
+            document.querySelectorAll('#lostVehiclesTable tbody tr').forEach(row => {
+                const rowPlate = row.cells[1].textContent.trim().toUpperCase();
+                if (rowPlate === plate) {
+                    found = true;
+                    row.classList.add('table-success');
+                    errorDiv.style.display = 'none';
+                }
+            });
+
+            if (!found) {
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+});
+</script>
+
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

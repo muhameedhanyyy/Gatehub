@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/logo.jpg" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -35,30 +35,35 @@
 
   <main>
     <div class="container">
-
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
 
+              <!-- Logo section remains the same -->
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <p class="d-none d-lg-block">GateHub</span>
+                    <img src="assets/img/logo.jpg" alt="" class="me-2">
+                    <span class="d-none d-lg-block fw-bold">GateHub</span>
                 </a>
               </div><!-- End Logo -->
 
               <div class="card mb-3">
-
                 <div class="card-body">
-
+                  <!-- Form section -->
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Vehicle Inquiry</h5>
                     <p class="text-center small">Enter vehicle details to retrieve its information</p>
                   </div>
 
+                  <!-- Error message container -->
+                  <div id="vehicleNotFoundError" class="alert alert-danger text-center" style="display: none;">
+                    Vehicle not found. Please check the entered details and try again.
+                  </div>
+
                   <!-- Inquiry Form -->
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" novalidate id="inquiryForm">
+                    <!-- Form fields remain the same -->
                     <div class="col-6">
                       <label for="licensePlate" class="form-label">License Plate</label>
                       <input type="text" name="licensePlate" class="form-control" id="licensePlate" required>
@@ -81,7 +86,6 @@
                     </div>
                   </form>
                   <!-- End Inquiry Form -->
-
                 </div>
               </div>
 
@@ -89,7 +93,7 @@
               <div class="card mb-3">
                 <div class="card-body">
                   <h5 class="card-title">Vehicle Details</h5>
-                  <table class="table table-bordered">
+                  <table class="table table-bordered" id="vehicleTable">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -129,21 +133,55 @@
                   </table>
                 </div>
               </div>
-              <!-- End Inquiry Results Table -->
-
-              <div class="credits">
-              </div>
 
             </div>
           </div>
         </div>
-
       </section>
-
     </div>
-  </main><!-- End #main -->
+</main>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- Add this JavaScript at the end of your file -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('inquiryForm');
+    const errorDiv = document.getElementById('vehicleNotFoundError');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        if (form.checkValidity()) {
+            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
+            const vehicleType = document.getElementById('vehicleType').value;
+            let found = false;
+
+            // Check against table data
+            document.querySelectorAll('#vehicleTable tbody tr').forEach(row => {
+                const rowLicense = row.cells[1].textContent.trim().toUpperCase();
+                const rowType = row.cells[3].textContent.trim();
+                
+                if (rowLicense === licensePlate && rowType === vehicleType) {
+                    found = true;
+                    // Highlight matching row
+                    row.classList.add('table-success');
+                    errorDiv.style.display = 'none';
+                } else {
+                    row.classList.remove('table-success');
+                }
+            });
+
+            if (!found) {
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+});
+</script>
+
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

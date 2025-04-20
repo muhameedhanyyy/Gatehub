@@ -71,7 +71,7 @@
                       <select class="form-select" id="loginRole" required>
                         <option selected disabled value="">Select Role</option>
                         <option value="admin">Admin</option>
-                        <option value="gate-staff">Gate Staff</option>
+                        <option value="gatestaff">Gate Staff</option>
                       </select>
                       <div class="invalid-feedback">Please select a role</div>
                     </div>
@@ -196,8 +196,12 @@
         loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
 
         try {
-          const response = await fetch(  'http://gatehub.runasp.net/api/Admin/login' 
-          , {
+          // Determine API endpoint based on role
+          const apiUrl = role === 'gatestaff' 
+            ? 'http://gatehub.runasp.net/api/GateStaff/login'
+            : 'http://gatehub.runasp.net/api/Admin/login';
+
+          const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ role, natId, password })
@@ -213,16 +217,29 @@
           localStorage.setItem("token", data.tokenString);
           
           setTimeout(() => {
-            window.location.href = role === 'admin' ? 'admin-dashboard.html' : 'staff-dashboard.html';
+            window.location.href = role === 'admin' ? 'index.html' : '../gatestaff/index2.html';
           }, 1500);
 
         } catch (error) {
-          console.error("Login error:", error);
-          showAlert(error.message || 'An error occurred. Please try again.');
-          if (error.message.toLowerCase().includes('credentials')) {
-            showValidationError('yourPassword', 'Invalid credentials');
-          }
-        } finally {
+  console.error("Login error:", error);
+  
+  // Check if it's a credentials error
+  const isCredentialError = error.message.toLowerCase().includes('credentials');
+  
+  // Use appropriate error message
+  const errorMessage =  
+    'National ID or password is incorrect' ;
+  
+  // Show alert with the determined message
+  showAlert(errorMessage);
+  
+  // If credentials error, show validation errors on both fields
+  if (isCredentialError) {
+    showValidationError('yourNationalID', 'Invalid credentials');
+    showValidationError('yourPassword', 'Invalid credentials');
+  }
+}
+         finally {
           loginBtn.disabled = false;
           loginBtn.textContent = 'Login';
         }

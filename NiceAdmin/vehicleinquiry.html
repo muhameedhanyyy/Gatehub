@@ -64,22 +64,13 @@
                   <!-- Inquiry Form -->
                   <form class="row g-3 needs-validation" novalidate id="inquiryForm">
                     <!-- Form fields remain the same -->
-                    <div class="col-6">
+                    <div class="col-12">
                       <label for="licensePlate" class="form-label">License Plate</label>
                       <input type="text" name="licensePlate" class="form-control" id="licensePlate" required>
                       <div class="invalid-feedback">Please enter the vehicle's license plate.</div>
                     </div>
 
-                    <div class="col-6">
-                      <label for="vehicleType" class="form-label">Vehicle Type</label>
-                      <select name="vehicleType" class="form-select" id="vehicleType" required>
-                        <option value="">Select</option>
-                        <option value="Car">Car</option>
-                        <option value="Truck">Truck</option>
-                        <option value="Bus">Bus</option>
-                      </select>
-                      <div class="invalid-feedback">Please select the vehicle type.</div>
-                    </div>
+                  
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Search</button>

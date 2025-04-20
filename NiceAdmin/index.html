@@ -100,7 +100,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a id="logoutButton" class="dropdown-item d-flex align-items-center " href="#">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -133,7 +133,7 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-person-add"></i><span>Add a new employee</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-person-add"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -147,8 +147,18 @@
             </a>
           </li>
           <li>
+            <a href="addvehicle.html">
+              <i class="bi bi-circle"></i><span>Add a new Vehicle </span>
+            </a>
+          </li>
+          <li>
             <a href="vehicleowner.html">
               <i class="bi bi-circle"></i><span>Add a new Vehicle Owner</span>
+            </a>
+          </li>
+          <li>
+            <a href="addgate.html">
+              <i class="bi bi-circle"></i><span>Add a new gate</span>
             </a>
           </li>
         </ul>
@@ -461,63 +471,7 @@
           </div>
         </div><!-- End Alerts for Lost Cars -->
 
-          <!-- Budget Report -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
 
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Budget Report <span>| This Month</span></h5>
-
-              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Resources', 'Actual Usage']
-                    },
-                    radar: {
-                      indicator: [
-                        { name: 'Toll Revenue', max: 100000 },
-                        { name: 'Maintenance Costs', max: 50000 },
-                        { name: 'System Availability', max: 100 },
-                        { name: 'Alerts Processed', max: 1000 },
-                        { name: 'User Complaints Resolved', max: 200 },
-                        { name: 'Vehicles Identified', max: 10000 }
-                      ]
-                    },
-                    series: [{
-                      name: 'Resources vs Usage',
-                      type: 'radar',
-                      data: [
-                        {
-                          value: [80000, 45000, 90, 950, 180, 9800],
-                          name: 'Allocated Resources'
-                        },
-                        {
-                          value: [75000, 48000, 85, 870, 160, 9500],
-                          name: 'Actual Usage'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-              
-
-            </div>
-          </div><!-- End Budget Report -->
 
           <!-- Website Traffic -->
           <div class="card">
@@ -623,7 +577,28 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-
+  <script>
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      try {
+        const response = await fetch('http://gatehub.runasp.net/api/Admin/logout', {
+          method: 'POST', // Assuming POST is required for logout
+          headers: {
+            'Content-Type': 'application/json', // Add if required by API
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Logout failed with status ${response.status}`);
+        }
+  
+        // Redirect to login.html after successful logout
+        window.location.href = 'pages-login.html';
+      } catch (error) {
+        console.error('Error during logout:', error.message);
+        alert('Logout failed. Please try again.');
+      }
+    });
+  </script>
 </body>
 
 </html>

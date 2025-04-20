@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Add New Admin</title>
+  <title>Add a new Gate </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -53,62 +53,47 @@
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Add New Admin</h5>
-                    <p class="text-center small">Enter the details to create a new admin account</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Add New Gate </h5>
+                    <p class="text-center small">Enter the details to add a new gate  </p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" id="addGateForm" class="needs-validation"  novalidate >
                     <div class="col-12">
-                      <label for="fullName" class="form-label">Full Name</label>
-                      <input type="text" name="name" class="form-control" id="fullName" required>
-                      <div class="invalid-feedback">Please enter the admin's full name.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="natId" class="form-label">National ID</label>
-                      <input type="text" name="username" class="form-control" id="natId" required>
-                      <div class="invalid-feedback">Please enter a National ID.</div>
+                      <label for="type" class="form-label">Gate type</label>
+                      <input type="text" name="type" class="form-control" id="type" required>
+                      <div class="invalid-feedback">Please enter the Gate type.</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="phoneNumber" class="form-label">Phone Number</label>
-                      <input type="text" name="phone" class="form-control" id="phoneNumber" required>
-                      <div class="invalid-feedback">Please enter the phone number.</div>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="gender" class="form-label">gender</label>
-                      <select name="gender" class="form-select" id="gender" required>
-                        <option value="" disabled selected>Select gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
-                      <div class="invalid-feedback">Please select a gender.</div>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="birthDate" class="form-label">Birth Date</label>
-                      <input type="date" name="birthDate" class="form-control" id="birthDate" required>
-                      <div class="invalid-feedback">Please enter the birth date.</div>
-                    </div>
-
-                    
-
-                   
-
-                    <div class="col-12">
-                      <label for="password" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="password" required>
-                      <div class="invalid-feedback">Please enter a password.</div>
+                      <label for="addressName" class="form-label">Adress</label>
+                      <input type="Adress" name="Adress" class="form-control" id="addressName" required>
+                      <div class="invalid-feedback">Please enter a valid adress .</div>
                     </div>
 
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Add a new Admin</button>
+                      <label for="addressCity" class="form-label">city</label>
+                      <input type="text" name="city" class="form-control" id="addressCity" required>
+                      <div class="invalid-feedback">Please enter the city.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="addressGovernment" class="form-label">Government Gate</label>
+                      <input type="text" name="gate" class="form-control" id="addressGovernment" required>
+                      <div class="invalid-feedback">Please enter the Government.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Add a Gate </button>
                     </div>
                   </form>
 
                 </div>
               </div>
 
-             
+              <div class="credits">
+               </div>
+
+            </div>
           </div>
         </div>
 
@@ -132,46 +117,43 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script>
-    document.querySelector('.needs-validation').addEventListener('submit', async (event) => {
+    document.getElementById('addGateForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent default form submission
   
       // Collect form data
-      const formData = {
-        fullName: document.getElementById('fullName').value,
-        natId: document.getElementById('natId').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        gender: document.getElementById('gender').value,
-        birthDate: document.getElementById('birthDate').value,
-        password: document.getElementById('password').value,
+      const gateData = {
+        type: document.getElementById('type').value,
+        addressName: document.getElementById('addressName').value,
+        addressCity: document.getElementById('addressCity').value,
+        addressGovernment: document.getElementById('addressGovernment').value,
       };
   
-      console.log('Payload being sent:', formData); // Log payload for debugging
-  
       try {
-        const response = await fetch('http://gatehub.runasp.net/api/Admin/register-admin', {
+        const response = await fetch('http://gatehub.runasp.net/api/Admin/add-gate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(gateData),
         });
   
         if (!response.ok) {
           const errorDetails = await response.json();
-          console.error('Error details:', errorDetails); // Log API error details
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          console.error('Error details:', errorDetails);
+          throw new Error(`Failed to add gate: ${response.status}`);
         }
   
         const result = await response.json();
-        alert('Admin added successfully!');
+        alert('Gate added successfully!');
         console.log(result);
+        // Optionally clear the form
+        document.getElementById('addGateForm').reset();
       } catch (error) {
-        console.error('Error adding admin:', error.message);
-        // alert('Failed to add admin. Check the console for more details.');
+        console.error('Error adding gate:', error.message);
+        // alert('Failed to add gate. Please try again.');
       }
     });
   </script>
-  
   
 </body>
 

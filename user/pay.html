@@ -73,6 +73,7 @@
                     <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
                     <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
                     <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
+                    <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
                     <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
                 </nav>
                 <div class="flex items-center space-x-4">
@@ -101,11 +102,12 @@
                             <th class="py-3 px-4 text-left">
                                 <input type="checkbox" class="custom-checkbox" id="select-all">
                             </th>
-                            <th class="py-3 px-4 text-left">Fee</th>
-                            <th class="py-3 px-4 text-left">Time</th>
-                            <th class="py-3 px-4 text-left">Location</th>
-                            <th class="py-3 px-4 text-left">Amount</th>
-                            <th class="py-3 px-4 text-left">Action</th>
+                            <th class="py-3 px-4 text-left">Fee Value</th>
+                            <th class="py-3 px-4 text-left">Fine Value</th>
+                            <th class="py-3 px-4 text-left">Fine Type</th>
+                            <th class="py-3 px-4 text-left">Date</th>
+                            <th class="py-3 px-4 text-left">Gate Name</th>
+                            <th class="py-3 px-4 text-left"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,45 +115,58 @@
                             <td class="border px-4 py-3">
                                 <input type="checkbox" class="custom-checkbox fee-selector">
                             </td>
-                            <td class="border px-4 py-3">1. Parking fee</td>
+                            <td class="border px-4 py-3">Parking fee</td>
+                            <td class="border px-4 py-3">$2.00</td>
+                            <td class="border px-4 py-3">Late Payment</td>
                             <td class="border px-4 py-3">2023-09-30 12:00</td>
                             <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                            <td class="border px-4 py-3">
+                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
+                            </td>
                         </tr>
                         <tr class="fee-row hover:bg-gray-50">
                             <td class="border px-4 py-3">
                                 <input type="checkbox" class="custom-checkbox fee-selector">
                             </td>
-                            <td class="border px-4 py-3">2. Parking fee</td>
-                            <td class="border px-4 py-3">2023-09-30 12:00</td>
-                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">Parking fee</td>
                             <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                            <td class="border px-4 py-3">Overstay</td>
+                            <td class="border px-4 py-3">2023-09-30 12:30</td>
+                            <td class="border px-4 py-3">Shanghai, China</td>
+                            <td class="border px-4 py-3">
+                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
+                            </td>
                         </tr>
                         <tr class="fee-row hover:bg-gray-50">
                             <td class="border px-4 py-3">
                                 <input type="checkbox" class="custom-checkbox fee-selector">
                             </td>
-                            <td class="border px-4 py-3">3. Parking fee</td>
-                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Parking fee</td>
+                            <td class="border px-4 py-3">$2.50</td>
+                            <td class="border px-4 py-3">Late Entry</td>
+                            <td class="border px-4 py-3">2023-09-30 13:00</td>
                             <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                            <td class="border px-4 py-3">
+                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
+                            </td>
                         </tr>
                         <tr class="fee-row hover:bg-gray-50">
                             <td class="border px-4 py-3">
                                 <input type="checkbox" class="custom-checkbox fee-selector">
                             </td>
-                            <td class="border px-4 py-3">4. Parking fee</td>
-                            <td class="border px-4 py-3">2023-09-30 12:00</td>
+                            <td class="border px-4 py-3">Parking fee</td>
+                            <td class="border px-4 py-3">$3.00</td>
+                            <td class="border px-4 py-3">Unauthorized Parking</td>
+                            <td class="border px-4 py-3">2023-09-30 14:00</td>
                             <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3"><button class="objection-button"  onclick="window.location.href='user_objection.html';">Make an Objection</button></td>
+                            <td class="border px-4 py-3">
+                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            
 
             <!-- Summary Section -->
             <div class="mt-8">

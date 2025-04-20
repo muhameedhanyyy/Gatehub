@@ -28,7 +28,22 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+<style>
+      .custom-btn {
+  background-color: #3498db; /* Replace with your website's primary color */
+  border: none;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem; /* Ensures the small size */
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
+}
 
+.custom-btn:hover {
+  background-color: #2980b9; /* Slightly darker shade for hover */
+}
+
+</style>
 </head>
 
 <body>
@@ -61,13 +76,9 @@
 
                   <!-- Inquiry Form -->
                   <form class="row g-3 needs-validation" novalidate id="ownerInquiryForm">
-                    <div class="col-6">
-                      <label for="ownerName" class="form-label">Owner Name</label>
-                      <input type="text" name="ownerName" class="form-control" id="ownerName" required>
-                      <div class="invalid-feedback">Please enter the owner's name.</div>
-                    </div>
+                  
 
-                    <div class="col-6">
+                    <div class="col-12">
                       <label for="ownerNationalID" class="form-label">National ID</label>
                       <input type="text" name="nationalID" class="form-control" id="ownerNationalID" required>
                       <div class="invalid-feedback">Please enter the owner's National ID.</div>
@@ -94,6 +105,7 @@
                         <th scope="col">Registered Vehicles</th>
                         <th scope="col">Total Fines</th>
                         <th scope="col">Account Status</th>
+                        <th scope="col">Update Data</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -105,6 +117,7 @@
                         <td>2</td>
                         <td>15,300 LE</td>
                         <td><span class="badge bg-success">Active</span></td>
+                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -119,6 +132,7 @@
                         <th scope="col">Registration Status</th>
                         <th scope="col">Last Gate Passed</th>
                         <th scope="col">Outstanding Fines</th>
+                        <th scope="col">Update Data</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -129,6 +143,7 @@
                         <td><span class="badge bg-success">Registered</span></td>
                         <td>Gate 5 (Downtown)</td>
                         <td>500 LE</td>
+                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
                       </tr>
                       <tr>
                         <th scope="row">2</th>
@@ -137,6 +152,7 @@
                         <td><span class="badge bg-warning">Pending Renewal</span></td>
                         <td>Gate 3 (Highway)</td>
                         <td>1,500 LE</td>
+                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
                       </tr>
                     </tbody>
                   </table>

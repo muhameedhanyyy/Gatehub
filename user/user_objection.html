@@ -343,13 +343,13 @@ button {
             <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
         </div>
         <div class="flex items-center space-x-8">
-            <nav class="flex space-x-6">
-                <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
-                <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
-                <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
-                <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
-                <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
-            </nav>
+          <nav class="flex space-x-6">
+            <a href="personal_information.html" class="text-gray-700 hover:text-blue-600">My Profile</a>
+            <a href="myvehicle.html" class="text-gray-700 hover:text-blue-600">My Vehicle</a>
+            <a href="recharge.html" class="text-gray-700 hover:text-blue-600">My Wallet</a>
+            <a href="pay.html" class="text-gray-700 hover:text-blue-600">Payments</a>
+            <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
+        </nav>
             <div class="flex items-center space-x-4">
                <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
                 <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
@@ -377,24 +377,13 @@ button {
 
     <!-- Objection Submission Form -->
     <section class="objection-form">
-      <h2>Submit Your Objection</h2>
       <form id="objection-form">
-        <label for="objection-reason">Objection Reason:</label>
-        <select id="objection-reason" required>
-          <option value="">Select a reason</option>
-          <option value="incorrect-plate">Incorrect license plate</option>
-          <option value="vehicle-not-present">Vehicle not present</option>
-          <option value="payment-not-updated">Paid but not updated</option>
-        </select>
+
 
         <label for="objection-explanation">Additional Explanation (Optional):</label>
         <textarea id="objection-explanation" rows="4"></textarea>
 
-        <label>Supporting Documents:</label>
-        <div class="file-upload">
-          <input type="file" id="supporting-docs" accept=".jpg, .png, .pdf" multiple>
-          <label for="supporting-docs">Click to upload or drag and drop files</label>
-        </div>
+      
 
         <!-- Confirmation Checkbox -->
         <div class="confirmation-checkbox">

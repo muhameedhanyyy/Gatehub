@@ -57,40 +57,52 @@
                     <p class="text-center small">Enter the details to add a new gate staff member</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" id="gatestaffForm" novalidate>
                     <div class="col-12">
-                      <label for="staffName" class="form-label">Full Name</label>
-                      <input type="text" name="name" class="form-control" id="staffName" required>
+                      <label for="fullName" class="form-label">Full Name</label>
+                      <input type="text" name="name" class="form-control" id="fullName" required>
                       <div class="invalid-feedback">Please enter the full name.</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="staffEmail" class="form-label">Email</label>
-                      <input type="email" name="email" class="form-control" id="staffEmail" required>
-                      <div class="invalid-feedback">Please enter a valid email address.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="staffPhone" class="form-label">Phone Number</label>
-                      <input type="text" name="phone" class="form-control" id="staffPhone" required>
-                      <div class="invalid-feedback">Please enter the phone number.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="assignedGate" class="form-label">Assigned Gate</label>
-                      <input type="text" name="gate" class="form-control" id="assignedGate" required>
-                      <div class="invalid-feedback">Please enter the assigned gate name or ID.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="staffUsername" class="form-label">National ID</label>
-                      <input type="text" name="username" class="form-control" id="staffUsername" required>
+                      <label for="natid" class="form-label">National ID</label>
+                      <input type="number" name="username" class="form-control" id="natid" required>
                       <div class="invalid-feedback">Please enter a username.</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="staffPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="staffPassword" required>
+                      <label for="bdate" class="form-label">Birth date</label>
+                      <input type="date" name="bdate" class="form-control" id="bdate" required>
+                      <div class="invalid-feedback">Please enter a valid birth date .</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="gender" class="form-label">Gender</label>
+                      <select class="form-control" id="gender" name="gender" required>
+                          <option value="" selected disabled>Select Gender</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a gender.</div>
+                  </div>
+
+                    <div class="col-12">
+                      <label for="staffPhone" class="form-label">Phone Number</label>
+                      <input type="number" name="phone" class="form-control" id="staffPhone" required>
+                      <div class="invalid-feedback">Please enter the phone number.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="gateId" class="form-label">Assigned Gate</label>
+                      <input type="number" name="gate" class="form-control" id="gateId" required>
+                      <div class="invalid-feedback">Please enter the assigned gate name or ID.</div>
+                    </div>
+
+                  
+
+                    <div class="col-12">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" name="password" class="form-control" id="password" required>
                       <div class="invalid-feedback">Please enter a password.</div>
                     </div>
 
@@ -129,6 +141,49 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 
+
+
+  <script>
+    document.getElementById('gatestaffForm').addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevent default form submission
+  
+      // Collect form data
+      const gateData = {
+        fullName: document.getElementById('fullName').value,
+        natId: document.getElementById('natid').value,
+        birthDate: document.getElementById('bdate').value,
+        gender: document.getElementById('gender').value,
+        phoneNumber: document.getElementById('staffPhone').value,
+        gateId: document.getElementById('gateId').value,
+        password: document.getElementById('password').value,
+      };
+      console.log(gateData);
+      try {
+        const response = await fetch('http://gatehub.runasp.net/api/GateStaff/register-gatestaff', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(gateData),
+        });
+  
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          console.error('Error details:', errorDetails);
+          throw new Error(`Failed to add gatestaff: ${response.status}`);
+        }
+  
+        const result = await response.json();
+        alert('gate staff  added successfully!');
+        console.log(result);
+        // Optionally clear the form
+        document.getElementById('gatestaffForm').reset();
+      } catch (error) {
+        console.error('Error adding gatestaff:', error.message);
+        // alert('Failed to add gate. Please try again.');
+      }
+    });
+  </script>
 </body>
 
 </html>

@@ -74,63 +74,25 @@
                   <table class="table table-bordered">
                     <thead>
                       <tr>
-                        <th scope="col">Complain ID</th>
-                        <th scope="col">User Name</th>
-                        <th scope="col">License Plate</th>
-                        <th scope="col">Date</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">description</th>
+                        <th scope="col">vehicleOwnerName</th>
+                        <th scope="col">plateNum</th>
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="complaintsTableBody">
                       <!-- Sample Complains -->
-                      <tr>
-                        <td>001</td>
-                        <td>Ahmed Osman</td>
-                        <td>ABC-1234</td>
-                        <td>2024-01-15</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                        <td>
-                          <button class="btn btn-sm custom-btn" onclick="window.location.href='complaindetails.html';">View Details</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>002</td>
-                        <td>Sarah Ahmed</td>
-                        <td>XYZ-5678</td>
-                        <td>2024-01-14</td>
-                        <td><span class="badge bg-success">Resolved</span></td>
-                        <td>
-                          <button class="btn btn-sm custom-btn" onclick="window.location.href='complaindetails.html';">View Details</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>003</td>
-                        <td>Khaled Hassan</td>
-                        <td>JKL-9101</td>
-                        <td>2024-01-13</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                        <td>
-                          <button class="btn btn-sm custom-btn" onclick="window.location.href='complaindetails.html';">View Details</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>004</td>
-                        <td>Layla Tarek</td>
-                        <td>MNO-1213</td>
-                        <td>2024-01-12</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                        <td>
-                          <button class="btn btn-sm custom-btn" onclick="window.location.href='complaindetails.html';">View Details</button>
-                        </td>
-                      </tr>
-                      <!-- Add more rows dynamically -->
+                    
                     </tbody>
                   </table>
                 </div>
               </div>
               <!-- End Complains Table -->
-
+              <div id="loading" class="text-center my-4">
+                Loading complaints...
+              </div>
             </div>
           </div>
         </div>
@@ -141,10 +103,75 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
+   <!-- Add this before main.js -->
+<script src="https://cdn.tiny.cloud/1/your-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="assets/js/main.js"></script>
 
+  <script>
+    // Function to load complaints from API
+    async function loadComplaints() {
+      // In your loadComplaints function
+const loading = document.getElementById('loading');
+loading.style.display = 'none'; // Hide after loading
+      try {
+        const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections');
+        const objections = await response.json();
+        console.log('API Response:', objections); // Add this before processing
+
+
+        const tbody = document.getElementById('complaintsTableBody');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        objections.forEach(objection => {
+          const row = document.createElement('tr');
+          
+          // Map API response to table columns
+          row.innerHTML = `
+      <td>
+            <span class="badge ${getStatusClass(objection.statue)}">
+              ${objection.statue || 'Unknown'}
+            </span>
+          </td>   
+          <td>${new Date(objection.date).toLocaleDateString()}</td>
+          <td>${objection.description }</td>
+          <td>${objection.vehicleOwnerName }</td>
+          <td>${objection.plateNum }</td>
+    
+    <td>
+      <button class="btn btn-sm custom-btn" 
+              onclick="window.location.href='complaindetails.html?id=${objection.id}'">
+        View Details
+      </button>
+    </td>
+  `;
+
+  tbody.appendChild(row);
+        });
+
+        // Initialize SimpleDatatables
+        new simpleDatatables.DataTable('.table');
+
+      } catch (error) {
+        console.error('Error loading complaints:', error);
+      }
+    }
+
+    // Helper function to determine status badge class
+    function getStatusClass(status) {
+  const statusValue = status?.toLowerCase()?.trim() || 'unknown';
+  
+  switch (statusValue) {
+    case 'pending': return 'bg-warning';
+    case 'resolved': return 'bg-success';
+    case 'rejected': return 'bg-danger';
+    default: return 'bg-secondary';
+  }
+}
+    // Load complaints when page loads
+    window.onload = loadComplaints;
+  </script>
 </body>
 
 </html>

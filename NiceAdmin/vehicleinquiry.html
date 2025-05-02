@@ -4,181 +4,133 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
   <title>Vehicle Inquiry</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
   <link href="assets/img/logo.jpg" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
 </head>
 
 <body>
-
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
-
-              <!-- Logo section remains the same -->
-              <div class="d-flex justify-content-center py-4">
-                <a href="index.html" class="logo d-flex align-items-center w-auto">
-                    <img src="assets/img/logo.jpg" alt="" class="me-2">
-                    <span class="d-none d-lg-block fw-bold">GateHub</span>
-                </a>
-              </div><!-- End Logo -->
-
+            <div class="col-lg-8 col-md-10">
               <div class="card mb-3">
                 <div class="card-body">
-                  <!-- Form section -->
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Vehicle Inquiry</h5>
+                    <h5 class="card-title text-center fs-4">Vehicle Inquiry</h5>
                     <p class="text-center small">Enter vehicle details to retrieve its information</p>
                   </div>
 
-                  <!-- Error message container -->
                   <div id="vehicleNotFoundError" class="alert alert-danger text-center" style="display: none;">
                     Vehicle not found. Please check the entered details and try again.
                   </div>
 
-                  <!-- Inquiry Form -->
-                  <form class="row g-3 needs-validation" novalidate id="inquiryForm">
-                    <!-- Form fields remain the same -->
-                    <div class="col-12">
+                  <form class="needs-validation" novalidate id="inquiryForm">
+                    <div class="mb-3">
                       <label for="licensePlate" class="form-label">License Plate</label>
-                      <input type="text" name="licensePlate" class="form-control" id="licensePlate" required>
+                      <input type="text" id="licensePlate" class="form-control" required>
                       <div class="invalid-feedback">Please enter the vehicle's license plate.</div>
                     </div>
 
-                  
-
-                    <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Search</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
                   </form>
-                  <!-- End Inquiry Form -->
                 </div>
               </div>
 
-              <!-- Inquiry Results Table -->
-              <div class="card mb-3">
+              <div class="card mb-3" id="resultsCard" style="display: none;">
                 <div class="card-body">
-                  <h5 class="card-title">Vehicle Details</h5>
-                  <table class="table table-bordered" id="vehicleTable">
+                  <table class="table" id="vehicleTable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">License Plate</th>
-                        <th scope="col">Owner Name</th>
-                        <th scope="col">Vehicle Type</th>
-                        <th scope="col">Last Gate Passed</th>
-                        <th scope="col">Date of Passing</th>
-                        <th scope="col">Total fees</th>
-                        <th scope="col">Status</th>
+                        <th>#</th>
+                        <th>License Plate</th>
+                        <th>Owner Name</th>
+                        <th>Type</th>
+                        <th>Last Gate</th>
+                        <th>Last Passing Date</th>
+                        <th>Total Fees</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <!-- Sample Data -->
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>ABC-1234</td>
-                        <td>احمد عثمان</td>
-                        <td>Truck</td>
-                        <td>North Gate</td>
-                        <td>2024-12-19 14:23</td>
-                        <td>EGP 2300</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>XYZ-5678</td>
-                        <td>سارة احمد</td>
-                        <td>Car</td>
-                        <td>East Gate</td>
-                        <td>2024-12-18 11:45</td>
-                        <td>EGP 1200</td>
-                        <td><span class="badge bg-danger">Flagged</span></td>
-                      </tr>
-                      <!-- Add more rows dynamically -->
-                    </tbody>
+                    <tbody></tbody>
                   </table>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </section>
     </div>
-</main>
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  </main>
 
-<!-- Add this JavaScript at the end of your file -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('inquiryForm');
-    const errorDiv = document.getElementById('vehicleNotFoundError');
+  <script>
+    document.getElementById('inquiryForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const form = event.target;
+      const errorDiv = document.getElementById('vehicleNotFoundError');
+      const resultsCard = document.getElementById('resultsCard');
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        if (form.checkValidity()) {
-            const licensePlate = document.getElementById('licensePlate').value.trim().toUpperCase();
-            const vehicleType = document.getElementById('vehicleType').value;
-            let found = false;
-
-            // Check against table data
-            document.querySelectorAll('#vehicleTable tbody tr').forEach(row => {
-                const rowLicense = row.cells[1].textContent.trim().toUpperCase();
-                const rowType = row.cells[3].textContent.trim();
-                
-                if (rowLicense === licensePlate && rowType === vehicleType) {
-                    found = true;
-                    // Highlight matching row
-                    row.classList.add('table-success');
-                    errorDiv.style.display = 'none';
-                } else {
-                    row.classList.remove('table-success');
-                }
-            });
-
-            if (!found) {
-                errorDiv.style.display = 'block';
+      if (form.checkValidity()) {
+        try {
+          const licensePlate = encodeURIComponent("123ن ف ر")
+          console.log(licensePlate)
+          const encodedPlate = "123ن ف ر";
+          console.log(encodedPlate)
+          // const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${licensePlate}`;
+          // const response = await fetch(apiUrl);
+          const response = await fetch('http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
             }
+          
+        });
+          
+
+          if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+          const vehicleData = await response.json();
+          if (!vehicleData.length) throw new Error('No vehicles found.');
+
+          errorDiv.style.display = 'none';
+          resultsCard.style.display = 'block';
+
+          const tbody = document.querySelector('#vehicleTable tbody');
+          tbody.innerHTML = '';
+
+          vehicleData.forEach((vehicle, index) => {
+            const row = `
+              <tr>
+                <th scope="row">${index + 1}</th>
+                <td>${vehicle.plateNumber || 'N/A'}</td>
+                <td>${vehicle.ownerName || 'N/A'}</td>
+                <td>${vehicle.type || 'N/A'}</td>
+                <td>${vehicle.lastGate || 'N/A'}</td>
+                <td>${vehicle.lastPassingDate ? new Date(vehicle.lastPassingDate).toLocaleString() : 'N/A'}</td>
+                <td>EGP ${vehicle.totalFees || 0}</td>
+                <td>
+                  <span class="badge ${vehicle.status === 'Active' ? 'bg-success' : 'bg-danger'}">
+                    ${vehicle.status || 'Unknown'}
+                  </span>
+                </td>
+              </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+          });
+        } catch (error) {
+          console.error(error);
+          errorDiv.style.display = 'block';
+          resultsCard.style.display = 'none';
         }
-        
-        form.classList.add('was-validated');
-    }, false);
-});
-</script>
+      }
 
+      form.classList.add('was-validated');
+    });
+  </script>
 
-  <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/js/main.js"></script>
-
 </body>
 
 </html>

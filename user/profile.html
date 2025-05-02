@@ -32,6 +32,76 @@
         border-color: #7C9AFC;
         box-shadow: 0 0 0 3px rgba(124, 154, 252, 0.1);
       }
+      #countdown {
+        display: none;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+#countdown button {
+    background-color: #e9ecef;
+    color: #495057;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+#countdown button:hover {
+    background-color: #dee2e6;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Add a progress bar animation */
+.countdown-progress {
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    margin-top: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.countdown-progress::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: #4dabf7;
+    animation: progress 5s linear forwards;
+}
+
+
+
+/* Add some text styling */
+#countdown {
+    font-size: 1.1rem;
+    color: #343a40;
+}
+
+#countdown strong {
+    color: #4dabf7;
+    font-weight: 600;
+}
+
+/* For cancelled state */
+.redirect-cancelled {
+    color: #dc3545;
+    background: #fff5f5;
+    border: 1px solid #ffd6d6;
+}
     </style>
   </head>
   <body class="bg-gray-50">
@@ -41,40 +111,215 @@
         <img alt="GateHub logo" class="h-10 w-10 rounded-full" src="assets/logo.jpg"/>
         <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
       </div>
-      <div class="flex items-center space-x-4">
-        <button class="btn-primary" onclick="window.location.href='index.html';">
-          <i class="fas fa-info-circle mr-2"></i>
-          About Us
-        </button>
-        <i class="fas fa-bell text-xl text-gray-600 cursor-pointer hover:text-gray-800"></i>
-        <img alt="User profile picture" class="h-10 w-10 rounded-full" src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg"/>
-      </div>
+     
     </header>
 
     <!-- Main Content -->
     <main class="flex justify-center mt-10 px-4">
       <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-bold mb-6 text-gray-800">Profile</h1>
-        <h2 class="text-lg font-semibold mb-2 text-gray-700">Password</h2>
-        <p class="text-gray-500 mb-6">You can change your password every 30 Days.</p>
-        <form>
-          <div class="mb-6">
-            <label class="block text-sm font-medium mb-2 text-gray-700" for="current-password">Current Password</label>
-            <input class="form-input w-full" id="current-password" placeholder="••••••••••••" type="password"/>
-          </div>
-          <div class="mb-6">
-            <label class="block text-sm font-medium mb-2 text-gray-700" for="new-password">New Password</label>
-            <input class="form-input w-full" id="new-password" placeholder="••••••••••••" type="password"/>
-          </div>
-          <div class="mb-6">
-            <label class="block text-sm font-medium mb-2 text-gray-700" for="confirm-password">Confirm New Password</label>
-            <input class="form-input w-full" id="confirm-password" placeholder="••••••••••••" type="password"/>
-          </div>
-          <button class="btn-primary w-full" type="submit">
-            Save Changes
-          </button>
-        </form>
+          <h1 class="text-3xl font-bold mb-6 text-gray-800">Profile</h1>
+          <h2 class="text-lg font-semibold mb-2 text-gray-700">Password</h2>
+          <p class="text-gray-500 mb-6">You can change your password every 30 Days.</p>
+          <form id="resetPasswordForm">
+              <!-- Email Field -->
+              <div class="mb-6">
+                  <label class="block text-sm font-medium mb-2 text-gray-700" for="email">Email</label>
+                  <input class="form-input w-full" id="email" placeholder="example@gmail.com" type="email" required>
+                  <div id="email-error" class="text-red-500 text-xs mt-1 hidden"></div>
+              </div>
+  
+              <!-- OTP Field -->
+              <div class="mb-6">
+                  <label class="block text-sm font-medium mb-2 text-gray-700" for="otp">OTP</label>
+                  <input class="form-input w-full" id="otp" placeholder="Enter OTP" type="text" required>
+                  <div id="otp-error" class="text-red-500 text-xs mt-1 hidden"></div>
+              </div>
+  
+              <!-- New Password Field -->
+              <div class="mb-6">
+                  <label class="block text-sm font-medium mb-2 text-gray-700" for="new-password">New Password</label>
+                  <input class="form-input w-full" id="new-password" placeholder="••••••••••••" type="password" required>
+                  <div id="new-password-error" class="text-red-500 text-xs mt-1 hidden"></div>
+              </div>
+  
+              <!-- Confirm Password Field -->
+              <div class="mb-6">
+                  <label class="block text-sm font-medium mb-2 text-gray-700" for="confirm-password">Confirm New Password</label>
+                  <input class="form-input w-full" id="confirm-password" placeholder="••••••••••••" type="password" required>
+                  <div id="confirm-password-error" class="text-red-500 text-xs mt-1 hidden"></div>
+              </div>
+  
+              <!-- Success/Error Messages -->
+              <div id="api-error" class="text-red-500 text-xs mb-4 hidden"></div>
+              <div id="success-message" class="text-green-500 text-xs mb-4 hidden"></div>
+  
+              <button class="btn-primary w-full" type="submit">
+                  Save Changes
+              </button>
+          </form>
+          <p id="countdown">
+            Redirecting in <strong>5</strong> seconds... 
+            <button onclick="cancelRedirect()">Cancel</button>
+        </p>    
       </div>
-    </main>
+  </main>
+
+  <script>
+     let redirectTimer;
+  let countdownTimer;
+  let seconds = 5;
+  
+  function startRedirect() {
+      const countdownElement = document.getElementById('countdown');
+      
+      redirectTimer = setTimeout(function() {
+          window.location.href = 'login.html';
+      }, 5000);
+  
+      countdownTimer = setInterval(function() {
+          seconds--;
+          countdownElement.innerHTML = `Redirecting in ${seconds} seconds... <button onclick="cancelRedirect()">Cancel</button>`;
+          
+          if (seconds <= 0) {
+              clearInterval(countdownTimer);
+          }
+      }, 1000);
+  }
+  
+  function cancelRedirect() {
+    clearTimeout(redirectTimer);
+    clearInterval(countdownTimer);
+    const countdownElement = document.getElementById('countdown');
+    countdownElement.innerHTML = "Redirect cancelled";
+    countdownElement.classList.add('redirect-cancelled');
+    // Optional: Hide the countdown after some time
+    setTimeout(() => {
+        countdownElement.style.display = 'none';
+    }, 2000);
+}
+  
+  // Start the redirect when page loads
+    document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessages();
+    
+        // Get form values
+        const email = document.getElementById('email').value;
+        const otp = document.getElementById('otp').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+    
+        // Validation
+        let isValid = true;
+    
+        if (!validateEmail(email)) {
+            showError('email-error', 'Please enter a valid email address');
+            isValid = false;
+        }
+    
+        if (!otp) {
+            showError('otp-error', 'OTP is required');
+            isValid = false;
+        }
+    
+        if (newPassword.length < 8) {
+            showError('new-password-error', 'Password must be at least 8 characters');
+            isValid = false;
+        }
+    
+        if (newPassword !== confirmPassword) {
+            showError('confirm-password-error', 'Passwords do not match');
+            isValid = false;
+        }
+    
+        if (!isValid) return;
+    
+        try {
+            const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept': '*/*'
+                },
+                body: JSON.stringify({
+                    email,
+                    otp,
+                    newPassword,
+                    confirmPassword
+                })
+            });
+            console.log('Sending payload:', {
+    email,
+    otp,
+    newPassword,
+    confirmPassword
+});
+            const data = await response.json();
+    
+            if (response.ok) {
+                showSuccess('Password reset successfully!');
+                // Optional: Redirect after success
+              // setTimeout(() => window.location.href = '/login', 2000);
+              showSuccess('Password reset successfully!');
+              document.getElementById('countdown').style.display = 'block';
+              startRedirect();
+            } else {
+                handleApiError(data);
+            }
+        } catch (error) {
+            // showApiError('An error occurred. Please try again.');
+        }
+    });
+    
+    // Helper Functions
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    function clearMessages() {
+        document.querySelectorAll('[id$="-error"]').forEach(el => {
+            el.classList.add('hidden');
+            el.textContent = '';
+        });
+        document.getElementById('api-error').classList.add('hidden');
+        document.getElementById('success-message').classList.add('hidden');
+    }
+    
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+    
+    function showSuccess(message) {
+        const element = document.getElementById('success-message');
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+    
+    function showApiError(message) {
+        const element = document.getElementById('api-error');
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+    
+    function handleApiError(error) {
+        if (error.errors) {
+            Object.entries(error.errors).forEach(([field, messages]) => {
+                const errorField = `${field.toLowerCase()}-error`;
+                showError(errorField, messages.join(', '));
+            });
+        } else {
+            showApiError(error.title || 'Password reset failed');
+        }
+    }
+    </script>
+
+
+    
+<script>
+ 
+  </script>
   </body>
 </html>

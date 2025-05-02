@@ -7,7 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Added missing styles */
         .profile-card {
             background: white;
             border-radius: 12px;
@@ -25,44 +24,6 @@
             box-shadow: 0 8px 15px rgba(91, 127, 251, 0.1);
         }
     
-        .stat-badge {
-            background: #e8f4ff;
-            color: #5B7FFB;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-    
-        .btn-gradient {
-            background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-        }
-    
-        .btn-gradient:hover {
-            background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    
-        .objection-button {
-            background-color: #7C9AFC;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-    
-        .objection-button:hover {
-            background-color: #5B7FFB;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    
-        /* Existing transaction styles */
         .transaction-card {
             background: white;
             border-radius: 12px;
@@ -91,11 +52,18 @@
     </style>
 </head>
 <body class="bg-gray-100">
+    <!-- Loading Spinner -->
+    <div id="loading" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
     <!-- Navbar -->
     <header class="bg-white shadow-sm p-4">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <a href="index.html">
+                    <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full">
+                </a>
                 <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
             </div>
             <div class="flex items-center space-x-8">
@@ -107,28 +75,35 @@
                     <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
                 </nav>
                 <div class="flex items-center space-x-4">
-                   <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
-                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
+                    <a href="settings.html">
+                        <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
+
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Personal Information Section -->
         <div class="profile-card p-6 mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Johnathan Doe</h1>
+                    <h1 class="text-2xl font-bold text-gray-800" id="userName">Loading...</h1>
                     <div class="flex items-center mt-2 space-x-4">
-                        <span class="text-gray-600">
-                            <i class="fas fa-id-card mr-2"></i>National ID: 123-456-789
+                        <span class="text-gray-600" id="phoneNumber">
+                            <i class="fa-solid fa-phone"></i> Phone: Loading...
                         </span>
-                        <span class="stat-badge">
-                            <i class="fas fa-car mr-2"></i>2 Registered Vehicles
+                        <span class="text-gray-600" id="address">
+                            <i class="fa-solid fa-location-dot"></i> Address: Loading...
+                        </span>
+                        <span class="text-gray-600" id="license">
+                            <i class="fa-solid fa-id-card"></i> License: Loading...
+                        </span>
+                        <span class="text-gray-600" id="balance">
+                            <i class="fa-solid fa-money-check-dollar"></i> Balance: Loading...
                         </span>
                     </div>
                 </div>
-              
             </div>
         </div>
 
@@ -137,129 +112,139 @@
             <h2 class="text-xl font-semibold mb-4 text-gray-800">
                 <i class="fas fa-car-side mr-2 text-blue-500"></i>Registered Vehicles
             </h2>
-            
-            <div class="grid gap-4">
-                <!-- Vehicle 1 -->
-                <div class="vehicle-card bg-white p-5 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Toyota Camry</h3>
-                            <div class="text-sm text-gray-600 mt-1">
-                                <span class="mr-4">2018 Model</span>
-                                <span class="mr-4">License: ABC-1234</span>
-                                <span class="text-green-600">Active</span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <!-- Vehicle 2 -->
-                <div class="vehicle-card bg-white p-5 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-800">Ford Fusion</h3>
-                            <div class="text-sm text-gray-600 mt-1">
-                                <span class="mr-4">2019 Model</span>
-                                <span class="mr-4">License: XYZ-5678</span>
-                                <span class="text-green-600">Active</span>
-                            </div>
-                        </div>
-                       
-                    </div>
-                </div>
+            <div class="grid gap-4" id="vehiclesContainer">
+                <!-- Vehicles will be dynamically inserted here -->
             </div>
         </div>
 
-
-    <div class="container mx-auto px-4 py-8">
-        <!-- Enhanced Transaction History Section -->
+        <!-- Transaction History Section -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Transaction History</h2>
+            <div class="space-y-4" id="transactionsContainer">
+                <!-- Transactions will be dynamically inserted here -->
+            </div>
             
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <p class="text-sm text-blue-600">Total Recharges</p>
-                    <p class="text-2xl font-bold text-blue-700">$100</p>
-                </div>
-                <div class="bg-green-50 p-4 rounded-lg">
-                    <p class="text-sm text-green-600">Total Payments</p>
-                    <p class="text-2xl font-bold text-green-700">$20</p>
-                </div>
-                <div class="bg-red-50 p-4 rounded-lg">
-                    <p class="text-sm text-red-600">Total Fines</p>
-                    <p class="text-2xl font-bold text-red-700">$10</p>
-                </div>
-            </div>
-
-            <!-- Transaction List -->
-            <div class="space-y-4">
-                <!-- Transaction Item -->
-                <div class="transaction-card">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="transaction-type recharge">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">Wallet Recharge</h3>
-                                <p class="text-sm text-gray-500">15 May 2023 • Credit Card</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold text-blue-600">+ $100</p>
-                            <p class="text-sm text-gray-500">Completed</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transaction Item -->
-                <div class="transaction-card">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="transaction-type payment">
-                                <i class="fas fa-receipt"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">Toll Payment</h3>
-                                <p class="text-sm text-gray-500">14 May 2023 • Automatic Deduction</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold text-green-600">- $20</p>
-                            <p class="text-sm text-gray-500">Completed</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transaction Item -->
-                <div class="transaction-card">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="transaction-type fine">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">Late Fine</h3>
-                                <p class="text-sm text-gray-500">13 May 2023 • Highway TX-45</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold text-red-600">- $10</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Usage -->
+            <!-- Total Balance -->
             <div class="mt-8 pt-6 border-t border-gray-200">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-700">Total Usage</h3>
-                    <p class="text-xl font-bold text-gray-800">$70</p>
+                    <h3 class="font-semibold text-gray-700">Total Balance</h3>
+                    <p class="text-xl font-bold text-gray-800" id="totalBalance">Loading...</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Add this at the very beginning of your script
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
+console.log('Token:', localStorage.getItem('token')); // Should show your JWT token
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+                headers: {
+                     "Content-Type": "application/json",
+                "Authorization": Bearer `${token}`
+                
+                    // Add authorization header if required:
+                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                   
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch profile');
+            
+            const data = await response.json();
+
+            // Update Personal Information
+            document.getElementById('userName').textContent = data.appUser?.userName || 'Mohamed Hany';
+            document.getElementById('phoneNumber').innerHTML = 
+                `<i class="fa-solid fa-phone"></i> Phone: ${data.phoneNumber}`;
+            document.getElementById('address').innerHTML = 
+                `<i class="fa-solid fa-location-dot"></i> Address: ${data.address}`;
+            document.getElementById('license').innerHTML = 
+                `<i class="fa-solid fa-id-card"></i> License: ${data.license}`;
+            document.getElementById('balance').innerHTML = 
+                `<i class="fa-solid fa-money-check-dollar"></i> Balance: ${data.balance.toFixed(2)} EGP`;
+
+            // Update Vehicles
+            const vehiclesContainer = document.getElementById('vehiclesContainer');
+            vehiclesContainer.innerHTML = data.vehicles.map(vehicle => `
+                <div class="vehicle-card bg-white p-5 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">${vehicle.plateNumber}</h3>
+                            <div class="text-sm text-gray-600 mt-1">
+                                <span class="mr-4">License Start: ${new Date(vehicle.licenseStart).toLocaleDateString()}</span>
+                                <span class="mr-4">License End: ${new Date(vehicle.licenseEnd).toLocaleDateString()}</span>
+                                <span class="mr-4">Model: ${vehicle.modelCompany} - ${vehicle.modelDescription}</span>
+                                <span class="mr-4">Color: ${vehicle.color}</span>
+                                <span class="mr-4">Type: ${vehicle.type}</span>
+                                <span class="text-green-600">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update Transactions
+            const transactionsContainer = document.getElementById('transactionsContainer');
+            transactionsContainer.innerHTML = data.transactions.map(transaction => `
+                <div class="transaction-card">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="transaction-type ${getTransactionTypeClass(transaction.paymentType)}">
+                                ${getTransactionIcon(transaction.paymentType)}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">${transaction.paymentType}</h3>
+                                <p class="text-sm text-gray-500">${new Date(transaction.transactionDate).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}">
+                                ${transaction.amount > 0 ? '+' : '-'} ${Math.abs(transaction.amount).toFixed(2)} EGP
+                            </p>
+                            <p class="text-sm text-gray-500">${transaction.status}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update Total Balance
+            document.getElementById('totalBalance').textContent = 
+                `${data.balance.toFixed(2)} EGP`;
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load profile data. Please try again later.');
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    });
+
+    function getTransactionTypeClass(paymentType) {
+        const typeMap = {
+            'Balance Recharge': 'recharge',
+            'Vehicle Entry Payment': 'payment',
+            'Fee and Fine': 'fine',
+            'Balance Payment': 'payment'
+        };
+        return typeMap[paymentType] || 'payment';
+    }
+
+    function getTransactionIcon(paymentType) {
+        const iconMap = {
+            'Balance Recharge': '<i class="fas fa-wallet"></i>',
+            'Vehicle Entry Payment': '<i class="fas fa-toll"></i>',
+            'Fee and Fine': '<i class="fas fa-exclamation-triangle"></i>',
+            'Balance Payment': '<i class="fas fa-money-bill-transfer"></i>'
+        };
+        return iconMap[paymentType] || '<i class="fas fa-receipt"></i>';
+    }
+    </script>
 </body>
 </html>

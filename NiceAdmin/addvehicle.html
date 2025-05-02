@@ -247,6 +247,7 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
   <script>
     document.getElementById('addvehicleForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent default form submission
@@ -254,40 +255,39 @@
       // Collect form data
       const gateData = {
         plateNumber: document.getElementById('plateNumber').value,
-        licenseStart: document.getElementById('licenseStart').value,
-        licenseEnd: document.getElementById('licenseEnd').value,
-        modelDescription: document.getElementById('modelDescription').value,
-        modelCompany: document.getElementById('modelCompany').value,
-        color: document.getElementById('color').value,
-        type: document.getElementById('type').value,
-        rfid: document.getElementById('rfid').value,
+              licenseStart: document.getElementById('licenseStart').value,
+              licenseEnd: document.getElementById('licenseEnd').value,
+              modelDescription: document.getElementById('modelDescription').value,
+              modelCompany: document.getElementById('modelCompany').value,
+              color: document.getElementById('color').value,
+              type: document.getElementById('type').value,
+              rfid: document.getElementById('rfid').value,
+              vehicleOwnerId:1
       };
   
-      console.log(gateData);
       try {
         const response = await fetch('http://gatehub.runasp.net/api/Admin/Add-vehicle', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(gateData),
-    mode: 'no-cors',
-});
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(gateData),
+        });
   
         if (!response.ok) {
           const errorDetails = await response.json();
           console.error('Error details:', errorDetails);
-          throw new Error(`Failed to add gate: ${response.status}`);
+          throw new Error(`Failed to add vehicle: ${response.status}`);
         }
   
         const result = await response.json();
-        alert('vehicle added successfully!');
+        alert('Vehicle added successfully!');
         console.log(result);
         // Optionally clear the form
         document.getElementById('addvehicleForm').reset();
       } catch (error) {
-        console.error('Error adding gate:', error.message);
-        alert('Failed to add vehicle. Please try again.');
+        console.error('Error adding vehicle:', error.message);
+        // alert('Failed to add gate. Please try again.');
       }
     });
   </script>

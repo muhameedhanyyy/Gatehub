@@ -363,75 +363,26 @@
 
 
 
-          <!-- Website Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
+<!-- Website Traffic -->
+<div class="card">
+  <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+          </li>
+          <li><a class="dropdown-item" href="#">Today</a></li>
+          <li><a class="dropdown-item" href="#">This Month</a></li>
+          <li><a class="dropdown-item" href="#">This Year</a></li>
+      </ul>
+  </div>
 
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
+  <div class="card-body pb-0">
+      <h5 class="card-title">Top Gates with Highest Traffic Flow<span>| Today</span></h5>
+      <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
 
-            <div class="card-body pb-0">
-              <h5 class="card-title">Top Gates with Highest Traffic Flow<span>| Today</span></h5>
-
-              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-                <script>
-                  
-                  document.addEventListener("DOMContentLoaded", () => {
-                    echarts.init(document.querySelector("#trafficChart")).setOption({
-                      tooltip: {
-                        trigger: 'item',
-                        formatter: '{a} <br/>{b}: {c} ({d}%)'
-                      },
-                      legend: {
-                        top: '5%',
-                        left: 'center'
-                      },
-                      series: [{
-                        name: 'Vehicle Distribution by Region',
-                        type: 'pie',
-                        radius: ['40%', '70%'],
-                        avoidLabelOverlap: false,
-                        label: {
-                          show: false,
-                          position: 'center'
-                        },
-                        emphasis: {
-                          label: {
-                            show: true,
-                            fontSize: '18',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        labelLine: {
-                          show: false
-                        },
-                        data: [
-  { value: 5000, name: 'Gate 101' },
-  { value: 4800, name: 'Gate 205' },
-  { value: 4600, name: 'Gate 310' },
-  { value: 4500, name: 'Gate 412' },
-  { value: 4300, name: 'Gate 518' },
-]
-
-                      }]
-                    });
-                  });
-                </script>
-                
-                
-
-
-            </div>
-          </div><!-- End Website Traffic -->
+  </div>
+</div><!-- End Website Traffic -->
 
 
 
@@ -791,6 +742,67 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   </script>
   
+
+
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            // Fetch data from API
+            const response = await fetch('http://gatehub.runasp.net/api/Admin/TopGatesToday', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch gate data');
+            
+            const gatesData = await response.json();
+
+            // Transform API data to ECharts format
+            const chartData = gatesData.map(gate => ({
+                value: gate.vehicleCount,
+                name: gate.gateName
+            }));
+
+            // Initialize chart with dynamic data
+            echarts.init(document.querySelector("#trafficChart")).setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Vehicle Distribution by Gate',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: chartData
+                }]
+            });
+        } catch (error) {
+            // console.error('Error loading gate data:', error);
+            // You can add error handling UI here
+        }
+    });
+</script>
   
 
 

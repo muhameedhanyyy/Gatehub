@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,33 +11,33 @@
         .profile-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
-    
+
         .vehicle-card {
             transition: transform 0.2s, box-shadow 0.2s;
             border-left: 4px solid #5B7FFB;
         }
-    
+
         .vehicle-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 15px rgba(91, 127, 251, 0.1);
         }
-    
+
         .transaction-card {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
-        
+
         .transaction-card:hover {
             transform: translateY(-3px);
         }
-    
+
         .transaction-type {
             width: 40px;
             height: 40px;
@@ -45,12 +46,24 @@
             align-items: center;
             justify-content: center;
         }
-    
-        .recharge { background: #e3f2fd; color: #2196f3; }
-        .payment { background: #e8f5e9; color: #4caf50; }
-        .fine { background: #ffebee; color: #f44336; }
+
+        .recharge {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .payment {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .fine {
+            background: #ffebee;
+            color: #f44336;
+        }
     </style>
 </head>
+
 <body class="bg-gray-100">
     <!-- Loading Spinner -->
     <div id="loading" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
@@ -123,7 +136,7 @@
             <div class="space-y-4" id="transactionsContainer">
                 <!-- Transactions will be dynamically inserted here -->
             </div>
-            
+
             <!-- Total Balance -->
             <div class="mt-8 pt-6 border-t border-gray-200">
                 <div class="flex justify-between items-center">
@@ -136,43 +149,68 @@
 
     <script>
         // Add this at the very beginning of your script
-if (!localStorage.getItem('token')) {
-    window.location.href = 'login.html';
-}
 
-console.log('Token:', localStorage.getItem('token')); // Should show your JWT token
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
-                headers: {
-                     "Content-Type": "application/json",
-                "Authorization": Bearer `${token}`
-                
-                    // Add authorization header if required:
-                    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
-                   
-                }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch profile');
-            
-            const data = await response.json();
 
-            // Update Personal Information
-            document.getElementById('userName').textContent = data.appUser?.userName || 'Mohamed Hany';
-            document.getElementById('phoneNumber').innerHTML = 
-                `<i class="fa-solid fa-phone"></i> Phone: ${data.phoneNumber}`;
-            document.getElementById('address').innerHTML = 
-                `<i class="fa-solid fa-location-dot"></i> Address: ${data.address}`;
-            document.getElementById('license').innerHTML = 
-                `<i class="fa-solid fa-id-card"></i> License: ${data.license}`;
-            document.getElementById('balance').innerHTML = 
-                `<i class="fa-solid fa-money-check-dollar"></i> Balance: ${data.balance.toFixed(2)} EGP`;
+        console.log('Token:', localStorage.getItem('token')); // Should show your JWT token
+        document.addEventListener('DOMContentLoaded', async () => {
+            /// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
 
-            // Update Vehicles
-            const vehiclesContainer = document.getElementById('vehiclesContainer');
-            vehiclesContainer.innerHTML = data.vehicles.map(vehicle => `
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+            const token = tokenObj?.result;
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
+
+            try {
+                const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch profile');
+
+                const data = await response.json();
+
+                // Update Personal Information
+                document.getElementById('userName').textContent = data.appUser?.userName || 'Mohamed Hany';
+                document.getElementById('phoneNumber').innerHTML =
+                    `<i class="fa-solid fa-phone"></i> Phone: ${data.phoneNumber}`;
+                document.getElementById('address').innerHTML =
+                    `<i class="fa-solid fa-location-dot"></i> Address: ${data.address}`;
+                document.getElementById('license').innerHTML =
+                    `<i class="fa-solid fa-id-card"></i> License: ${data.license}`;
+                document.getElementById('balance').innerHTML =
+                    `<i class="fa-solid fa-money-check-dollar"></i> Balance: ${data.balance.toFixed(2)} EGP`;
+
+                // Update Vehicles
+                const vehiclesContainer = document.getElementById('vehiclesContainer');
+                vehiclesContainer.innerHTML = data.vehicles.map(vehicle => `
                 <div class="vehicle-card bg-white p-5 rounded-lg">
                     <div class="flex items-center justify-between">
                         <div>
@@ -190,9 +228,9 @@ console.log('Token:', localStorage.getItem('token')); // Should show your JWT to
                 </div>
             `).join('');
 
-            // Update Transactions
-            const transactionsContainer = document.getElementById('transactionsContainer');
-            transactionsContainer.innerHTML = data.transactions.map(transaction => `
+                // Update Transactions
+                const transactionsContainer = document.getElementById('transactionsContainer');
+                transactionsContainer.innerHTML = data.transactions.map(transaction => `
                 <div class="transaction-card">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
@@ -214,37 +252,38 @@ console.log('Token:', localStorage.getItem('token')); // Should show your JWT to
                 </div>
             `).join('');
 
-            // Update Total Balance
-            document.getElementById('totalBalance').textContent = 
-                `${data.balance.toFixed(2)} EGP`;
+                // Update Total Balance
+                document.getElementById('totalBalance').textContent =
+                    `${data.balance.toFixed(2)} EGP`;
 
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to load profile data. Please try again later.');
-        } finally {
-            document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load profile data. Please try again later.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function getTransactionTypeClass(paymentType) {
+            const typeMap = {
+                'Balance Recharge': 'recharge',
+                'Vehicle Entry Payment': 'payment',
+                'Fee and Fine': 'fine',
+                'Balance Payment': 'payment'
+            };
+            return typeMap[paymentType] || 'payment';
         }
-    });
 
-    function getTransactionTypeClass(paymentType) {
-        const typeMap = {
-            'Balance Recharge': 'recharge',
-            'Vehicle Entry Payment': 'payment',
-            'Fee and Fine': 'fine',
-            'Balance Payment': 'payment'
-        };
-        return typeMap[paymentType] || 'payment';
-    }
-
-    function getTransactionIcon(paymentType) {
-        const iconMap = {
-            'Balance Recharge': '<i class="fas fa-wallet"></i>',
-            'Vehicle Entry Payment': '<i class="fas fa-toll"></i>',
-            'Fee and Fine': '<i class="fas fa-exclamation-triangle"></i>',
-            'Balance Payment': '<i class="fas fa-money-bill-transfer"></i>'
-        };
-        return iconMap[paymentType] || '<i class="fas fa-receipt"></i>';
-    }
+        function getTransactionIcon(paymentType) {
+            const iconMap = {
+                'Balance Recharge': '<i class="fas fa-wallet"></i>',
+                'Vehicle Entry Payment': '<i class="fas fa-toll"></i>',
+                'Fee and Fine': '<i class="fas fa-exclamation-triangle"></i>',
+                'Balance Payment': '<i class="fas fa-money-bill-transfer"></i>'
+            };
+            return iconMap[paymentType] || '<i class="fas fa-receipt"></i>';
+        }
     </script>
 </body>
+
 </html>

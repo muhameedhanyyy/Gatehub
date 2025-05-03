@@ -8,19 +8,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
         .selected {
-            background-color: #f0f8ff; /* Light blue background for selected rows */
+            background-color: #f0f8ff;
         }
         .btn-gradient {
-            background: linear-gradient(135deg, #7C9AFC, #5B7FFB); /* Gradient for buttons */
+            background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
             color: white;
             transition: all 0.3s ease;
         }
         .btn-gradient:hover {
-            background: linear-gradient(135deg, #5B7FFB, #7C9AFC); /* Reverse gradient on hover */
+            background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        /* Custom checkbox styling */
         .custom-checkbox {
             appearance: none;
             width: 20px;
@@ -44,7 +43,6 @@
             color: white;
             font-size: 12px;
         }
-        /* Prettier objection button */
         .objection-button {
             background-color: #7C9AFC;
             color: white;
@@ -57,7 +55,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
     </style>
 </head>
 <body class="bg-gray-100">
@@ -65,7 +62,7 @@
     <header class="bg-white shadow-sm p-4">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+                <a href="index.html"><img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
                 <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
             </div>
             <div class="flex items-center space-x-8">
@@ -77,7 +74,7 @@
                     <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
                 </nav>
                 <div class="flex items-center space-x-4">
-                   <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
+                    <a href="settings.html"><i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a>
                     <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
                 </div>
             </div>
@@ -86,12 +83,11 @@
 
     <!-- Main Content -->
     <main class="container mx-auto p-8">
-        
         <div class="bg-white rounded-lg shadow-lg p-6">
             <div class="mb-6 p-4 bg-blue-50 rounded-lg">
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600">Account Balance:</span>
-                    <span class="text-2xl font-bold text-blue-600">$<span id="account-balance">100.00</span></span>
+                    <span class="text-2xl font-bold text-blue-600">$<span id="account-balance">0.00</span></span>
                 </div>
             </div>
             <h1 class="text-2xl font-bold mb-6">Pending Fees</h1>
@@ -110,64 +106,12 @@
                             <th class="py-3 px-4 text-left"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="fee-row hover:bg-gray-50">
-                            <td class="border px-4 py-3">
-                                <input type="checkbox" class="custom-checkbox fee-selector">
-                            </td>
-                            <td class="border px-4 py-3">Parking fee</td>
-                            <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3">Late Payment</td>
-                            <td class="border px-4 py-3">2023-09-30 12:00</td>
-                            <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">
-                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
-                            </td>
-                        </tr>
-                        <tr class="fee-row hover:bg-gray-50">
-                            <td class="border px-4 py-3">
-                                <input type="checkbox" class="custom-checkbox fee-selector">
-                            </td>
-                            <td class="border px-4 py-3">Parking fee</td>
-                            <td class="border px-4 py-3">$2.00</td>
-                            <td class="border px-4 py-3">Overstay</td>
-                            <td class="border px-4 py-3">2023-09-30 12:30</td>
-                            <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">
-                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
-                            </td>
-                        </tr>
-                        <tr class="fee-row hover:bg-gray-50">
-                            <td class="border px-4 py-3">
-                                <input type="checkbox" class="custom-checkbox fee-selector">
-                            </td>
-                            <td class="border px-4 py-3">Parking fee</td>
-                            <td class="border px-4 py-3">$2.50</td>
-                            <td class="border px-4 py-3">Late Entry</td>
-                            <td class="border px-4 py-3">2023-09-30 13:00</td>
-                            <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">
-                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
-                            </td>
-                        </tr>
-                        <tr class="fee-row hover:bg-gray-50">
-                            <td class="border px-4 py-3">
-                                <input type="checkbox" class="custom-checkbox fee-selector">
-                            </td>
-                            <td class="border px-4 py-3">Parking fee</td>
-                            <td class="border px-4 py-3">$3.00</td>
-                            <td class="border px-4 py-3">Unauthorized Parking</td>
-                            <td class="border px-4 py-3">2023-09-30 14:00</td>
-                            <td class="border px-4 py-3">Shanghai, China</td>
-                            <td class="border px-4 py-3">
-                                <button class="objection-button" onclick="window.location.href='user_objection.html';">Make an Objection</button>
-                            </td>
-                        </tr>
+                    <tbody id="fees-table-body">
+                        <!-- Data will be populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
             
-
             <!-- Summary Section -->
             <div class="mt-8">
                 <h2 class="text-xl font-semibold mb-4">Summary</h2>
@@ -175,154 +119,344 @@
                     <div>Total Money of Selected Fees</div>
                     <div class="font-bold">$<span id="selected-total">0.00</span></div>
                     <div>All Fees</div>
-                    <div class="font-bold">$20.00</div>
+                    <div class="font-bold">$<span id="all-fees-total">0.00</span></div>
                     <div>User's Balance</div>
-                    <div class="font-bold">$100.00</div>
+                    <div class="font-bold">$<span id="account-balance-summary">0.00</span></div>
                 </div>
             </div>
 
             <!-- Buttons -->
             <div class="mt-8 flex space-x-4">
-                <button class="btn-gradient px-6 py-2 rounded-full">Pay</button>
-                <button class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Cancel</button>
+                <button id="pay-button" class="btn-gradient px-6 py-2 rounded-full">Pay</button>
                 <button class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600" onclick="window.location.href='recharge.html'">Recharge</button>
             </div>
         </div>
     </main>
-    <!-- Add this modal markup at the end of body -->
+
+    <!-- Modal Container -->
     <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-xl p-6 w-full max-w-md transform transition-all">
-        <!-- Confirmation Modal -->
-        <div id="confirmation-modal" class="hidden">
-            <div class="text-center">
-                <i class="fas fa-question-circle text-4xl text-blue-500 mb-4"></i>
-                <h3 class="text-xl font-bold mb-4">Confirm Payment</h3>
-                <p class="mb-6">You're about to pay <span class="font-bold" id="payment-amount"></span></p>
-                <div class="flex justify-center space-x-4">
-                    <button onclick="confirmPayment()" class="btn-gradient px-6 py-2 rounded-full">Confirm</button>
-                    <button onclick="hideModal()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Cancel</button>
+            <!-- Confirmation Modal -->
+            <div id="confirmation-modal" class="hidden">
+                <div class="text-center">
+                    <i class="fas fa-question-circle text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4">Confirm Payment</h3>
+                    <p class="mb-6">You're about to pay <span class="font-bold" id="payment-amount"></span></p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="confirmPayment()" class="btn-gradient px-6 py-2 rounded-full">Confirm</button>
+                        <button onclick="hideModal()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Modal -->
+            <div id="success-modal" class="hidden">
+                <div class="text-center">
+                    <i class="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4">Payment Successful!</h3>
+                    <p class="mb-6">Your payment of <span class="font-bold" id="success-amount"></span> has been processed</p>
+                    <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Close</button>
+                </div>
+            </div>
+
+            <!-- Error Modal -->
+            <div id="error-modal" class="hidden">
+                <div class="text-center">
+                    <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-4" id="error-title"></h3>
+                    <p class="mb-6" id="error-message"></p>
+                    <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Okay</button>
                 </div>
             </div>
         </div>
-
-        <!-- Success Modal -->
-        <div id="success-modal" class="hidden">
-            <div class="text-center">
-                <i class="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
-                <h3 class="text-xl font-bold mb-4">Payment Successful!</h3>
-                <p class="mb-6">Your payment of <span class="font-bold" id="success-amount"></span> has been processed</p>
-                <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Close</button>
-            </div>
-        </div>
-
-        <!-- Error Modal -->
-        <div id="error-modal" class="hidden">
-            <div class="text-center">
-                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-                <h3 class="text-xl font-bold mb-4" id="error-title"></h3>
-                <p class="mb-6" id="error-message"></p>
-                <button onclick="hideModal()" class="btn-gradient px-6 py-2 rounded-full">Okay</button>
-            </div>
-        </div>
     </div>
-</div>
 
-<!-- Update the JavaScript with this code -->
-<script>
-    // Modal handling functions
-    function showModal(modalId) {
-        document.getElementById('modal-container').classList.remove('hidden');
-        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
-            modal.classList.add('hidden');
-        });
-        document.getElementById(modalId).classList.remove('hidden');
-    }
-
-    function hideModal() {
-        document.getElementById('modal-container').classList.add('hidden');
-    }
-
-    function showError(title, message) {
-        document.getElementById('error-title').textContent = title;
-        document.getElementById('error-message').textContent = message;
-        showModal('error-modal');
-    }
-
-    // Payment handling
-    function confirmPayment() {
-        const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
-        const currentBalance = parseFloat(document.getElementById('account-balance').textContent);
-        
-        // Update balance
-        document.getElementById('account-balance').textContent = (currentBalance - selectedTotal).toFixed(2);
-        
-        // Reset selection
-        document.getElementById('select-all').checked = false;
-        document.querySelectorAll('.fee-selector').forEach(checkbox => {
-            checkbox.checked = false;
-            checkbox.closest('.fee-row').classList.remove('selected');
-        });
-        document.getElementById('selected-total').textContent = '0.00';
-        
-        hideModal();
-        document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
-        showModal('success-modal');
-    }
-
-    // Update pay button click handler
-    document.querySelector('.btn-gradient').addEventListener('click', function(e) {
-        e.preventDefault();
-        const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
-        const currentBalance = parseFloat(document.getElementById('account-balance').textContent);
-
-        if (selectedTotal === 0) {
-            showError('No Fees Selected', 'Please select at least one fee to pay');
-            return;
-        }
-
-        if (selectedTotal > currentBalance) {
-            showError('Insufficient Balance', 'Please recharge your account to proceed with payment');
-            return;
-        }
-
-        document.getElementById('payment-amount').textContent = `$${selectedTotal.toFixed(2)}`;
-        showModal('confirmation-modal');
-    });
-
-    // Keep the existing checkbox and total update logic
-    // ... (previous checkbox code remains the same)
-</script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAll = document.getElementById('select-all');
-            const feeSelectors = document.querySelectorAll('.fee-selector');
-            const feeRows = document.querySelectorAll('.fee-row');
-            const selectedTotal = document.getElementById('selected-total');
+        // Global variables
+        let feesData = [];
+        let selectedFees = new Set();
+        let userBalance = 0;
 
-            selectAll.addEventListener('change', function() {
-                feeSelectors.forEach(selector => selector.checked = selectAll.checked);
-                feeRows.forEach(row => row.classList.toggle('selected', selectAll.checked));
-                updateTotal();
-            });
+        // Token handling and authentication
+        function verifyToken() {
+            const tokenString = localStorage.getItem('token');
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return null;
+            }
 
-            feeSelectors.forEach((selector, index) => {
-                selector.addEventListener('change', function() {
-                    feeRows[index].classList.toggle('selected', selector.checked);
-                    updateTotal();
-                });
-            });
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return null;
+            }
 
-            function updateTotal() {
-                let total = 0;
-                feeSelectors.forEach((selector, index) => {
-                    if (selector.checked) {
-                        total += 2.00; // Assuming each fee is $2.00
+            const token = tokenObj?.result;
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return null;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "...");
+            return token;
+        }
+
+        // Fetch user profile to get balance
+        async function fetchUserProfile(token) {
+            try {
+                const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
                     }
                 });
-                selectedTotal.textContent = total.toFixed(2);
+
+                if (!response.ok) throw new Error('Failed to fetch profile');
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                throw error;
+            }
+        }
+
+        // Fetch fees data
+        async function fetchFeesData(token) {
+            try {
+                const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOEntries', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch fees');
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching fees:', error);
+                throw error;
+            }
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        // Render fees table
+        function renderFeesTable() {
+            const tableBody = document.getElementById('fees-table-body');
+            tableBody.innerHTML = '';
+
+            feesData.forEach(fee => {
+                if (!fee.isPaid) {
+                    const row = document.createElement('tr');
+                    row.className = 'fee-row hover:bg-gray-50';
+                    row.dataset.id = fee.id;
+                    row.dataset.total = (fee.feeValue + fee.fineValue).toFixed(2);
+
+                    row.innerHTML = `
+                        <td class="border px-4 py-3">
+                            <input type="checkbox" class="custom-checkbox fee-selector" data-id="${fee.id}" data-total="${(fee.feeValue + fee.fineValue).toFixed(2)}">
+                        </td>
+                        <td class="border px-4 py-3">$${fee.feeValue.toFixed(2)}</td>
+                        <td class="border px-4 py-3">$${fee.fineValue.toFixed(2)}</td>
+                        <td class="border px-4 py-3">${fee.fineType}</td>
+                        <td class="border px-4 py-3">${formatDate(fee.date)}</td>
+                        <td class="border px-4 py-3">${fee.gateName}</td>
+                        <td class="border px-4 py-3">
+                            <button class="objection-button" onclick="makeObjection(${fee.id})">Make an Objection</button>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                }
+            });
+
+            initializeCheckboxes();
+        }
+
+        // Initialize checkboxes
+        function initializeCheckboxes() {
+            const selectAll = document.getElementById('select-all');
+            const feeSelectors = document.querySelectorAll('.fee-selector');
+
+            selectAll.addEventListener('change', function() {
+                feeSelectors.forEach(selector => {
+                    selector.checked = selectAll.checked;
+                    const row = selector.closest('.fee-row');
+                    row.classList.toggle('selected', selector.checked);
+                    
+                    const feeId = parseInt(selector.dataset.id);
+                    if (selector.checked) {
+                        selectedFees.add(feeId);
+                    } else {
+                        selectedFees.delete(feeId);
+                    }
+                });
+                
+                updateSelectedTotal();
+            });
+
+            feeSelectors.forEach(selector => {
+                selector.addEventListener('change', function() {
+                    const row = this.closest('.fee-row');
+                    row.classList.toggle('selected', this.checked);
+                    
+                    const feeId = parseInt(this.dataset.id);
+                    if (this.checked) {
+                        selectedFees.add(feeId);
+                    } else {
+                        selectedFees.delete(feeId);
+                    }
+                    
+                    // Update "Select All" checkbox state
+                    const allChecked = document.querySelectorAll('.fee-selector:not(:checked)').length === 0;
+                    selectAll.checked = allChecked;
+                    
+                    updateSelectedTotal();
+                });
+            });
+        }
+
+        // Update selected total
+        function updateSelectedTotal() {
+            let total = 0;
+            document.querySelectorAll('.fee-selector:checked').forEach(checkbox => {
+                total += parseFloat(checkbox.dataset.total);
+            });
+            document.getElementById('selected-total').textContent = total.toFixed(2);
+        }
+
+        // Update all fees total
+        function updateAllFeesTotal() {
+            let total = 0;
+            feesData.forEach(fee => {
+                if (!fee.isPaid) {
+                    total += fee.feeValue + fee.fineValue;
+                }
+            });
+            document.getElementById('all-fees-total').textContent = total.toFixed(2);
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById('modal-container').classList.remove('hidden');
+            document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function hideModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+        }
+
+        function showError(title, message) {
+            document.getElementById('error-title').textContent = title;
+            document.getElementById('error-message').textContent = message;
+            showModal('error-modal');
+        }
+
+        // Payment handling
+        async function confirmPayment() {
+            const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+            
+            try {
+                const token = verifyToken();
+                if (!token) return;
+
+                // In a real app, you would send a request to mark fees as paid
+                // For now, we'll just update the UI
+                userBalance -= selectedTotal;
+                updateBalanceDisplay();
+                
+                // Mark fees as paid locally
+                selectedFees.forEach(feeId => {
+                    const feeIndex = feesData.findIndex(fee => fee.id === feeId);
+                    if (feeIndex !== -1) {
+                        feesData[feeIndex].isPaid = true;
+                    }
+                });
+                
+                // Reset selection
+                document.getElementById('select-all').checked = false;
+                selectedFees.clear();
+                
+                // Re-render table and update totals
+                renderFeesTable();
+                updateSelectedTotal();
+                updateAllFeesTotal();
+                
+                hideModal();
+                document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+                showModal('success-modal');
+            } catch (error) {
+                console.error('Payment error:', error);
+                showError('Payment Failed', 'An error occurred during payment. Please try again.');
+            }
+        }
+
+        // Update balance display
+        function updateBalanceDisplay() {
+            document.getElementById('account-balance').textContent = userBalance.toFixed(2);
+            document.getElementById('account-balance-summary').textContent = userBalance.toFixed(2);
+        }
+
+        // Make objection
+        function makeObjection(feeId) {
+            console.log(`Making objection for fee ID: ${feeId}`);
+            window.location.href = `user_objection.html?feeId=${feeId}`;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const token = verifyToken();
+                if (!token) return;
+
+                // Fetch user profile to get balance
+                const profile = await fetchUserProfile(token);
+                userBalance = profile.balance;
+                updateBalanceDisplay();
+
+                // Fetch fees data
+                feesData = await fetchFeesData(token);
+                renderFeesTable();
+                updateAllFeesTotal();
+
+                // Set up pay button click handler
+                document.getElementById('pay-button').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+
+                    if (selectedTotal === 0) {
+                        showError('No Fees Selected', 'Please select at least one fee to pay');
+                        return;
+                    }
+
+                    if (selectedTotal > userBalance) {
+                        showError('Insufficient Balance', 'Please recharge your account to proceed with payment');
+                        return;
+                    }
+
+                    document.getElementById('payment-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+                    showModal('confirmation-modal');
+                });
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Loading Error', 'Failed to load data. Please try again later.');
             }
         });
-        
     </script>
 </body>
 </html>

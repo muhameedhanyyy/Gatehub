@@ -75,10 +75,10 @@
 
       if (form.checkValidity()) {
         try {
-          const licensePlate = encodeURIComponent("123ن ف ر")
+          const licensePlate = encodeURIComponent(document.getElementById('licensePlate'))
           console.log(licensePlate)
-          const encodedPlate = "123ن ف ر";
-          console.log(encodedPlate)
+          // const encodedPlate = "";
+          // console.log(encodedPlate)
           // const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${licensePlate}`;
           // const response = await fetch(apiUrl);
           const response = await fetch('http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}', {

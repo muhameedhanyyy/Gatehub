@@ -556,6 +556,10 @@
         </script>
 
 <script>
+
+
+
+
     document.getElementById('update-password-btn').addEventListener('click', async () => {
         // Clear previous errors
         clearErrors();
@@ -587,6 +591,37 @@
         }
     
         if (!isValid) return;
+
+          /// 1. Retrieve token with proper checks
+          const tokenString = localStorage.getItem('token');
+
+if (!tokenString) {
+    console.error("No token found - redirecting to login");
+    window.location.href = 'login.html';
+    return;
+}
+
+// 2. Parse with error handling
+let tokenObj;
+try {
+    tokenObj = JSON.parse(tokenString);
+} catch (e) {
+    console.error("Failed to parse token:", e);
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+}
+
+// 3. Extract the actual token with validation
+const token = tokenObj?.result;
+if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+    console.error("Invalid token format:", token);
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+}
+
+console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
     
         try {
             const token = localStorage.getItem('token');
@@ -615,7 +650,7 @@
                 handleApiError(data);
             }
         } catch (error) {
-            showError('password-success', 'An error occurred. Please try again.');
+            showError('password-success');
         }
     });
     

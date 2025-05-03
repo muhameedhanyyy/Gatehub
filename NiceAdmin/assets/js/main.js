@@ -310,7 +310,7 @@
     setTimeout(() => {
       new ResizeObserver(function() {
         select('.echart', true).forEach(getEchart => {
-          echarts.getInstanceByDom(getEchart).resize();
+          echarts.getInstanceByDom(getEchart);
         })
       }).observe(mainContainer);
     }, 200);

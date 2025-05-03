@@ -266,16 +266,15 @@
                 throw new Error(errorText || 'Invalid credentials');
             }
 
-            const result = await response.json();
-            // You can now store the token and redirect the user
-            console.log(result); // result.tokenString contains the JWT
+           // In your login success handler (where you first get the token)
+           const result = await response.json();
+                console.log("Full login response:", result); // Inspect the structure
 
-            // Example: store token and redirect
-            localStorage.setItem('token', result.tokenString);
-            // localStorage.setItem('token', json.token);
+                // Store the token PROPERLY (notice we stringify the entire tokenString object)
+                localStorage.setItem('token', JSON.stringify(result.tokenString));
 
-            console.log(result.tokenString)
-            // Redirect to dashboard
+                // Verify storage
+                console.log("Stored token:", localStorage.getItem('token'));
             window.location.href = 'personal_information.html';
             return true;
 

@@ -75,7 +75,6 @@
                 </nav>
                 <div class="flex items-center space-x-4">
                     <a href="settings.html"><i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a>
-                    <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
                 </div>
             </div>
         </div>
@@ -366,50 +365,143 @@
             showModal('error-modal');
         }
 
-        // Payment handling
         async function confirmPayment() {
-            const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
-            
-            try {
-                const token = verifyToken();
-                if (!token) return;
+    const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+    const token = verifyToken();
+    if (!token) return;
 
-                // In a real app, you would send a request to mark fees as paid
-                // For now, we'll just update the UI
-                userBalance -= selectedTotal;
-                updateBalanceDisplay();
-                
-                // Mark fees as paid locally
-                selectedFees.forEach(feeId => {
-                    const feeIndex = feesData.findIndex(fee => fee.id === feeId);
-                    if (feeIndex !== -1) {
-                        feesData[feeIndex].isPaid = true;
-                    }
-                });
-                
-                // Reset selection
-                document.getElementById('select-all').checked = false;
-                selectedFees.clear();
-                
-                // Re-render table and update totals
-                renderFeesTable();
-                updateSelectedTotal();
-                updateAllFeesTotal();
-                
-                hideModal();
-                document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
-                showModal('success-modal');
-            } catch (error) {
-                console.error('Payment error:', error);
-                showError('Payment Failed', 'An error occurred during payment. Please try again.');
-            }
+    try {
+        // Convert Set to array of numeric IDs
+        const vehicleEntryIds = Array.from(selectedFees).map(id => Number(id));
+        
+        const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/pay-from-balance', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vehicleEntryIds) // Direct array without wrapper object
+        });
+
+        // Handle response
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(JSON.stringify(errorData));
         }
+
+        // If successful, update local state
+        const result = await response.json();
+        
+        // Update balance from response
+        userBalance = result.newBalance;
+        
+        // Update fees data
+        feesData = feesData.map(fee => ({
+            ...fee,
+            isPaid: vehicleEntryIds.includes(fee.id) ? true : fee.isPaid
+        }));
+
+        // Update UI
+        updateBalanceDisplay();
+        selectedFees.clear();
+        document.getElementById('select-all').checked = false;
+        renderFeesTable();
+        updateSelectedTotal();
+        updateAllFeesTotal();
+
+        // Show success
+        document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+        showModal('success-modal');
+
+    } catch (error) {
+        console.error('Payment error:', error);
+        showError('Payment Failed', 
+            error.message.includes('vehicleEntryIds') 
+            ? 'Invalid payment selection. Please try again.' 
+            : error.message
+        );
+    }
+}
+
+
+
+        async function refreshBalance() {
+    try {
+        const token = verifyToken();
+        const profile = await fetchUserProfile(token);
+        userBalance = profile.balance;
+        updateBalanceDisplay();
+    } catch (error) {
+        console.error('Balance refresh failed:', error);
+    }
+}
 
         // Update balance display
-        function updateBalanceDisplay() {
-            document.getElementById('account-balance').textContent = userBalance.toFixed(2);
-            document.getElementById('account-balance-summary').textContent = userBalance.toFixed(2);
+// Update the updateBalanceDisplay function
+function updateBalanceDisplay() {
+    const formattedBalance = (userBalance || 0).toFixed(2);
+    document.getElementById('account-balance').textContent = formattedBalance;
+    document.getElementById('account-balance-summary').textContent = formattedBalance;
+}
+
+// Modify the confirmPayment function's success handling
+async function confirmPayment() {
+    try {
+        // Get token first
+        const token = verifyToken();
+        if (!token) {
+            showError('Session Expired', 'Please login again');
+            return;
         }
+
+        const selectedTotal = parseFloat(document.getElementById('selected-total').textContent);
+        const vehicleEntryIds = Array.from(selectedFees).map(Number);
+
+        // Payment API call
+        const paymentResponse = await fetch('http://gatehub.runasp.net/api/VehicleOwner/pay-from-balance', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vehicleEntryIds)
+        });
+
+        if (!paymentResponse.ok) {
+            const error = await paymentResponse.json();
+            throw new Error(error.message || 'Payment failed');
+        }
+
+        // Refresh balance
+        const profileResponse = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const profileData = await profileResponse.json();
+        
+        // Update state
+        userBalance = profileData.balance;
+        feesData = feesData.map(fee => ({
+            ...fee,
+            isPaid: vehicleEntryIds.includes(fee.id) || fee.isPaid
+        }));
+
+        // Update UI
+        updateBalanceDisplay();
+        selectedFees.clear();
+        document.getElementById('select-all').checked = false;
+        renderFeesTable();
+        updateSelectedTotal();
+        updateAllFeesTotal();
+
+        // Show success
+        document.getElementById('success-amount').textContent = `$${selectedTotal.toFixed(2)}`;
+        showModal('success-modal');
+
+    } catch (error) {
+        console.error('Payment error:', error);
+        showError('Payment Failed', error.message);
+    }
+}
 
         // Make objection
         function makeObjection(feeId) {
@@ -422,7 +514,7 @@
             try {
                 const token = verifyToken();
                 if (!token) return;
-
+                setInterval(refreshBalance, 30000);
                 // Fetch user profile to get balance
                 const profile = await fetchUserProfile(token);
                 userBalance = profile.balance;

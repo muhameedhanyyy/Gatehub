@@ -61,29 +61,22 @@
             background-color: #fee2e2;
             color: #dc2626;
         }
-        #update-vehicle-modal .input-field {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        background-color: white;
-        color: var(--text-primary);
-        font-size: 0.85rem;
-    }
 
-    #update-vehicle-modal .input-field:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-
-    #update-vehicle-modal .language-select {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        background-color: white;
-        font-size: 0.85rem;
-    }
+        .vehicle-card {
+            @apply bg-white rounded-lg shadow-sm p-6 mb-8;
+        }
+        .history-table {
+            @apply min-w-full divide-y divide-gray-200;
+        }
+        .status-badge {
+            @apply px-2 py-1 rounded-full text-xs font-medium;
+        }
+        .status-paid {
+            @apply bg-green-100 text-green-800;
+        }
+        .status-pending {
+            @apply bg-yellow-100 text-yellow-800;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -105,7 +98,6 @@
                 
                 <div class="flex items-center space-x-4">
                     <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
-                     <img src="https://storage.googleapis.com/a1aa/image/nBJV8TUMuL809hbEhUYsi1_N3scnH621Z4jWB7KDE0I.jpg" alt="Profile" class="h-10 w-10 rounded-full">
                  </div>
             </div>
         </div>
@@ -117,40 +109,20 @@
         <div class="vehicle-card">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">
-                    <i class="fas fa-car mr-3 text-[var(--primary)]"></i>
+                    <i class="fas fa-car mr-3 text-blue-600"></i>
                     My Vehicle Details
                 </h2>
-               
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                    <p class="text-sm text-gray-600">Make & Model</p>
-                    <p class="font-medium">Toyota Camry 2022</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Vehicle Year</p>
-                    <p class="font-medium">2022</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">VIN Number</p>
-                    <p class="font-medium">1HGCM82633A123456</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Registration Expiry</p>
-                    <p class="font-medium">2024-12-31</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Insurance Status</p>
-                    <p class="font-medium text-green-600">Active</p>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="vehicleDetails">
+                <!-- Data will be populated by JavaScript -->
             </div>
         </div>
 
         <!-- Fees and Violations History -->
         <div class="vehicle-card">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-history mr-3 text-[var(--primary)]"></i>
+                <i class="fas fa-history mr-3 text-blue-600"></i>
                 Payment History & Violations
             </h2>
 
@@ -158,184 +130,133 @@
                 <table class="history-table">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>fee</th>
-                            <th>fine</th>
-                            <th>Status</th>
+                            <th class="px-4 py-3 text-left">Date</th>
+                            <th class="px-4 py-3 text-left">Type</th>
+                            <th class="px-4 py-3 text-left">Fee</th>
+                            <th class="px-4 py-3 text-left">Fine</th>
+                            <th class="px-4 py-3 text-left">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Fees -->
-                        <tr class="hover:bg-gray-50">
-                            <td>2023-10-15</td>
-                            <td>Parking Fee</td>
-                            <td>Shanghai Downtown</td>
-                            <td>$2.00</td>
-                            <td>$2.00</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td>2023-10-12</td>
-                            <td>Toll Charge</td>
-                            <td>Huangpu Bridge</td>
-                            <td>$5.00</td>
-                            <td>$5.00</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                        </tr>
-                        
-                        <!-- Violations -->
-                        <tr class="hover:bg-gray-50">
-                            <td>2023-09-28</td>
-                            <td>Speeding</td>
-                            <td>Jing'an District</td>
-                            <td>$150.00</td>
-                            <td>$150.00</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td>2023-09-15</td>
-                            <td>Parking Violation</td>
-                            <td>Xuhui Area</td>
-                            <td>$75.00</td>
-                            <td>$75.00</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                        </tr>
+                    <tbody id="paymentHistory">
+                        <!-- Data will be populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Summary Section -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-600">Total Fees</p>
-                    <p class="text-xl font-bold">$232.00</p>
-                </div>
-                <div class="bg-green-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-600">Paid Amount</p>
-                    <p class="text-xl font-bold">$77.00</p>
-                </div>
-                <div class="bg-yellow-50 p-4 rounded-lg">
-                    <p class="text-sm text-gray-600">Pending Payments</p>
-                    <p class="text-xl font-bold">$155.00</p>
-                </div>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4" id="summarySection">
+                <!-- Data will be populated by JavaScript -->
             </div>
-            
         </div>
-
-        <!-- Violation Details Section -->
-
     </main>
-    <div id="update-vehicle-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-xl font-bold">
-                    <i class="fas fa-car mr-2 text-[var(--primary)]"></i>
-                    Update Vehicle Information
-                </h3>
-                <button onclick="closeUpdateModal()" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-    
-            <!-- Modal Body -->
-            <div class="p-6">
-                <form id="vehicle-update-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-sm text-gray-600">Make & Model</label>
-                        <input type="text" id="vehicle-make" class="input-field" required>
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-600">Vehicle Year</label>
-                        <input type="number" id="vehicle-year" class="input-field" min="1900" max="2099" required>
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-600">VIN Number</label>
-                        <input type="text" id="vehicle-vin" class="input-field" pattern="[A-HJ-NPR-Z0-9]{17}" required>
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-600">Registration Expiry</label>
-                        <input type="date" id="vehicle-expiry" class="input-field" required>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-sm text-gray-600">Insurance Status</label>
-                        <select id="vehicle-insurance" class="language-select">
-                            <option value="active">Active</option>
-                            <option value="expired">Expired</option>
-                            <option value="pending">Pending</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <!-- Modal Footer -->
-            <div class="flex justify-end space-x-3 p-6 border-t">
-                <button onclick="closeUpdateModal()" class="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600">
-                    Cancel
-                </button>
-                <button onclick="submitVehicleUpdate()" class="btn-gradient px-6 py-2 rounded-full">
-                    <i class="fas fa-save mr-2"></i>Update Details
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Add JavaScript for interactivity -->
+
+
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Add click functionality to table rows
-            document.querySelectorAll('.history-table tbody tr').forEach(row => {
-                row.addEventListener('click', () => {
-                    // Implement view details functionality
-                    alert('View details for: ' + row.cells[1].textContent);
-                });
-            });
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Token verification
+            const tokenString = localStorage.getItem('token');
+            if (!tokenString) {
+                window.location.href = 'login.html';
+                return;
+            }
 
-            // Add accordion functionality to violation items
-            document.querySelectorAll('.violation-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    item.classList.toggle('bg-gray-50');
+            try {
+                const token = JSON.parse(tokenString)?.result;
+                if (!token) throw new Error('Invalid token');
+
+                // Fetch vehicle data
+                const response = await fetch('http://gatehub.runasp.net/api/Admin/GetVehicleById/1', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
-            });
+
+                if (!response.ok) throw new Error('Failed to fetch vehicle data');
+                const vehicleData = await response.json();
+
+                // Update vehicle details
+                const vehicleDetails = document.getElementById('vehicleDetails');
+                vehicleDetails.innerHTML = `
+                    <div>
+                        <p class="text-sm text-gray-600">Plate Number</p>
+                        <p class="font-medium">${vehicleData.plateNumber}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">License Start</p>
+                        <p class="font-medium">${new Date(vehicleData.licenseStart).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">License End</p>
+                        <p class="font-medium">${new Date(vehicleData.licenseEnd).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Model</p>
+                        <p class="font-medium">${vehicleData.modelCompany} - ${vehicleData.modelDescription}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Color</p>
+                        <p class="font-medium">${vehicleData.color}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Vehicle Type</p>
+                        <p class="font-medium">${vehicleData.type}</p>
+                    </div>
+                `;
+
+                // Update payment history
+                const paymentHistory = document.getElementById('paymentHistory');
+                let totalFees = 0;
+                let paidAmount = 0;
+                let pendingPayments = 0;
+
+                paymentHistory.innerHTML = vehicleData.vehicleEntries.map(entry => {
+                    const total = entry.feeValue + entry.fineValue;
+                    totalFees += total;
+                    
+                    if (entry.isPaid) {
+                        paidAmount += total;
+                    } else {
+                        pendingPayments += total;
+                    }
+
+                    return `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3">${new Date(entry.date).toLocaleDateString()}</td>
+                            <td class="px-4 py-3">${entry.fineType}</td>
+                            <td class="px-4 py-3">$${entry.feeValue.toFixed(2)}</td>
+                            <td class="px-4 py-3">$${entry.fineValue.toFixed(2)}</td>
+                            <td class="px-4 py-3">
+                                <span class="status-badge ${entry.isPaid ? 'status-paid' : 'status-pending'}">
+                                    ${entry.isPaid ? 'Paid' : 'Pending'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Update summary section
+                const summarySection = document.getElementById('summarySection');
+                summarySection.innerHTML = `
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">Total Fees</p>
+                        <p class="text-xl font-bold">$${totalFees.toFixed(2)}</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">Paid Amount</p>
+                        <p class="text-xl font-bold">$${paidAmount.toFixed(2)}</p>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">Pending Payments</p>
+                        <p class="text-xl font-bold">$${pendingPayments.toFixed(2)}</p>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load vehicle data. Please try again later.');
+            }
         });
-
-
-    // Form Validation and Submission
-    function submitVehicleUpdate() {
-        const form = document.getElementById('vehicle-update-form');
-        const formData = {
-            make: document.getElementById('vehicle-make').value.trim(),
-            year: document.getElementById('vehicle-year').value.trim(),
-            vin: document.getElementById('vehicle-vin').value.trim(),
-            expiry: document.getElementById('vehicle-expiry').value,
-            insurance: document.getElementById('vehicle-insurance').value
-        };
-
-        // Simple validation
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-
-        // Update display data
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(1) p:last-child').textContent = formData.make;
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(2) p:last-child').textContent = formData.year;
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(3) p:last-child').textContent = formData.vin;
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(4) p:last-child').textContent = formData.expiry;
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(5) p:last-child').textContent = 
-            formData.insurance.charAt(0).toUpperCase() + formData.insurance.slice(1);
-        document.querySelector('.vehicle-card h2 + div > div:nth-child(5) p:last-child').className = 
-            `font-medium ${formData.insurance === 'active' ? 'text-green-600' : 'text-red-600'}`;
-
-        closeUpdateModal();
-        showToast('success', 'Vehicle information updated successfully!');
-    }
-
-    // Add click handler to Update Info button
-    document.querySelector('.btn-gradient').addEventListener('click', (e) => {
-        e.preventDefault();
-        showUpdateModal();
-    });
     </script>
 </body>
 </html>

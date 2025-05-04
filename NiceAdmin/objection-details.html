@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objection Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="flex items-center px-4 py-3 bg-white shadow-sm rounded-xl transition-all duration-300 hover:shadow-md">
+        <a href="index.html" class="flex items-center group">
+            <img src="assets/img/logo.jpg" alt="Logo" 
+                 class="h-12 w-12 rounded-full border-2 border-white ring-2 ring-gray-100 transition-all 
+                        duration-300 group-hover:ring-blue-200 group-hover:scale-105">
+            <span class="ml-3 text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent 
+                          transition-all duration-300 group-hover:-translate-y-0.5">
+                GateHub
+            </span>
+        </a>
+    </div>
+    <div class="container mx-auto p-6">
+        <div id="error-message" class="hidden"></div>
+        <!-- Rest of your existing content -->
+    </div>
+    <div class="container mx-auto p-6">
+        <a href="complains.html" class="text-blue-600 mb-4 inline-block">
+            <i class="fas fa-arrow-left mr-2"></i> Back to List
+        </a>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Objection Details</h2>
+            
+            <!-- Details Card -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm text-gray-600">Objection ID:</p>
+                    <p class="font-medium" id="objection-id">-</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Status:</p>
+                    <p class="font-medium" id="status">-</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Date:</p>
+                    <p class="font-medium" id="date">-</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Vehicle Owner:</p>
+                    <p class="font-medium" id="vehicle-owner">-</p>
+                </div>
+                <div class="md:col-span-2">
+                    <p class="text-sm text-gray-600">Description:</p>
+                    <p class="font-medium" id="description">-</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Plate Number:</p>
+                    <p class="font-medium" id="plate-number">-</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 mt-6">
+        <h3 class="text-lg font-semibold mb-4">Admin Actions</h3>
+        <div class="flex gap-4">
+            <button 
+                id="accept-button"
+                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300"
+            >
+                Accept Objection
+            </button>
+            <button 
+                id="reject-button"
+                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-300"
+            >
+                Reject Objection
+            </button>
+        </div>
+    </div>
+    <script>
+        async function loadObjectionDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const objectionId = urlParams.get('id');
+                
+                if (!objectionId) throw new Error('No objection specified');
+    
+                const token = JSON.parse(localStorage.getItem('token'))?.result;
+                if (!token) window.location.href = '/login';
+    
+                // First get all objections
+                const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+    
+                if (!response.ok) throw new Error('Failed to fetch objections');
+                
+                const objections = await response.json();
+                
+                // Find the specific objection
+                const objection = objections.find(o => o.id == objectionId);
+                if (!objection) throw new Error('Objection not found');
+    
+                // Populate data using CORRECT property names from your JSON
+                document.getElementById('objection-id').textContent = objection.id;
+                document.getElementById('status').textContent = objection.statue; // Note: "statue" not "status"
+                document.getElementById('date').textContent = new Date(objection.date).toLocaleString();
+                document.getElementById('description').textContent = objection.description;
+                document.getElementById('vehicle-owner').textContent = objection.vehicleOwnerName;
+                document.getElementById('plate-number').textContent = objection.plateNum; // Note: "plateNum" not "plateNumber"
+    
+            } catch (error) {
+                console.error('Error:', error);
+                document.body.innerHTML = `
+                    <div class="container mx-auto p-6">
+                        <div class="bg-red-50 text-red-700 p-4 rounded-lg">
+                            <p class="font-bold">Error:</p>
+                            <p>${error.message}</p>
+                            <a href="admin-objections.html" class="text-blue-600 mt-2 inline-block">
+                                Return to objections list
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', loadObjectionDetails);
+    </script>
+    <script>
+        // Main objection loading function
+        async function loadObjectionDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const objectionId = urlParams.get('id');
+                
+                if (!objectionId) throw new Error('No objection specified');
+                
+                const token = JSON.parse(localStorage.getItem('token'))?.result;
+                if (!token) window.location.href = '/login';
+    
+                // Fetch all objections
+                const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+    
+                if (!response.ok) throw new Error('Failed to fetch objections');
+                
+                const objections = await response.json();
+                const objection = objections.find(o => o.id == objectionId);
+                
+                if (!objection) throw new Error('Objection not found');
+    
+                // Populate data with correct property names
+                document.getElementById('objection-id').textContent = objection.id;
+                document.getElementById('status').textContent = objection.statue;
+                document.getElementById('date').textContent = new Date(objection.date).toLocaleString();
+                document.getElementById('description').textContent = objection.description;
+                document.getElementById('vehicle-owner').textContent = objection.vehicleOwnerName;
+                document.getElementById('plate-number').textContent = objection.plateNum;
+    
+                // Set initial button states
+                const isPending = objection.statue === 'Pending';
+                document.getElementById('accept-button').disabled = !isPending;
+                document.getElementById('reject-button').disabled = !isPending;
+    
+            } catch (error) {
+                console.error('Error:', error);
+                document.body.innerHTML = `
+                    <div class="container mx-auto p-6">
+                        <div class="bg-red-50 text-red-700 p-4 rounded-lg">
+                            <p class="font-bold">Error:</p>
+                            <p>${error.message}</p>
+                            <a href="admin-objections.html" class="text-blue-600 mt-2 inline-block">
+                                Return to objections list
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    
+        // Action handling function
+        async function handleObjectionAction(action) {
+            try {
+                const token = JSON.parse(localStorage.getItem('token'))?.result;
+                const objectionId = new URLSearchParams(window.location.search).get('id');
+                const acceptBtn = document.getElementById('accept-button');
+                const rejectBtn = document.getElementById('reject-button');
+    
+                // Disable buttons during processing
+                acceptBtn.disabled = true;
+                rejectBtn.disabled = true;
+                
+                // Set loading state
+                if (action === 'accept') {
+                    acceptBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                } else {
+                    rejectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                }
+    
+                // API endpoint selection
+                const endpoint = action === 'accept' 
+                    ? `http://gatehub.runasp.net/api/Admin/AcceptObjection/${objectionId}`
+                    : `http://gatehub.runasp.net/api/Admin/RejectObjection/${objectionId}`;
+    
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Action failed');
+                }
+    
+                // Update UI state
+                const newStatus = action === 'accept' ? 'Accepted' : 'Rejected';
+                document.getElementById('status').textContent = newStatus;
+                
+                // Show success message
+                const result = await response.json();
+                showSuccess(result.message);
+    
+            } catch (error) {
+                showError(`Action failed: ${error.message}`);
+            } finally {
+                // Reset button states
+                document.getElementById('accept-button').innerHTML = 'Accept Objection';
+                document.getElementById('reject-button').innerHTML = 'Reject Objection';
+                
+                // Keep buttons disabled after action
+                document.getElementById('accept-button').disabled = true;
+                document.getElementById('reject-button').disabled = true;
+            }
+        }
+    
+        // Helper functions
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'bg-green-50 text-green-700 p-3 rounded-lg mb-4';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle mr-2"></i>
+                ${message}
+            `;
+            document.querySelector('.container').prepend(successDiv);
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+    
+        function showError(message) {
+            const errorContainer = document.getElementById('error-message');
+            if (errorContainer) {
+                errorContainer.innerHTML = `
+                    <div class="bg-red-50 text-red-700 p-4 rounded-lg">
+                        <p class="font-bold">Error:</p>
+                        <p>${message}</p>
+                    </div>
+                `;
+                errorContainer.classList.remove('hidden');
+            }
+        }
+    
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            loadObjectionDetails();
+            
+            document.getElementById('accept-button').addEventListener('click', () => {
+                if (confirm('Are you sure you want to accept this objection?')) {
+                    handleObjectionAction('accept');
+                }
+            });
+    
+            document.getElementById('reject-button').addEventListener('click', () => {
+                if (confirm('Are you sure you want to reject this objection?')) {
+                    handleObjectionAction('reject');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

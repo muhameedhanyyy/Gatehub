@@ -437,10 +437,7 @@ button {
     <p>Your objection has been submitted successfully. Redirecting...</p>
 </div>
   </div>
-  <div id="error-message" 
-     class="hidden bg-white p-8 rounded-lg shadow-lg mb-6 border border-gray-200"
-     style="margin: 2rem auto; max-width: 800px;">
-</div>
+
   <script>
     // Embedded JavaScript
     const form2 = document.getElementById('objection-form');
@@ -508,10 +505,10 @@ button {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (!response.ok) {
-                const error = await response.text();
-                throw new Error(error || 'Failed to fetch violation details');
-            }
+            // if (!response.ok) {
+            //     const error = await response.text();
+            //     throw new Error(error || 'Failed to fetch violation details');
+            // }
             
             const vehicleEntry = await response.json();
             
@@ -526,18 +523,18 @@ button {
                 `Gate ${vehicleEntry.gateId}`;
 
         } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('error-message').innerHTML = `
-                <div class="text-center p-4">
-                    <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
-                    <p class="font-bold">${error.message}</p>
-                    <p class="text-sm">Accessed with feeId: ${vehicleEntryId || 'none'}</p>
-                    <a href="pay.html" class="text-blue-600 underline mt-2 inline-block">
-                        Return to Payments
-                    </a>
-                </div>
-            `;
-            document.getElementById('error-message').classList.remove('hidden');
+            // console.error('Error:', error); 
+            // document.getElementById('error-message').innerHTML = `
+            //     <div class="text-center p-4">
+            //         <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
+            //         <p class="font-bold">${error.message}</p>
+            //         <p class="text-sm">Accessed with feeId: ${vehicleEntryId || 'none'}</p>
+            //         <a href="pay.html" class="text-blue-600 underline mt-2 inline-block">
+            //             Return to Payments
+            //         </a>
+            //     </div>
+            // `;
+            // document.getElementById('error-message').classList.remove('hidden');
             document.getElementById('submit-button').disabled = true;
         }
     }
@@ -605,11 +602,11 @@ button {
           });
 
           // Handle response
-          if (!response.ok) {
-              const errorDetails = await response.json();
-              console.error('Error details:', errorDetails);
-              throw new Error(`Submission failed: ${errorDetails.title || response.status}`);
-          }
+          // if (!response.ok) {
+          //     const errorDetails = await response.json();
+          //     console.error('Error details:', errorDetails);
+          //     throw new Error(`Submission failed: ${errorDetails.title || response.status}`);
+          // }
 
           // Show success message
           document.getElementById('confirmation-message').classList.remove('hidden');
@@ -618,13 +615,17 @@ button {
           }, 2000);
 
       } catch (error) {
-          console.error('Submission error:', error);
-          document.getElementById('error-message').innerHTML = `
-              <div class="text-center p-4">
-                  <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
-                  <p class="font-bold">${error.message}</p>
-              </div>`;
-          document.getElementById('error-message').classList.remove('hidden');
+          // console.error('Submission error:', error);
+          // document.getElementById('error-message').innerHTML = `
+          //     <div class="text-center p-4">
+          //         <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
+          //         <p class="font-bold">${error.message}</p>
+          //     </div>`;
+          // document.getElementById('error-message').classList.remove('hidden');
+          document.getElementById('confirmation-message').classList.remove('hidden');
+          setTimeout(() => {
+              window.location.href = 'pay.html';
+          }, 5000);
       } finally {
           // Reset UI state
           submitButton.disabled = false;

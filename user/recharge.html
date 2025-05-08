@@ -30,7 +30,7 @@
     <header class="bg-white shadow-sm p-4">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-              <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
+            <a href="index.html">  <img src="assets/logo.jpg" alt="Logo" class="h-10 w-10 rounded-full"></a>
                 <span class="ml-2 text-xl font-bold text-gray-800">GateHub</span>
             </div>
             <div class="flex items-center space-x-8">
@@ -42,7 +42,7 @@
                     <a href="index.html" class="text-gray-700 hover:text-blue-600">Help</a>
                 </nav>
                 <div class="flex items-center space-x-4">
-                   <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
+                <a href="settings.html"> <i class="fas fa-cog text-xl text-gray-600 cursor-pointer hover:text-blue-600"></i></a> <!-- Settings icon -->
                 </div>
             </div>
         </div>
@@ -55,11 +55,11 @@
                 <i class="fas fa-wallet mr-2 text-blue-500"></i>Recharge Account
             </h1>
 
-            <!-- Balance Display -->
-            <div class="bg-blue-50 rounded-lg p-4 mb-6">
-                <p class="text-sm text-gray-600">Current Balance</p>
-                <p class="text-2xl font-bold text-blue-600">$0.00</p>
-            </div>
+           <!-- Balance Display -->
+<div class="bg-blue-50 rounded-lg p-4 mb-6">
+    <p class="text-sm text-gray-600">Current Balance</p>
+    <p id="balanceDisplay" class="text-2xl font-bold text-blue-600">$0.00</p>
+</div>
 
             <!-- Recharge Amount -->
             <div class="mb-6">
@@ -69,9 +69,9 @@
                 <div class="relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
                     <input type="number" 
-                           class="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="0.00"
-                           step="0.01">
+                        class="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="0.00"
+                        step="0.01">
                 </div>
             </div>
 
@@ -124,117 +124,171 @@
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.querySelector('main');
+            // Token verification (same as working code)
+            const token = (function verifyToken() {
+                const tokenString = localStorage.getItem('token');
+                if (!tokenString) {
+                    window.location.href = 'login.html';
+                    return null;
+                }
+    
+                try {
+                    const tokenObj = JSON.parse(tokenString);
+                    if (!tokenObj?.result?.startsWith('eyJ')) throw new Error();
+                    return tokenObj.result;
+                } catch (e) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                    return null;
+                }
+            })();
+    
+            if (!token) return;
+    
+            // DOM elements
             const amountInput = document.querySelector('input[type="number"]');
-            const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
             const confirmBtn = document.querySelector('button');
-            let amountError = null;
-            let paymentError = null;
-        
-            // Create error message elements
-            function createErrorElements() {
-                amountError = document.createElement('div');
-                amountError.className = 'text-red-600 text-sm mt-2 hidden';
-                amountInput.parentElement.parentElement.appendChild(amountError);
-        
-                paymentError = document.createElement('div');
-                paymentError.className = 'text-red-600 text-sm mt-2 mb-4 hidden';
-                document.querySelector('h3').insertAdjacentElement('afterend', paymentError);
+            const balanceElement = document.getElementById('balanceDisplay');
+            let currentBalance = 0;
+    
+            // Error handling (similar to working code)
+            function showError(message) {
+                alert(`Error: ${message}`);
             }
-        
-            // Validate amount input
-            function validateAmount() {
-                const value = parseFloat(amountInput.value);
-                let isValid = true;
-        
-                if (isNaN(value) || value <= 0) {
-                    amountInput.classList.add('border-red-500');
-                    amountError.textContent = 'Please enter a valid amount greater than 0';
-                    amountError.classList.remove('hidden');
-                    isValid = false;
-                } else {
-                    amountInput.classList.remove('border-red-500');
-                    amountError.classList.add('hidden');
-                }
-        
-                return isValid;
+    
+            // Fetch balance (updated with proper error handling)
+            async function fetchBalance() {
+    try {
+        const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
             }
-        
-            // Validate payment method
-            function validatePaymentMethod() {
-                const isSelected = [...paymentMethods].some(method => method.checked);
-                
-                if (!isSelected) {
-                    paymentError.textContent = 'Please select a payment method';
-                    paymentError.classList.remove('hidden');
-                    document.querySelectorAll('.payment-card').forEach(card => {
-                        card.classList.add('border-red-500');
-                    });
-                    return false;
-                }
-        
-                paymentError.classList.add('hidden');
-                document.querySelectorAll('.payment-card').forEach(card => {
-                    card.classList.remove('border-red-500');
-                });
-                return true;
-            }
-        
-            // Real-time amount validation
-            amountInput.addEventListener('input', () => {
-                validateAmount();
-            });
-        
-            // Payment method selection validation
-            document.querySelectorAll('input[name="payment-method"]').forEach(method => {
-                method.addEventListener('change', () => {
-                    validatePaymentMethod();
-                });
-            });
-        
-            // Form submission handler
-            confirmBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                const isAmountValid = validateAmount();
-                const isPaymentValid = validatePaymentMethod();
-        
-                if (isAmountValid && isPaymentValid) {
-                    // Simulate successful submission
-                    confirmBtn.disabled = true;
-                    confirmBtn.innerHTML = `
-                        <i class="fas fa-spinner fa-spin mr-2"></i>
-                        Processing...
-                    `;
-        
-                    // Simulate API call
-                    setTimeout(() => {
-                        alert('Recharge successful!');
-                        confirmBtn.disabled = false;
-                        confirmBtn.innerHTML = `
-                            <i class="fas fa-check-circle mr-2"></i>
-                            Confirm Recharge
-                        `;
-                        form.reset();
-                    }, 2000);
-                }
-            });
-        
-            // Initialize error elements
-            createErrorElements();
-        
-            // Payment card selection styling
-            document.querySelectorAll('.payment-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.payment-card').forEach(c => {
-                        c.classList.remove('selected');
-                        c.style.borderColor = 'transparent';
-                    });
-                    card.classList.add('selected');
-                    card.style.borderColor = '#3b82f6';
-                });
-            });
         });
-        </script>
+
+        if (!response.ok) throw new Error('Failed to fetch balance');
+        
+        const data = await response.json();
+        
+        // Verify the element exists before updating
+        const balanceElement = document.getElementById('balanceDisplay');
+        if (!balanceElement) {
+            throw new Error('Balance display element not found');
+        }
+
+        // Update based on actual API response structure
+        const balance = data.balance || data.accountBalance || 0.00;
+        balanceElement.textContent = `$${balance.toFixed(2)}`;
+    } catch (error) {
+        console.error('Balance fetch error:', error);
+        const balanceElement = document.getElementById('balanceDisplay');
+        if (balanceElement) {
+            balanceElement.textContent = '$0.00';
+        }
+        showError('Failed to load balance. Please refresh the page.');
+    }
+}
+    
+            // Validation functions
+            function validateAmount(value) {
+                return !isNaN(value) && value > 0;
+            }
+    
+            function validatePaymentMethod() {
+                return document.querySelector('input[name="payment-method"]:checked') !== null;
+            }
+    
+            // Recharge handler (updated with proper error handling)
+// Updated handleRecharge function
+async function handleRecharge(e) {
+    e.preventDefault();
+    const amountValue = parseFloat(amountInput.value);
+    
+    if (!validateAmount(amountValue)) {
+        showError('Invalid amount entered');
+        return;
+    }
+
+    if (!validatePaymentMethod()) {
+        showError('Please select payment method');
+        return;
+    }
+
+    try {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Processing...`;
+
+        const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/recharge-balance', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'accept': '*/*'
+            },
+            body: JSON.stringify({ 
+    amount: amountValue,
+    returnUrl: window.location.href 
+})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Recharge failed');
+        }
+
+        // Handle the payment URL redirect
+        if (data.paymentUrl) {
+            window.location.href = data.paymentUrl;
+        } else {
+            throw new Error('No payment URL received from server');
+        }
+
+    } catch (error) {
+        console.error('Recharge error:', error);
+        showError(error.message);
+    } finally {
+        confirmBtn.disabled = false;
+// Before redirecting
+confirmBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Redirecting...`;
+setTimeout(() => window.location.href = data.paymentUrl, 1000);    }
+}
+            // Check for payment status in URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('payment_status')) {
+    if (urlParams.get('payment_status') === 'success') {
+        alert('Payment completed successfully!');
+        fetchBalance(); // Refresh balance after successful payment
+    } else {
+        showError('Payment failed or was canceled');
+    }
+}
+    
+            // Initialization
+            function init() {
+                // Payment method selection
+                document.querySelectorAll('.payment-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        document.querySelectorAll('.payment-card').forEach(c => 
+                            c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        card.querySelector('input[type="radio"]').checked = true;
+                    });
+                });
+    
+                // Event listeners
+                amountInput.addEventListener('input', () => {
+                    amountInput.classList.toggle('border-red-500', !validateAmount(amountInput.value));
+                });
+    
+                confirmBtn.addEventListener('click', handleRecharge);
+                
+                // Initial balance fetch
+                fetchBalance();
+            }
+    
+            init();
+        });
+    </script>
 </body>
 </html>

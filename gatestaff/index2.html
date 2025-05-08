@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GateHub - Live Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Add SignalR client library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -37,6 +40,14 @@
             background-color: #10b981;
         }
 
+        .status-warning {
+            background-color: #f59e0b;
+        }
+
+        .status-critical {
+            background-color: #ef4444;
+        }
+
         .alert-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -49,6 +60,16 @@
             color: #dc2626;
         }
 
+        .alert-warning {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .alert-normal {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
         .btn-gradient {
             background: linear-gradient(135deg, #7C9AFC, #5B7FFB);
             color: white;
@@ -59,8 +80,25 @@
             background: linear-gradient(135deg, #5B7FFB, #7C9AFC);
             transform: translateY(-2px);
         }
+
+        .connection-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .connected {
+            background-color: #10b981;
+        }
+
+        .disconnected {
+            background-color: #ef4444;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm p-4">
@@ -72,13 +110,15 @@
             <div class="flex items-center space-x-6">
                 <div class="flex items-center space-x-4">
                     <span id="live-timestamp" class="text-gray-600"></span>
+                    <span id="connection-status" class="text-sm flex items-center">
+                        <span class="connection-status disconnected"></span>
+                        <span>Connecting...</span>
+                    </span>
                     <a href="addFines.html" class="btn-gradient px-4 py-2 rounded-full">
                         <i class="fas fa-plus mr-2"></i>Add Fine
                     </a>
-                  
-                    <img src="../NiceAdmin/assets/img/profile-img.jpg" 
-                         alt="Profile" 
-                         class="h-10 w-10 rounded-full">
+
+                    <img src="../NiceAdmin/assets/img/profile-img.jpg" alt="Profile" class="h-10 w-10 rounded-full">
                 </div>
             </div>
         </div>
@@ -92,36 +132,36 @@
                 <i class="fas fa-car mr-3 text-[var(--primary)]"></i>
                 Real-Time Vehicle Details
             </h2>
-            
+
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <p class="text-sm text-gray-600">License Plate</p>
-                    <p class="text-xl font-bold" id="license-plate">ABC 1234</p>
+                    <p class="text-xl font-bold" id="license-plate">Waiting for data...</p>
                 </div>
                 <div class="bg-green-50 p-4 rounded-lg">
                     <p class="text-sm text-gray-600">Vehicle Model</p>
-                    <p class="text-xl font-bold" id="vehicle-details">Toyota Camry 2022</p>
+                    <p class="text-xl font-bold" id="vehicle-details">Waiting for data...</p>
                 </div>
                 <div class="bg-purple-50 p-4 rounded-lg">
                     <p class="text-sm text-gray-600">Owner's Name</p>
-                    <p class="text-xl font-bold" id="owner-name">John Doe</p>
+                    <p class="text-xl font-bold" id="owner-name">Waiting for data...</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                     <p class="text-sm text-gray-600">Last Entry Time</p>
-                    <p class="font-medium" id="entry-timestamp">2023-10-25 14:30:45</p>
+                    <p class="font-medium" id="entry-timestamp">--:--:--</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-600">Gate Number</p>
-                    <p class="font-medium" id="gate-number">GATE-05</p>
+                    <p class="font-medium" id="gate-number">--</p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-600">Current Status</p>
-                    <p class="font-medium">
-                        <span class="status-indicator status-active"></span>
-                        Active
+                    <p class="font-medium" id="current-status">
+                        <span class="status-indicator"></span>
+                        <span>Unknown</span>
                     </p>
                 </div>
             </div>
@@ -140,18 +180,14 @@
                         <tr>
                             <th class="py-3 px-4 text-left">License Plate</th>
                             <th class="py-3 px-4 text-left">Vehicle Model</th>
+                            <th class="py-3 px-4 text-left">Owner</th>
                             <th class="py-3 px-4 text-left">Timestamp</th>
                             <th class="py-3 px-4 text-left">Status</th>
                         </tr>
                     </thead>
                     <tbody id="recent-vehicles-table">
-                        <tr class="hover:bg-gray-50">
-                            <td class="py-3 px-4">XYZ 5678</td>
-                            <td class="py-3 px-4">Honda Accord</td>
-                            <td class="py-3 px-4">2023-10-25 14:25:30</td>
-                            <td class="py-3 px-4">
-                                <span class="alert-badge alert-critical">Alert</span>
-                            </td>
+                        <tr>
+                            <td colspan="5" class="py-4 text-center text-gray-500">No vehicle activity yet</td>
                         </tr>
                     </tbody>
                 </table>
@@ -165,21 +201,8 @@
                 Active Alerts
             </h2>
 
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
-                    <div>
-                        <p class="font-medium">Expired License</p>
-                        <p class="text-sm text-gray-600">ABC123 - Toyota Camry</p>
-                    </div>
-                    <div class="flex space-x-3">
-                        <button class="btn-gradient px-4 py-2 rounded-full">
-                            <i class="fas fa-search mr-2"></i>Investigate
-                        </button>
-                        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300">
-                            Escalate
-                        </button>
-                    </div>
-                </div>
+            <div id="alerts-container" class="space-y-4">
+                <div class="text-center text-gray-500 py-4">No active alerts</div>
             </div>
         </div>
     </main>
@@ -187,48 +210,198 @@
     <script>
         // Update timestamp every second
         function updateTimestamp() {
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
             };
-            document.getElementById('live-timestamp').textContent = 
+            document.getElementById('live-timestamp').textContent =
                 new Date().toLocaleDateString('en-US', options);
         }
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
 
-        // Simulate real-time updates
-        setInterval(() => {
-            const plates = ['ABC 1234', 'XYZ 5678', 'DEF 9012', 'GHI 3456'];
-            const models = ['Toyota Camry', 'Honda Accord', 'Ford F-150', 'BMW X5'];
-            
-            // Update current vehicle
-            document.getElementById('license-plate').textContent = 
-                plates[Math.floor(Math.random() * plates.length)];
-            document.getElementById('vehicle-details').textContent = 
-                `${models[Math.floor(Math.random() * models.length)]} 2022`;
-            
-            // Add to recent vehicles
+        // SignalR Connection
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://gatehub.runasp.net/vehicleHub", {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets,
+                withCredentials: false // Explicitly disable credentials
+            })
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // Connection status indicator
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connection-status');
+            const indicator = statusElement.querySelector('.connection-status');
+            const text = statusElement.querySelector('span:last-child');
+
+            if (connected) {
+                indicator.className = 'connection-status connected';
+                text.textContent = 'Connected';
+            } else {
+                indicator.className = 'connection-status disconnected';
+                text.textContent = 'Disconnected';
+            }
+        }
+
+        // Handle vehicle updates
+        connection.on("ReceiveVehicleUpdate", (licensePlate, vehicleModel, ownerName, entryTime, gateNumber, status) => {
+            console.log("Received vehicle update:", { licensePlate, vehicleModel, ownerName, entryTime, gateNumber, status });
+
+            // Update the real-time vehicle section
+            document.getElementById('license-plate').textContent = licensePlate;
+            document.getElementById('vehicle-details').textContent = vehicleModel;
+            document.getElementById('owner-name').textContent = ownerName;
+            document.getElementById('entry-timestamp').textContent = entryTime;
+            document.getElementById('gate-number').textContent = gateNumber;
+
+            // Update status indicator
+            const statusElement = document.getElementById('current-status');
+            const indicator = statusElement.querySelector('.status-indicator');
+            const statusText = statusElement.querySelector('span:last-child');
+
+            statusText.textContent = status;
+            indicator.className = 'status-indicator';
+
+            if (status.toLowerCase().includes('alert') || status.toLowerCase().includes('critical')) {
+                indicator.classList.add('status-critical');
+            } else if (status.toLowerCase().includes('warning')) {
+                indicator.classList.add('status-warning');
+            } else {
+                indicator.classList.add('status-active');
+            }
+
+            // Add to recent vehicles table
             const tbody = document.getElementById('recent-vehicles-table');
+
+            // Remove the "no data" row if it exists
+            if (tbody.querySelector('td[colspan]')) {
+                tbody.innerHTML = '';
+            }
+
             const newRow = document.createElement('tr');
             newRow.className = 'hover:bg-gray-50';
             newRow.innerHTML = `
-                <td class="py-3 px-4">${plates[Math.floor(Math.random() * plates.length)]}</td>
-                <td class="py-3 px-4">${models[Math.floor(Math.random() * models.length)]}</td>
-                <td class="py-3 px-4">${new Date().toLocaleTimeString()}</td>
+                <td class="py-3 px-4">${licensePlate}</td>
+                <td class="py-3 px-4">${vehicleModel}</td>
+                <td class="py-3 px-4">${ownerName}</td>
+                <td class="py-3 px-4">${entryTime}</td>
                 <td class="py-3 px-4">
-                    <span class="alert-badge ${Math.random() > 0.5 ? 'alert-critical' : 'bg-green-100 text-green-800'}">
-                        ${Math.random() > 0.5 ? 'Alert' : 'Normal'}
+                    <span class="alert-badge ${status.toLowerCase().includes('alert') ? 'alert-critical' :
+                    status.toLowerCase().includes('warning') ? 'alert-warning' : 'alert-normal'}">
+                        ${status}
                     </span>
                 </td>
             `;
             tbody.insertBefore(newRow, tbody.firstChild);
-        }, 5000);
+
+            // Limit to 10 most recent entries
+            if (tbody.children.length > 3) {
+                tbody.removeChild(tbody.lastChild);
+            }
+        });
+
+        // Handle alerts
+        connection.on("ReceiveAlert", (message, licensePlate, vehicleModel, ownerName, timestamp) => {
+    console.log("Received alert:", { message, licensePlate, vehicleModel, ownerName, timestamp });
+
+    const alertsContainer = document.getElementById('alerts-container');
+    const maxAlerts = 10; // Maximum number of alerts to keep
+
+    // Remove the "no alerts" message if it exists
+    if (alertsContainer.querySelector('.text-center')) {
+        alertsContainer.innerHTML = '';
+    }
+
+    // Create new alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'flex items-center justify-between p-4 bg-red-50 rounded-lg';
+    alertDiv.innerHTML = `
+        <div>
+            <p class="font-medium">${message}</p>
+            <p class="text-sm text-gray-600">${licensePlate} - ${vehicleModel} (${ownerName})</p>
+            <p class="text-xs text-gray-500 mt-1">${timestamp}</p>
+        </div>
+    `;
+
+    // Add new alert to the top
+    alertsContainer.insertBefore(alertDiv, alertsContainer.firstChild);
+
+    // Remove oldest alert if we exceed maximum
+    while (alertsContainer.children.length > maxAlerts) {
+        alertsContainer.removeChild(alertsContainer.lastChild);
+    }
+
+    // Play alert sound
+    playAlertSound();
+
+    // Show browser notification if permitted
+    showNotification(message, `${licensePlate} - ${vehicleModel}`);
+});
+
+        // Start the connection
+        async function startConnection() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+                updateConnectionStatus(true);
+
+                // Reconnect if connection is lost
+                connection.onclose(async () => {
+                    updateConnectionStatus(false);
+                    console.log("SignalR connection lost. Attempting to reconnect...");
+                    await startConnection();
+                });
+            } catch (err) {
+                console.log("SignalR Connection Error: ", err);
+                updateConnectionStatus(false);
+                setTimeout(startConnection, 5000);
+            }
+        }
+
+        // Browser notification
+        function showNotification(title, body) {
+            if (!("Notification" in window)) {
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                new Notification(title, { body });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification(title, { body });
+                    }
+                });
+            }
+        }
+
+        // Alert sound
+        function playAlertSound() {
+            const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log("Audio play failed:", e));
+        }
+
+        // Alert actions
+        
+
+        // Start the connection when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            startConnection();
+
+            // Request notification permission
+            if ("Notification" in window) {
+                Notification.requestPermission();
+            }
+        });
     </script>
 </body>
+
 </html>

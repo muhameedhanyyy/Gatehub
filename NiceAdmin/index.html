@@ -18,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -38,6 +38,21 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <style>
+    table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table td, table th {
+  text-align: left; /* Default LTR */
+}
+
+[lang="ar"] table td, [lang="ar"] table th {
+  text-align: right; /* RTL for Arabic */
+}
+
+  </style>
 </head>
 
 <body>
@@ -89,101 +104,90 @@
 
   </header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="index.html">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link " href="index.html">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-person-add"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="newadmin.html">
+            <i class="bi bi-circle"></i><span>Add a new Admin</span>
+          </a>
+        </li>
+        <li>
+          <a href="gatestaff.html">
+            <i class="bi bi-circle"></i><span>Add a new Gatestaff</span>
+          </a>
+        </li>
+        <li>
+          <a href="addvehicle.html">
+            <i class="bi bi-circle"></i><span>Add a new Vehicle </span>
+          </a>
+        </li>
+        <li>
+          <a href="vehicleowner.html">
+            <i class="bi bi-circle"></i><span>Add a new Vehicle Owner</span>
+          </a>
+        </li>
+        <li>
+          <a href="addgate.html">
+            <i class="bi bi-circle"></i><span>Add a new gate</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End add admin Nav -->
 
-      <li class="nav-item">
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-question-circle"></i><span>Inquiries</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="vehicleinquiry.html">
+            <i class="bi bi-circle"></i><span>Vehicle Inquiry</span>
+          </a>
+        </li>
+        <li>
+          <a href="vehicleownerinquiry.html">
+            <i class="bi bi-circle"></i><span>Vehicle Owner Inquiry</span>
+          </a>
+        </li>
+        <li>
+          <a href="lostvehicleinquiry.html">
+            <i class="bi bi-circle"></i><span>Lost Vehicle Inquiry</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Inquiries Nav -->
 
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="complains.html">
+        <i class="bi bi-flag"></i><span>Complaints</span>
+      </a>
+    </li><!-- End Complaints Nav -->
 
+    <li class="nav-heading">Pages</li>
 
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="users-profile.html">
+        <i class="bi bi-person"></i>
+        <span>Profile</span>
+      </a>
+    </li><!-- End Profile Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-person-add"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="newadmin.html">
-              <i class="bi bi-circle"></i><span>Add a new Admin</span>
-            </a>
-          </li>
-          <li>
-            <a href="gatestaff.html">
-              <i class="bi bi-circle"></i><span>Add a new Gatestaff</span>
-            </a>
-          </li>
-          <li>
-            <a href="addvehicle.html">
-              <i class="bi bi-circle"></i><span>Add a new Vehicle </span>
-            </a>
-          </li>
-          <li>
-            <a href="vehicleowner.html">
-              <i class="bi bi-circle"></i><span>Add a new Vehicle Owner</span>
-            </a>
-          </li>
-          <li>
-            <a href="addgate.html">
-              <i class="bi bi-circle"></i><span>Add a new gate</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End add admin Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-question-circle"></i><span>Inquiries</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="vehicleinquiry.html">
-              <i class="bi bi-circle"></i><span>Vehicle Inquiry</span>
-            </a>
-          </li>
-          <li>
-            <a href="vehicleownerinquiry.html">
-              <i class="bi bi-circle"></i><span>Vehicle Owner Inquiry</span>
-            </a>
-          </li>
-          <li>
-            <a href="lostvehicleinquiry.html">
-              <i class="bi bi-circle"></i><span>Lost Vehicle Inquiry</span>
-            </a>
-          </li>
-
-        </ul>
-      </li><!-- End Inquiries Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed"   href="complains.html" data-bs-target="#forrms-nav" >
-          <i class="bi bi-flag" ></i><span>Complains</span>
-        </a>
-        
-      </li><!-- End Inquiries Nav -->
-
-      <li class="nav-heading">Pages</li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-    
-
-
-
-    </ul>
-
-  </aside><!-- End Sidebar-->
+  </ul>
+</aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
@@ -215,8 +219,8 @@
         </div>
         <div class="ps-3">
           <h6 id="carsPassedCount">Loading...</h6>
-          <span id="carsPercentage" class="small pt-1 fw-bold">0%</span>
-          <span id="carsTrend" class="text-muted small pt-2 ps-1">loading</span>
+          <span id="carsPercentage" class="small pt-1 fw-bold"></span>
+          <span id="carsTrend" class="text-muted small pt-2 ps-1"></span>
         </div>
       </div>
     </div>
@@ -233,9 +237,9 @@
                     <i class="bi bi-currency-dollar"></i>
                   </div>
                   <div class="ps-3">
-                    <h6 id="totalRevenueAmount">Loading...</h6>
-                    <span id="revenuePercentage" class="small pt-1 fw-bold">0%</span>
-                    <span id="revenueTrend" class="text-muted small pt-2 ps-1">loading</span>
+                    <h6 id="totalRevenueAmount"></h6>
+                    <span id="revenuePercentage" class="small pt-1 fw-bold"></span>
+                    <span id="revenueTrend" class="text-muted small pt-2 ps-1"></span>
                   </div>
                 </div>
               </div>
@@ -256,8 +260,8 @@
                     </div>
                     <div class="ps-3">
                       <h6 id="lostVehiclesCount">Loading...</h6>
-                      <span id="lostPercentage" class="small pt-1 fw-bold">0%</span>
-                      <span id="lostTrend" class="text-muted small pt-2 ps-1">loading</span>
+                      <span id="lostPercentage" class="small pt-1 fw-bold"></span>
+                      <span id="lostTrend" class="text-muted small pt-2 ps-1"></span>
                     </div>
                   </div>
                 </div>
@@ -284,36 +288,26 @@
   <!-- Recent Cars Passed -->
   <div class="col-12">
     <div class="card recent-sales overflow-auto">
-      <div class="filter">
-        <a class="icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-three-dots"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <li class="dropdown-header text-start">
-            <h6>Filter</h6>
-          </li>
-          <li><a class="dropdown-item" href="#">Today</a></li>
-          <li><a class="dropdown-item" href="#">This Month</a></li>
-          <li><a class="dropdown-item" href="#">This Year</a></li>
-        </ul>
-      </div>
       <div class="card-body">
         <h5 class="card-title">Recent Cars Passed <span>| Today</span></h5>
         <table class="table table-borderless datatable">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Vehicle License Plate</th>
-              <th scope="col">Gate Name</th>
-              <th scope="col">Date of Passing</th>
+              <th>#</th>
+              <th>Vehicle License Plate</th>
+              <th>Gate Name</th>
+              <th>Date of Passing</th>
             </tr>
           </thead>
-          <tbody id="recentCarsBody"></tbody>
+          <tbody id="recentCarsBody">
+          <tr><td colspan="4" class="text-center">Loading data...</td></tr>
+</tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- End Recent Cars Passed -->
 
@@ -425,27 +419,13 @@
       
       const vehicleData = await response.json();
       
-      // Update DOM elements with API data - adjust these selectors based on actual API response structure
       document.getElementById('carsPassedCount').textContent = 
         vehicleData.count.toLocaleString() ; // Use actual property name from API
       
-      const percentageElement = document.getElementById('carsPercentage');
-      const trendElement = document.getElementById('carsTrend');
-      
-      // Assuming API returns percentageChange and trend properties
-      const percentage = vehicleData.percentageChange || 0;
-      percentageElement.textContent = `${Math.abs(percentage)}%`;
-      percentageElement.className = percentage >= 0 ? 
-        'text-success small pt-1 fw-bold' : 
-        'text-danger small pt-1 fw-bold';
-      
-      trendElement.textContent = percentage >= 0 ? 'increase' : 'decrease';
-  
     } catch (error) {
       console.error('Error fetching vehicle data:', error);
       document.getElementById('carsPassedCount').textContent = 'Error';
-      document.getElementById('carsPercentage').textContent = '--%';
-      document.getElementById('carsTrend').textContent = 'unavailable';
+     
     }
   }
   
@@ -461,32 +441,14 @@
         const revenueData = await response.json();
         console.log('Revenue Data:', revenueData); // Check actual response structure
     
-        // Update elements - adjust these properties based on actual API response
         const amountElement = document.getElementById('totalRevenueAmount');
-        const percentageElement = document.getElementById('revenuePercentage');
-        const trendElement = document.getElementById('revenueTrend');
-    
-        // Format currency (assuming API returns amount as number)
-        const amount = revenueData.total || revenueData.amount || 0;
+        
+        const amount = revenueData.totalFees+ revenueData.totalFines;
         amountElement.textContent = `$${amount.toLocaleString()}`;
     
-        // Handle percentage change (assuming API returns percentageChange)
-        const percentage = revenueData.percentageChange || revenueData.changePercent || 0;
-        percentageElement.textContent = `${Math.abs(percentage)}%`;
-        
-        // Set color class based on positive/negative change
-        percentageElement.className = percentage >= 0 
-          ? 'text-success small pt-1 fw-bold' 
-          : 'text-danger small pt-1 fw-bold';
-    
-        // Set trend text
-        trendElement.textContent = percentage >= 0 ? 'increase' : 'decrease';
     
       } catch (error) {
-        console.error('Error fetching revenue data:', error);
-        document.getElementById('totalRevenueAmount').textContent = 'Error';
-        percentageElement.textContent = '--%';
-        trendElement.textContent = 'unavailable';
+      
       }
     }
     
@@ -505,28 +467,16 @@
   
       // Update elements
       const countElement = document.getElementById('lostVehiclesCount');
-      const percentageElement = document.getElementById('lostPercentage');
-      const trendElement = document.getElementById('lostTrend');
-  
-      // Assuming API returns count and percentageChange properties
+
       const count = lostVehicleData ;
       countElement.textContent = count.toLocaleString();
   
-      const percentage = lostVehicleData.percentageChange || lostVehicleData.changePercent || 0;
-      percentageElement.textContent = `${Math.abs(percentage)}%`;
-      
-      // Set color based on positive/negative change
-      percentageElement.className = percentage >= 0 
-        ? 'text-danger small pt-1 fw-bold'  // Using danger color for increases in lost vehicles
-        : 'text-success small pt-1 fw-bold'; // Success color for decreases
-  
-      trendElement.textContent = percentage >= 0 ? 'increase' : 'decrease';
+    
   
     } catch (error) {
       console.error('Error fetching lost vehicles data:', error);
       document.getElementById('lostVehiclesCount').textContent = 'Error';
-      document.getElementById('lostPercentage').textContent = '--%';
-      document.getElementById('lostTrend').textContent = 'unavailable';
+
     }
   }
   
@@ -536,145 +486,176 @@
 
 
 <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+     
+  
+      const response = await fetch('http://gatehub.runasp.net/api/Admin/DailyReport');
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  
+      const apiData = await response.json();
+      console.log('API Data:', apiData);
+  
+      // Create empty dataset for all hours (00:00 to 06:00)
+      const hours = Array.from({length: 7}, (_, i) => i); // [0,1,2,3,4,5,6]
+      const categories = hours.map(h => `${h.toString().padStart(2, '0')}:00`);
+  
+      // Initialize data arrays with zeros
+      const carsData = Array(7).fill(0);
+      const revenueData = Array(7).fill(0);
+      const lostVehiclesData = Array(7).fill(0);
+  
+      // Fill data from API response
+      apiData.forEach(item => {
+        const index = item.hour;
+        carsData[index] = item.cars;
+        revenueData[index] = item.revenue;
+        lostVehiclesData[index] = item.lostVehicles;
+      });
+  
+      new ApexCharts(document.querySelector("#reportsChart"), {
+        series: [{
+          name: 'Cars',
+          data: carsData
+        }, {
+          name: 'Revenue',
+          data: revenueData
+        }, {
+          name: 'Lost Vehicles',
+          data: lostVehiclesData
+        }],
+        chart: {
+          height: 350,
+          type: 'line',
+          toolbar: { show: false }
+        },
+        markers: { 
+          size: 4,
+          hover: { size: 6 }
+        },
+        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+        dataLabels: { enabled: false },
+        stroke: {
+          curve: 'straight',
+          width: 2
+        },
+        xaxis: {
+          categories: categories,
+          labels: { style: { colors: '#6c757d' } }
+        },
+        yaxis: {
+          min: 0,
+          max: Math.max(...carsData, ...revenueData, ...lostVehiclesData) + 10, // Auto-scale
+          tickAmount: 6,
+          labels: {
+            formatter: function(value) {
+              return Math.floor(value);
+            }
+          }
+        },
+        grid: {
+          borderColor: '#f1f1f1',
+          row: { colors: ['transparent', '#f8f9fa'] }
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right'
+        }
+      }).render();
+  
+    } catch (error) {
+      document.querySelector("#reportsChart").innerHTML = `
+        <div class="alert alert-danger p-3">
+          Failed to load report data. Please check your connection and try again later.
+          <div class="text-muted small mt-2">Error: ${error.message}</div>
+        </div>
+      `;
+    }
+  });
+  </script>
+
+<script>
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Show loading state
-    const chartContainer = document.querySelector("#reportsChart");
-    chartContainer.innerHTML = '<div class="text-center p-4">Loading chart data...</div>';
-
-    // Fetch daily report data
-    const response = await fetch('http://gatehub.runasp.net/api/Admin/DailyReport');
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
-    const reportData = await response.json();
-    console.log('Daily Report Data:', reportData);
-
-    // Process API data - adjust these property names based on actual API response
-    const categories = reportData.map(item => {
-      // Convert API date string to JavaScript Date object
-      const date = new Date(item.date);
-      // Format date for chart (YYYY-MM-DD format)
-      return date.toISOString().split('T')[0];
-    });
-
-    // Extract numerical data with fallbacks
-    const carsData = reportData.map(item => Number(item.carsPassed) || 0);
-    const revenueData = reportData.map(item => Number(item.totalRevenue) || 0);
-    const lostVehiclesData = reportData.map(item => Number(item.lostVehicles) || 0);
-
-    // Initialize chart
-    new ApexCharts(document.querySelector("#reportsChart"), {
-      series: [{
-        name: 'Cars',
-        data: carsData
-      }, {
-        name: 'Revenue',
-        data: revenueData
-      }, {
-        name: 'Lost Vehicles',
-        data: lostVehiclesData
-      }],
-      chart: {
-        height: 350,
-        type: 'area',
-        toolbar: { show: false }
-      },
-      markers: { size: 4 },
-      colors: ['#4154f1', '#2eca6a', '#ff771d'],
-      fill: {
-        type: "gradient",
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.3,
-          opacityTo: 0.4,
-          stops: [0, 90, 100]
-        }
-      },
-      dataLabels: { enabled: false },
-      stroke: {
-        curve: 'smooth',
-        width: 2
-      },
-      xaxis: {
-        type: 'category',
-        categories: categories,
-        labels: {
-          formatter: function(value) {
-            return new Date(value).toLocaleDateString();
-          }
-        }
-      },
-      tooltip: {
-        x: {
-          formatter: function(value) {
-            return new Date(value).toLocaleDateString();
-          }
-        }
-      }
-    }).render();
-
-  } catch (error) {
-    console.error('Error loading reports:', error);
-    document.querySelector("#reportsChart").innerHTML = `
-      <div class="alert alert-danger p-3">
-        Failed to load report data. Please check your connection and try again later.
-        <div class="text-muted small mt-2">Error: ${error.message}</div>
-      </div>
-    `;
-  }
-});
-</script>
-
-  <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const tbody = document.getElementById('recentCarsBody');
-    
-    try {
-      // Show loading state
-      tbody.innerHTML = `<tr><td colspan="4" class="text-center">Loading data...</td></tr>`;
+      // 1. Safely get DOM elements
+      const tbody = document.getElementById('recentCarsBody');
+      // const carsPassedCount = document.getElementById('carsPassedCount');
+      // const carsPercentage = document.getElementById('carsPercentage');
+      const carsTrend = document.getElementById('carsTrend');
   
+      // 2. Validate critical elements exist
+      if (!tbody) {
+      throw new Error('Recent cars table body element not found');
+    }
+      if (!carsPassedCount  || !carsTrend) {
+        throw new Error('Card elements not found');
+      }
+    
+      // 4. Fetch data
       const response = await fetch('http://gatehub.runasp.net/api/Admin/RecentCars');
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${await response.text()}`);
       
       const carsData = await response.json();
-      console.log('API Data:', carsData);
   
-      // Clear existing content
-      tbody.innerHTML = '';
+      // 5. Update cars passed card
+      const today = new Date().toISOString().split('T')[0];
+      const todayCars = carsData.filter(car => 
+        new Date(car.dateOfPassing).toISOString().split('T')[0] === today
+      ).length;
   
-      // Create document fragment for batch insertion
+      // carsPassedCount.textContent = todayCars;
+      // Add your percentage calculation logic here
+  
+      // 6. Update table
+      tbody.innerHTML = ''; // Clear loading state
       const fragment = document.createDocumentFragment();
-  
+      
       carsData.forEach((car, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td><a href="#">${car.vehicleLicensePlate }</a></td>
-          <td>${car.gateName }</td>
-          <td>${car.dateOfPassing}</td>
+          <td>${index + 1}</td>
+          <td><a href="#">${car.vehicleLicensePlate}</a></td>
+          <td>${car.gateName}</td>
+          <td>${new Date(car.dateOfPassing).toLocaleString()}</td>
         `;
         fragment.appendChild(row);
       });
-  
+      
       tbody.appendChild(fragment);
   
-      // Initialize datatable after DOM update
+      // 7. Initialize DataTable
       if (typeof simpleDatatables !== 'undefined') {
         new simpleDatatables.DataTable('.datatable', {
           perPage: 5,
           labels: {
-            placeholder: "Search vehicles..."
+            placeholder: "Search vehicles...",
+            noRows: "No recent cars found",
+            info: "Showing {start} to {end} of {rows} entries"
           }
         });
       }
   
     } catch (error) {
-      // console.error('Error:', error);
-      // tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">${error.message}</td></tr>`;
+      console.error('Error:', error);
+      
+      // 8. Update error states
+      const errorHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-danger">
+            ${error.message}
+          </td>
+        </tr>
+      `;
+      
+      if (document.getElementById('recentCarsBody')) {
+        // document.getElementById('recentCarsBody').innerHTML = errorHTML;
+      }
+      
+      if (carsPassedCount) carsPassedCount.textContent = 'Error';
+      if (carsTrend) carsTrend.textContent = 'data unavailable';
     }
   });
-  </script> 
-  
-
+  </script>
 
 
 

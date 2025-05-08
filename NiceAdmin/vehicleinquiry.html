@@ -40,95 +40,301 @@
                 </div>
               </div>
 
-              <div class="card mb-3" id="resultsCard" style="display: none;">
+               <!-- Results Section -->
+               <div class="card mb-3" id="resultsCard" style="display: none;">
                 <div class="card-body">
-                  <table class="table" id="vehicleTable">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>License Plate</th>
-                        <th>Owner Name</th>
-                        <th>Type</th>
-                        <th>Last Gate</th>
-                        <th>Last Passing Date</th>
-                        <th>Total Fees</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
+                  <h5 class="card-title mb-4">Vehicle Details</h5>
+                  <div class="row">
+                    <!-- Vehicle Details Table -->
+                    <div class="col-md-6">
+                      <table class="table table-bordered">
+                        <thead class="table-primary">
+                          <tr>
+                            <th colspan="2" class="text-center">Vehicle Information</th>
+                          </tr>
+                        </thead>
+                        <tbody id="vehicleDetails"></tbody>
                   </table>
                 </div>
+
+
+                  <!-- Owner Details Table -->
+                  <div class="col-md-6">
+                    <table class="table table-bordered">
+                      <thead class="table-primary">
+                        <tr>
+                          <th colspan="2" class="text-center">Owner Information</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ownerDetails">
+                        <!-- Owner data will be inserted here -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="card-title mb-0">Update Vehicle Details</h5>
+                      <div>
+                        <button class="btn btn-sm btn-warning me-2" id="editVehicleBtn">
+                          <i class="bi bi-pencil"></i> Edit Vehicle
+                        </button>
+                        <button class="btn btn-sm btn-warning" id="editOwnerBtn">
+                          <i class="bi bi-person-gear"></i> Edit Owner
+                        </button>
+                      </div>
+                    </div>
               </div>
             </div>
           </div>
+          
         </div>
+
       </section>
     </div>
   </main>
+<!-- Update Vehicle Modal (modified) -->
+<div class="modal fade" id="vehicleModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Vehicle Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="vehicleForm">
+          <div class="mb-3">
+            <label class="form-label">License Start</label>
+            <input type="date" class="form-control" id="editLicenseStart" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">License End</label>
+            <input type="date" class="form-control" id="editLicenseEnd" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Color</label>
+            <input type="text" class="form-control" id="editColor" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">RFID</label>
+            <input type="text" class="form-control" id="editRfid" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveVehicleBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+  
+</div>
 
+<!-- Update Owner Modal (modified) -->
+<div class="modal fade" id="ownerModal" tabindex="-1">
+  
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Owner Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="ownerForm">
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="editPhone" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" id="editAddress" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">License</label>
+            <input type="text" class="form-control" id="editLicense" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveOwnerBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+ 
+</div>
   <script>
-    document.getElementById('inquiryForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
-      const form = event.target;
-      const errorDiv = document.getElementById('vehicleNotFoundError');
-      const resultsCard = document.getElementById('resultsCard');
-
-      if (form.checkValidity()) {
+    let currentVehicleData = null;
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('inquiryForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const errorDiv = document.getElementById('vehicleNotFoundError');
+        const resultsCard = document.getElementById('resultsCard');
+        const licensePlateInput = document.getElementById('licensePlate');
+    
+        if (!form.checkValidity()) {
+          form.classList.add('was-validated');
+          return;
+        }
+    
         try {
-          const licensePlate = encodeURIComponent(document.getElementById('licensePlate'))
-          console.log(licensePlate)
-          // const encodedPlate = "";
-          // console.log(encodedPlate)
-          // const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${licensePlate}`;
-          // const response = await fetch(apiUrl);
-          const response = await fetch('http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
+          const licensePlate = licensePlateInput.value.trim();
+          if (!licensePlate) return;
+    
+          const encodedPlate = encodeURIComponent(licensePlate);
+          const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}`;
+    
+          const response = await fetch(apiUrl);
+          
+          if (!response.ok) {
+            if (response.status === 404) {
+              throw new Error('Vehicle not found');
             }
-          
-        });
-          
-
-          if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+    
           const vehicleData = await response.json();
-          if (!vehicleData.length) throw new Error('No vehicles found.');
-
+          currentVehicleData = vehicleData;
+          
+          // Remove array check since we're getting a single object
+          if (!vehicleData) {
+            throw new Error('No vehicle data found');
+          }
+    
+          // Update vehicle details
+          const vehicleDetails = document.getElementById('vehicleDetails');
+          vehicleDetails.innerHTML = `
+            <tr><td>Plate Number</td><td>${vehicleData.plateNumber || 'N/A'}</td></tr>
+            <tr><td>License Start</td><td>${new Date(vehicleData.licenseStart).toLocaleDateString() || 'N/A'}</td></tr>
+            <tr><td>License End</td><td>${new Date(vehicleData.licenseEnd).toLocaleDateString() || 'N/A'}</td></tr>
+            <tr><td>Model</td><td>${vehicleData.modelCompany} ${vehicleData.modelDescription}</td></tr>
+            <tr><td>Color</td><td>${vehicleData.color || 'N/A'}</td></tr>
+            <tr><td>Type</td><td>${vehicleData.type || 'N/A'}</td></tr>
+            <tr><td>RFID</td><td>${vehicleData.rfid || 'N/A'}</td></tr>
+          `;
+    
+          // Update owner details
+          const ownerDetails = document.getElementById('ownerDetails');
+          ownerDetails.innerHTML = `
+            <tr><td>Owner ID</td><td>${vehicleData.vehicleOwner?.id || 'N/A'}</td></tr>
+            <tr><td>Phone</td><td>${vehicleData.vehicleOwner?.phoneNumber || 'N/A'}</td></tr>
+            <tr><td>Address</td><td>${vehicleData.vehicleOwner?.address || 'N/A'}</td></tr>
+            <tr><td>Balance</td><td>EGP ${vehicleData.vehicleOwner?.balance || 0}</td></tr>
+            <tr><td>license</td><td> ${vehicleData.vehicleOwner?.license || 'N/A'}</td></tr>
+          `;
+    
           errorDiv.style.display = 'none';
           resultsCard.style.display = 'block';
-
-          const tbody = document.querySelector('#vehicleTable tbody');
-          tbody.innerHTML = '';
-
-          vehicleData.forEach((vehicle, index) => {
-            const row = `
-              <tr>
-                <th scope="row">${index + 1}</th>
-                <td>${vehicle.plateNumber || 'N/A'}</td>
-                <td>${vehicle.ownerName || 'N/A'}</td>
-                <td>${vehicle.type || 'N/A'}</td>
-                <td>${vehicle.lastGate || 'N/A'}</td>
-                <td>${vehicle.lastPassingDate ? new Date(vehicle.lastPassingDate).toLocaleString() : 'N/A'}</td>
-                <td>EGP ${vehicle.totalFees || 0}</td>
-                <td>
-                  <span class="badge ${vehicle.status === 'Active' ? 'bg-success' : 'bg-danger'}">
-                    ${vehicle.status || 'Unknown'}
-                  </span>
-                </td>
-              </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
-          });
+    
         } catch (error) {
-          console.error(error);
+          console.error('Search failed:', error);
+          errorDiv.textContent = error.message;
           errorDiv.style.display = 'block';
           resultsCard.style.display = 'none';
         }
-      }
+      });
+      // Add these event handlers after your existing submit handler
+      document.getElementById('editVehicleBtn').addEventListener('click', () => {
+        if (!currentVehicleData) return;
+  
+  const form = document.getElementById('vehicleForm');
+  form.reset();
+  
+  document.getElementById('editLicenseStart').value = currentVehicleData.licenseStart.split('T')[0];
+  document.getElementById('editLicenseEnd').value = currentVehicleData.licenseEnd.split('T')[0];
+  document.getElementById('editColor').value = currentVehicleData.color;
+  document.getElementById('editRfid').value = currentVehicleData.rfid;
+  
+  new bootstrap.Modal(document.getElementById('vehicleModal')).show();
+});
 
-      form.classList.add('was-validated');
+document.getElementById('editOwnerBtn').addEventListener('click', () => {
+  if (!currentVehicleData?.vehicleOwner) return;
+  
+  const owner = currentVehicleData.vehicleOwner;
+  document.getElementById('editPhone').value = owner.phoneNumber;
+  document.getElementById('editAddress').value = owner.address;
+  document.getElementById('editLicense').value = owner.license;
+  
+  new bootstrap.Modal(document.getElementById('ownerModal')).show();
+});
+
+// Updated Vehicle Update Handler
+document.getElementById('saveVehicleBtn').addEventListener('click', async () => {
+  try {
+    const vehicleId = currentVehicleData.id;
+    const updatedData = {
+      licenseStart: new Date(document.getElementById('editLicenseStart').value).toISOString(),
+      licenseEnd: new Date(document.getElementById('editLicenseEnd').value).toISOString(),
+      color: document.getElementById('editColor').value,
+      rfid: document.getElementById('editRfid').value
+    };
+
+    const response = await fetch(
+      `http://gatehub.runasp.net/api/Admin/EditVehicle?vehicleId=${vehicleId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedData)
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Vehicle update failed');
+    }
+
+    // Refresh data
+    document.getElementById('inquiryForm').dispatchEvent(new Event('submit'));
+    bootstrap.Modal.getInstance(document.getElementById('vehicleModal')).hide();
+  } catch (error) {
+    console.error('Vehicle update error:', error);
+    alert(`Update failed: ${error.message}`);
+  }
+});
+
+// Owner Update Handler with PATCH
+document.getElementById('saveOwnerBtn').addEventListener('click', async () => {
+  try {
+    const ownerId = currentVehicleData.vehicleOwner.id;
+    const updatedOwner = {
+      phoneNumber: document.getElementById('editPhone').value,
+      address: document.getElementById('editAddress').value,
+      license: document.getElementById('editLicense').value
+    };
+
+    const response = await fetch(
+      `http://gatehub.runasp.net/api/Admin/update-vehicle-owner?OwnerId=${ownerId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedOwner)
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Owner update failed');
+    }
+
+    // Refresh data
+    document.getElementById('inquiryForm').dispatchEvent(new Event('submit'));
+    bootstrap.Modal.getInstance(document.getElementById('ownerModal')).hide();
+  } catch (error) {
+    console.error('Owner update error:', error);
+    alert(`Update failed: ${error.message}`);
+  }
+});
+
+
+
     });
-  </script>
+    </script>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>

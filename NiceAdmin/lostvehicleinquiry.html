@@ -85,32 +85,21 @@
                   <table class="table table-bordered" id="lostVehiclesTable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">License Plate</th>
-                        <th scope="col">Vehicle Type</th>
+                        <th scope="col">Vehicle ID</th>
+                        <th scope="col">Plate Number</th>
                         <th scope="col">Reported Date</th>
-                        <th scope="col">Last Seen</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Action</th>
                       </tr>
                     </thead>
+                    <!-- Add this after the table header -->
+<div id="loading" class="text-center my-3" style="display: none;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
                     <tbody>
-                      <!-- Sample Lost Vehicles -->
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>ABC-1234</td>
-                        <td>SUV</td>
-                        <td>2024-01-12</td>
-                        <td>Gate 5 (Downtown)</td>
-                        <td><span class="badge bg-danger">Active</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>XYZ-5678</td>
-                        <td>Sedan</td>
-                        <td>2023-12-30</td>
-                        <td>Gate 3 (Highway)</td>
-                        <td><span class="badge bg-success">Recovered</span></td>
-                      </tr>
+                     
                     </tbody>
                   </table>
                 </div>
@@ -161,6 +150,125 @@ document.addEventListener('DOMContentLoaded', function() {
     }, false);
 });
 </script>
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('lostVehicleForm');
+      const errorDiv = document.getElementById('vehicleNotFoundError');
+      const tableBody = document.querySelector('#lostVehiclesTable tbody');
+      let allLostVehicles = [];
+
+      // Load initial data
+      async function loadLostVehicles() {
+          try {
+              document.getElementById('loading').style.display = 'block';
+              const response = await fetch('http://gatehub.runasp.net/api/Admin/getallLostVehicles');
+              if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+              allLostVehicles = await response.json();
+              populateTable(allLostVehicles);
+          } catch (error) {
+              console.error('Error:', error);
+              alert('Failed to load lost vehicle data: ' + error.message);
+          } finally {
+              document.getElementById('loading').style.display = 'none';
+          }
+      }
+
+      // Populate table with data
+      function populateTable(vehicles) {
+          tableBody.innerHTML = vehicles.map((vehicle, index) => `
+              <tr data-vehicle-id="${vehicle.id}">
+                  <th scope="row">${index + 1}</th>
+                  <td>${vehicle.plateNumber}</td>
+                  <td>${new Date(vehicle.reportedDate).toLocaleDateString()}</td>
+                  <td>
+                      <span class="badge ${vehicle.isFound ? 'bg-success' : 'bg-danger'}">
+                          ${vehicle.isFound ? 'Recovered' : 'Active'}
+                      </span>
+                  </td>
+                  <td>
+                      ${!vehicle.isFound ? 
+                      `<button class="btn btn-sm btn-success mark-found-btn px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
+                          Mark as Found
+                      </button>` : ''}
+                  </td>
+              </tr>
+          `).join('');
+
+          // Add event listeners to recovery buttons
+          document.querySelectorAll('.mark-found-btn').forEach(button => {
+              button.addEventListener('click', async (e) => {
+                  const row = e.target.closest('tr');
+                  const vehicleId = parseInt(row.dataset.vehicleId);
+                  const vehicle = allLostVehicles.find(v => v.id === vehicleId);
+
+                  if (!vehicle) return;
+
+                  if (confirm('Mark this vehicle as found?')) {
+                      try {
+                          // Call recovery API
+                          const response = await fetch('http://gatehub.runasp.net/api/Admin/RecoverVehicle', {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                                  // Add authorization headers if required:
+                                  // 'Authorization': 'Bearer YOUR_TOKEN'
+                              },
+                              body: JSON.stringify({
+                                  plateNum: vehicle.plateNumber
+                              })
+                          });
+
+                          if (!response.ok) {
+                              const errorData = await response.json();
+                              throw new Error(errorData.message || `API request failed: ${response.status}`);
+                          }
+                          console.log(response)
+                          // Update local state after successful API call
+                          vehicle.isFound = true;
+                          vehicle.reportedDate = new Date().toISOString();
+                          
+                          // Refresh table display
+                          populateTable(allLostVehicles);
+                          alert('Vehicle recovered successfully!');
+                      } catch (error) {
+                          console.error('Recovery Error:', error);
+                          alert(`Recovery failed: ${error.message}`);
+                      }
+                  }
+              });
+          });
+      }
+
+      // Search functionality
+      form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          
+          if (form.checkValidity()) {
+              const searchTerm = document.getElementById('vehiclePlate').value.trim().toLowerCase();
+              const filtered = allLostVehicles.filter(vehicle => 
+                  vehicle.plateNumber.toLowerCase().includes(searchTerm));
+              
+              if (filtered.length > 0) {
+                  populateTable(filtered);
+                  errorDiv.style.display = 'none';
+              } else {
+                  tableBody.innerHTML = '';
+                  errorDiv.style.display = 'block';
+              }
+          }
+          form.classList.add('was-validated');
+      });
+
+      // Initial load
+      loadLostVehicles();
+  });
+</script>
+
 
 
   <!-- Vendor JS Files -->

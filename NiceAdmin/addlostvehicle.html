@@ -50,47 +50,29 @@
                   <form class="row g-3 needs-validation" novalidate>
                     <div class="col-12">
                       <label for="licensePlate" class="form-label">License Plate</label>
-                      <input type="text" name="licensePlate" class="form-control" id="licensePlate" placeholder="Enter License Plate" required>
-                      <div class="invalid-feedback">License plate must be alphanumeric and 1-10 characters long.</div>
+                      <input type="text" name="licensePlate" class="form-control" id="licensePlate" placeholder="Enter License Plate" >
+                      <!-- <div class="invalid-feedback">License plate must be alphanumeric and 1-10 characters long.</div> -->
                     </div>
-
-                    <div class="col-12">
-                      <label for="vehicleType" class="form-label">Vehicle Type</label>
-                      <select name="vehicleType" class="form-select" id="vehicleType" required>
-                        <option selected disabled value="">Select Vehicle Type</option>
-                        <option value="SUV">SUV</option>
-                        <option value="Sedan">Sedan</option>
-                        <option value="Truck">Truck</option>
-                        <option value="Motorbike">Motorbike</option>
-                      </select>
-                      <div class="invalid-feedback">Please select a vehicle type.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="lastSeenLocation" class="form-label">Last Seen Location</label>
-                      <input type="text" name="lastSeenLocation" class="form-control" id="lastSeenLocation" placeholder="Enter Last Seen Location" required>
-                      <div class="invalid-feedback">Please enter the last seen location.</div>
-                    </div>
-
+                    
                     <div class="col-12">
                       <label for="reportedDate" class="form-label">Reported Date</label>
                       <input type="date" name="reportedDate" class="form-control" id="reportedDate" required>
                       <div class="invalid-feedback">Please select the reported date.</div>
                     </div>
 
-                    <div class="col-12">
-                      <label for="additionalNotes" class="form-label">Additional Notes</label>
-                      <textarea name="additionalNotes" class="form-control" id="additionalNotes" rows="4" placeholder="Enter any additional information"></textarea>
-                    </div>
-
-                    <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Add Vehicle</button>
-                    </div>
+                  
+                    <button class="btn btn-primary w-100" type="submit" id="submitBtn">
+                      Add Lost Vehicle
+                    </button>
                   </form>
                 </div>
               </div>
               <!-- End Add Lost Vehicle Form -->
-
+              <div id="loading" class="text-center mb-3" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -119,12 +101,7 @@
   
         // Vehicle Type Validation
         const vehicleType = document.getElementById("vehicleType");
-        if (!vehicleType.value) {
-          vehicleType.classList.add("is-invalid");
-          isValid = false;
-        } else {
-          vehicleType.classList.remove("is-invalid");
-        }
+      
   
         // Last Seen Location Validation
         const lastSeenLocation = document.getElementById("lastSeenLocation");
@@ -152,6 +129,73 @@
       });
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector("form");
+      
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let isValid = true;
+    
+        // Clear previous validation
+        form.classList.remove('was-validated');
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+        // License Plate Validation
+        const licensePlate = document.getElementById("licensePlate");
+        const licensePlateValue = licensePlate.value;
+        // const licensePlateRegex = /^[A-Z0-9-]{1,10}$/i; // Case-insensitive check
+       
+    
+        // Reported Date Validation
+        const reportedDate = document.getElementById("reportedDate");
+        const reportedDateValue = reportedDate.value;
+        if (!reportedDateValue) {
+          reportedDate.classList.add("is-invalid");
+          isValid = false;
+        }
+    
+        if (!isValid) {
+          event.stopPropagation();
+          form.classList.add('was-validated');
+          return;
+        }
+    
+        try {
+          document.getElementById('loading').style.display = 'block';
+document.getElementById('submitBtn').disabled = true;
+          const response = await fetch('http://gatehub.runasp.net/api/Admin/AddLostVehicle', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              reportedDate: reportedDateValue,
+              isFound: false, // Hardcoded as per requirements
+              plateNumber: licensePlateValue
+            })
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to add lost vehicle');
+          }
+    
+          // Clear form on success
+          form.reset();
+          alert('Lost vehicle added successfully!');
+          
+        } catch (error) {
+          console.error('Submission error:', error);
+          alert(`Error: ${error.message}`);
+        }
+        finally {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+}
+      });
+    });
+    </script>
   
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

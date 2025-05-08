@@ -43,6 +43,7 @@
   background-color: #2980b9; /* Slightly darker shade for hover */
 }
 
+
 </style>
 </head>
 
@@ -98,27 +99,17 @@
                   <table class="table table-bordered" id="ownerTable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Owner Name</th>
                         <th scope="col">National ID</th>
                         <th scope="col">Phone Number</th>
                         <th scope="col">Registered Vehicles</th>
-                        <th scope="col">Total Fines</th>
+                        <th scope="col">Balance</th>
                         <th scope="col">Account Status</th>
-                        <th scope="col">Update Data</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>احمد عثمان</td>
-                        <td>12345678901234</td>
-                        <td>+201234567890</td>
-                        <td>2</td>
-                        <td>15,300 LE</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
-                      </tr>
+                      
                     </tbody>
                   </table>
                   
@@ -126,34 +117,18 @@
                   <table class="table table-bordered" id="vehiclesTable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Vehicle Plate</th>
-                        <th scope="col">Vehicle Type</th>
+                        <th scope="col">ID</th>
+                        <th scope="col"> Plate</th>
+                        <th scope="col"> Type</th>
+                        <th scope="col"> color</th>
+                        <th scope="col"> model Company</th>
+                        <th scope="col"> rfid</th>
                         <th scope="col">Registration Status</th>
-                        <th scope="col">Last Gate Passed</th>
-                        <th scope="col">Outstanding Fines</th>
-                        <th scope="col">Update Data</th>
+                        <th scope="col">Start and End of license</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>ABC-1234</td>
-                        <td>SUV</td>
-                        <td><span class="badge bg-success">Registered</span></td>
-                        <td>Gate 5 (Downtown)</td>
-                        <td>500 LE</td>
-                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>XYZ-5678</td>
-                        <td>Sedan</td>
-                        <td><span class="badge bg-warning">Pending Renewal</span></td>
-                        <td>Gate 3 (Highway)</td>
-                        <td>1,500 LE</td>
-                        <td><button class="btn btn-sm custom-btn" onclick="window.location.href='';">Update Data</button></td>
-                      </tr>
+                    
                     </tbody>
                   </table>
                 </div>
@@ -166,7 +141,11 @@
     </div>
 </main>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+<div id="loadingSpinner" class="text-center" style="display: none;">
+  <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('ownerInquiryForm');
@@ -214,7 +193,94 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('ownerInquiryForm');
+      const errorDiv = document.getElementById('ownerNotFoundError');
+      const ownerTableBody = document.querySelector('#ownerTable tbody');
+      const vehiclesTableBody = document.querySelector('#vehiclesTable tbody');
+  
+      form.addEventListener('submit', async function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          
+          if (form.checkValidity()) {
+              try {
+                  const nationalID = document.getElementById('ownerNationalID').value.trim();
+                  const encodedNatID = encodeURIComponent(nationalID);
+                  const response = await fetch(`http://gatehub.runasp.net/api/Admin/GetOwnerWithVehicles?natId=${encodedNatID}`);
+                  
+                  if (!response.ok) {
+                      if (response.status === 404) {
+                          throw new Error('Owner not found');
+                      }
+                      throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+  
+                  const ownerData = await response.json();
+                  
+                  // Clear previous results
+                  ownerTableBody.innerHTML = '';
+                  vehiclesTableBody.innerHTML = '';
+                  errorDiv.style.display = 'none';
+  
+                  // Populate Owner Details
+                  ownerTableBody.innerHTML = `
+                      <tr>
+                          <th scope="row">1</th>
+                          <td>${ownerData.license || 'N/A'}</td>
+                          <td>${nationalID}</td>
+                          <td>${ownerData.phoneNumber || 'N/A'}</td>
+                          <td>${ownerData.vehicles?.length || 0}</td>
+                          <td>EGP ${ownerData.balance?.toLocaleString() || 0}</td>
+                          <td><span class="badge bg-success">Active</span></td>
+                         
+                      </tr>
+                  `;
+  
+                  // Populate Vehicles Table
+                  if (ownerData.vehicles?.length) {
+                      ownerData.vehicles.forEach((vehicle, index) => {
+                          vehiclesTableBody.innerHTML += `
+                              <tr>
+                                  <th scope="row">${index + 1}</th>
+                                  <td>${vehicle.plateNumber || 'N/A'}</td>
+                                  <td>${vehicle.type || 'N/A'}</td>
+                                  <td>${vehicle.color || 'N/A'}</td>
+                                  <td>${vehicle.modelCompany || 'N/A'}</td>
+                                  <td>${vehicle.rfid || 'N/A'}</td>
+                                  <td>
+                                      <span class="badge ${new Date(vehicle.licenseEnd) > new Date() ? 'bg-success' : 'bg-danger'}">
+                                          ${new Date(vehicle.licenseEnd) > new Date() ? 'Valid' : 'Expired'}
+                                      </span>
+                                  </td>
+                                  <td>${vehicle.licenseStart.slice(0,10)} - ${vehicle.licenseEnd.slice(0,10)}</td>
+                                
+                              </tr>
+                          `;
+                      });
+                  }
+  
+              } catch (error) {
+                  console.error('Search failed:', error);
+                  errorDiv.textContent = error.message;
+                  errorDiv.style.display = 'block';
+                  ownerTableBody.innerHTML = '';
+                  vehiclesTableBody.innerHTML = '';
+              }
+              
+          }
+          
+          form.classList.add('was-validated');
+      }, false);
+  
+      function formatDate(dateString) {
+          if (!dateString) return 'N/A';
+          const options = { year: 'numeric', month: 'short', day: 'numeric' };
+          return new Date(dateString).toLocaleDateString('ar-EG', options);
+      }
+  });
+  </script>
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .role-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1rem;
+            color: #4a5568;
+            text-decoration: none;
+        }
+
+        .role-btn i {
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        .role-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #c3dafe;
+            background: #f7fafc;
+        }
+
+        .user-btn { color: #4299e1; border-color: #bee3f8; }
+        .admin-btn { color: #48bb78; border-color: #c6f6d5; }
+        .staff-btn { color: #ed64a6; border-color: #fed7e2; }
+
+        .role-btn:hover i {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+            
+            .role-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Role</h1>
+        <div class="btn-container">
+            <a href="file:///C:/Users/medo2/OneDrive/Desktop/graduationproject//user/index.html" class="role-btn user-btn">
+                <i class="fas fa-user"></i>
+                Regular User
+            </a>
+            <a href="file:///C:/Users/medo2/OneDrive/Desktop/graduationproject//NiceAdmin/index.html" class="role-btn admin-btn">
+                <i class="fas fa-lock"></i>
+                System Administrator
+            </a>
+            <a href="file:///C:/Users/medo2/OneDrive/Desktop/graduationproject//gatestaff/index2.html" class="role-btn staff-btn">
+                <i class="fas fa-shield-alt"></i>
+                Gate Staff
+            </a>
+        </div>
+    </div>
+</body>
+</html>

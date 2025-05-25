@@ -164,12 +164,44 @@ document.getElementById('fine-form').addEventListener('submit', async (e) => {
     return;
   }
 
+/// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
+
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
+            
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
+
   try {
     const response = await fetch('http://gatehub.runasp.net/api/GateStaff/AddFine', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'accept': '*/*' // Added missing accept header
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
         plateNumber: plateNumber,
@@ -179,13 +211,11 @@ document.getElementById('fine-form').addEventListener('submit', async (e) => {
       })
     });
 
-    // Handle non-OK responses first
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Server error: ${response.status} - ${errorText}`);
     }
 
-    // Handle success
     const result = await response.json();
     showToast('Fine submitted successfully!', true);
     document.getElementById('fine-form').reset();

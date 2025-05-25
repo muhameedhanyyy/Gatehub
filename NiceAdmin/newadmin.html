@@ -131,46 +131,82 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script>
-    document.querySelector('.needs-validation').addEventListener('submit', async (event) => {
-      event.preventDefault(); // Prevent default form submission
-  
-      // Collect form data
-      const formData = {
-        fullName: document.getElementById('fullName').value,
-        natId: document.getElementById('natId').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        gender: document.getElementById('gender').value,
-        birthDate: document.getElementById('birthDate').value,
-        password: document.getElementById('password').value,
-      };
-  
-      console.log('Payload being sent:', formData); // Log payload for debugging
-  
-      try {
-        const response = await fetch('http://gatehub.runasp.net/api/Admin/register-admin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (!response.ok) {
-          const errorDetails = await response.json();
-          console.error('Error details:', errorDetails); // Log API error details
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-  
-        const result = await response.json();
-        alert('Admin added successfully!');
-        console.log(result);
-      } catch (error) {
-        console.error('Error adding admin:', error.message);
-        // alert('Failed to add admin. Check the console for more details.');
-      }
+<script>
+document.querySelector('.needs-validation').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+/// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
+
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
+            
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
+  // Proceed with form submission if token is valid
+  try {
+    // Collect and format form data
+    const formData = {
+      fullName: document.getElementById('fullName').value,
+      natId: document.getElementById('natId').value,
+      phoneNumber: document.getElementById('phoneNumber').value,
+      gender: document.getElementById('gender').value,
+      birthDate: document.getElementById('birthDate').value ? 
+        `${document.getElementById('birthDate').value}T00:00:00.000Z` : null,
+      password: document.getElementById('password').value,
+    };
+
+    console.log('Payload being sent:', formData);
+
+    const response = await fetch('http://gatehub.runasp.net/api/Admin/register-admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Add authorization header
+      },
+      body: JSON.stringify(formData),
     });
-  </script>
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      console.error('API Error:', responseData);
+      throw new Error(responseData.message || `Error ${response.status}: ${response.statusText}`);
+    }
+
+    alert('Admin added successfully!');
+    console.log('Success:', responseData);
+    event.target.reset();
+
+  } catch (error) {
+    console.error('Error adding admin:', error);
+    alert(`Operation failed: ${error.message}`);
+  }
+});
+</script>
   
   
 </body>

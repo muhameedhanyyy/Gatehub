@@ -195,7 +195,7 @@
                 return null;
             }
 
-            const token = tokenObj?.result;
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
             if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
                 console.error("Invalid token format:", token);
                 localStorage.removeItem('token');

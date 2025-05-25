@@ -164,28 +164,50 @@
  
 </div>
   <script>
-    let currentVehicleData = null;
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('inquiryForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const errorDiv = document.getElementById('vehicleNotFoundError');
-        const resultsCard = document.getElementById('resultsCard');
-        const licensePlateInput = document.getElementById('licensePlate');
-    
-        if (!form.checkValidity()) {
-          form.classList.add('was-validated');
-          return;
+document.addEventListener('DOMContentLoaded', () => {
+  let currentVehicleData = null;
+  let authToken = null; // Store the token for reuse
+
+  // Token handling on page load
+  const tokenString = localStorage.getItem('token');
+  try {
+    if (!tokenString) throw new Error('No token found');
+    const tokenObj = JSON.parse(tokenString);
+    authToken = tokenObj?.result || tokenObj?.token || tokenObj;
+    if (!authToken?.startsWith('eyJ')) throw new Error('Invalid token format');
+    console.log("Token verified:", authToken.slice(0, 20) + "...");
+  } catch (e) {
+    console.error("Authentication error:", e);
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  document.getElementById('inquiryForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const errorDiv = document.getElementById('vehicleNotFoundError');
+    const resultsCard = document.getElementById('resultsCard');
+    const licensePlateInput = document.getElementById('licensePlate');
+
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+
+    try {
+      const licensePlate = licensePlateInput.value.trim();
+      if (!licensePlate) return;
+
+      const encodedPlate = encodeURIComponent(licensePlate);
+      const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}`;
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
         }
-    
-        try {
-          const licensePlate = licensePlateInput.value.trim();
-          if (!licensePlate) return;
-    
-          const encodedPlate = encodeURIComponent(licensePlate);
-          const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}`;
-    
-          const response = await fetch(apiUrl);
+      });
+      
           
           if (!response.ok) {
             if (response.status === 404) {
@@ -261,8 +283,8 @@ document.getElementById('editOwnerBtn').addEventListener('click', () => {
 });
 
 // Updated Vehicle Update Handler
-document.getElementById('saveVehicleBtn').addEventListener('click', async () => {
-  try {
+  document.getElementById('saveVehicleBtn').addEventListener('click', async () => {
+    try {
     const vehicleId = currentVehicleData.id;
     const updatedData = {
       licenseStart: new Date(document.getElementById('editLicenseStart').value).toISOString(),
@@ -272,15 +294,16 @@ document.getElementById('saveVehicleBtn').addEventListener('click', async () => 
     };
 
     const response = await fetch(
-      `http://gatehub.runasp.net/api/Admin/EditVehicle?vehicleId=${vehicleId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedData)
-      }
-    );
+        `http://gatehub.runasp.net/api/Admin/EditVehicle?vehicleId=${vehicleId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(updatedData)
+        }
+      );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -306,17 +329,17 @@ document.getElementById('saveOwnerBtn').addEventListener('click', async () => {
       license: document.getElementById('editLicense').value
     };
 
-    const response = await fetch(
-      `http://gatehub.runasp.net/api/Admin/update-vehicle-owner?OwnerId=${ownerId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedOwner)
-      }
-    );
-
+     const response = await fetch(
+        `http://gatehub.runasp.net/api/Admin/update-vehicle-owner?OwnerId=${ownerId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(updatedOwner)
+        }
+      );
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText || 'Owner update failed');

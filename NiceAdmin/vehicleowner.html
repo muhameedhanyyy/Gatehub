@@ -254,6 +254,53 @@
 
 
   <script>
+
+          document.addEventListener('DOMContentLoaded', async () => {
+ /// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
+
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
+            
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
     document.getElementById('addvehicleownerForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent default form submission
   
@@ -274,6 +321,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(gateData),
         });

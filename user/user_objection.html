@@ -397,13 +397,13 @@ button {
       </div>
       <h2>Fee/Violation Overview</h2>
       <div class="details">
-        <p><strong>Violation ID/Reference Number:</strong> <span id="violation-id">123456</span></p>
-        <p><strong>Fee Amount:</strong> <span id="fee-amount">50 LE</span></p>
-        <p><strong>Violation Type:</strong> <span id="violation-type">Unpaid Toll</span></p>
-        <p><strong>Date and Time:</strong> <span id="violation-date">2023-10-01 14:30</span></p>
-        <p><strong>Location:</strong> <span id="violation-location">Gate 5, Highway 101</span></p>
-<!-- Replace the evidence image line with -->
-<p><strong>Evidence:</strong> <span id="evidence-status">No evidence available</span></p>      </div>
+        <p><strong>Violation ID/Reference Number:</strong> <span id="id"></span></p>
+        <p><strong>feeValue:</strong> <span id="feeValue"></span></p>
+        <p><strong>fineValue:</strong> <span id="fineValue"></span></p>
+<p><strong>Violation Type:</strong> <span id="fineType"></span></p>
+        <p><strong>Date and Time:</strong> <span id="date"></span></p>
+        <p><strong>Location:</strong> <span id="violation-location"></span></p>
+        </div>
     </section>
 
     <!-- Objection Submission Form -->
@@ -438,52 +438,20 @@ button {
 </div>
   </div>
 
-  <script>
-    // Embedded JavaScript
-    const form2 = document.getElementById('objection-form');
-    const submitButton = document.getElementById('submit-button');
-    const confirmationCheckbox = document.getElementById('confirmation-checkbox');
-
-    // Enable/disable submit button based on checkbox
-    confirmationCheckbox.addEventListener('change', () => {
-      submitButton.disabled = !confirmationCheckbox.checked;
-    });
-
-    form2.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      // Show loading spinner
-      document.getElementById('submit-text').classList.add('hidden');
-      document.getElementById('spinner').classList.remove('hidden');
-
-      // Simulate form submission
-      setTimeout(() => {
-        document.getElementById('confirmation-message').classList.remove('hidden');
-        form2.reset();
-        document.getElementById('submit-text').classList.remove('hidden');
-        document.getElementById('spinner').classList.add('hidden');
-        submitButton.disabled = true;
-        confirmationCheckbox.checked = false;
-      }, 2000); // Simulate a 2-second delay
-    });
-  </script>
-
-
-
 <script>
-     // Get the correct parameter name 'feeId' from URL
-     const urlParams = new URLSearchParams(window.location.search);
-    const vehicleEntryId = urlParams.get('feeId'); // Changed from 'id' to 'feeId'
+    // Get URL parameter and verify token first
+    const urlParams = new URLSearchParams(window.location.search);
+    const vehicleEntryId = urlParams.get('feeId');
 
-    // Verify Token (unchanged)
-    function verifyToken() {
+     function verifyToken() {
         const tokenString = localStorage.getItem('token');
         if (!tokenString) {
             window.location.href = 'login.html';
             return null;
         }
         try {
-            return JSON.parse(tokenString)?.result;
+            const tokenData = JSON.parse(tokenString);
+            return tokenData?.result || tokenData?.token || tokenData;
         } catch {
             localStorage.removeItem('token');
             window.location.href = 'login.html';
@@ -491,149 +459,124 @@ button {
         }
     }
 
-    // Updated fetch function
-    async function fetchVehicleEntry() {
+ async function fetchVehicleEntry() {
         try {
+            const vehicleEntryId = new URLSearchParams(window.location.search).get('feeId');
+            console.log('Current feeId:', vehicleEntryId);
+
             if (!vehicleEntryId || isNaN(vehicleEntryId)) {
-                throw new Error('Missing or invalid fee ID. Access through payments history.');
+                throw new Error('Missing or invalid fee ID in URL parameters');
             }
 
-            const token = verifyToken();
-            if (!token) return;
+            const token = localStorage.getItem('token');
+            console.log('Token from storage:', token);
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
 
             const response = await fetch(`http://gatehub.runasp.net/api/VehicleOwner/vehicle-entry/${vehicleEntryId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 
+                    'Authorization': `Bearer ${JSON.parse(token)?.result}`,
+                    'Content-Type': 'application/json'
+                }
             });
 
-            // if (!response.ok) {
-            //     const error = await response.text();
-            //     throw new Error(error || 'Failed to fetch violation details');
-            // }
+            console.log('API Response Status:', response.status);
             
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('API Error Details:', errorData);
+                throw new Error(errorData.message || 'Failed to fetch violation details');
+            }
+
             const vehicleEntry = await response.json();
-            
-            // Populate data
-            document.getElementById('violation-id').textContent = vehicleEntry.id;
-            document.getElementById('fee-amount').textContent = 
-                `${vehicleEntry.feeValue + vehicleEntry.fineValue} LE`;
-            document.getElementById('violation-type').textContent = vehicleEntry.fineType;
-            document.getElementById('violation-date').textContent = 
-                new Date(vehicleEntry.date).toLocaleString();
-            document.getElementById('violation-location').textContent = 
-                `Gate ${vehicleEntry.gateId}`;
+            console.log('Formatted API Data:', vehicleEntry);
+
+            // Ensure numeric values are properly formatted
+            const formatCurrency = (value) => 
+                typeof value === 'number' ? `${value.toFixed(2)} LE` : 'N/A';
+
+            // Populate data with fallback values
+            document.getElementById('id').textContent = vehicleEntry.id || 'N/A';
+            document.getElementById('feeValue').textContent = formatCurrency(vehicleEntry.feeValue);
+            document.getElementById('fineValue').textContent = formatCurrency(vehicleEntry.fineValue);
+            document.getElementById('fineType').textContent = vehicleEntry.fineType || 'No violation type specified';
+            document.getElementById('date').textContent = vehicleEntry.date ? 
+                new Date(vehicleEntry.date).toLocaleString() : 'N/A';
+            document.getElementById('violation-location').textContent = vehicleEntry.gateId ? 
+                `Gate ${vehicleEntry.gateId}` : 'Location not available';
 
         } catch (error) {
-            // console.error('Error:', error); 
-            // document.getElementById('error-message').innerHTML = `
-            //     <div class="text-center p-4">
-            //         <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
-            //         <p class="font-bold">${error.message}</p>
-            //         <p class="text-sm">Accessed with feeId: ${vehicleEntryId || 'none'}</p>
-            //         <a href="pay.html" class="text-blue-600 underline mt-2 inline-block">
-            //             Return to Payments
-            //         </a>
-            //     </div>
-            // `;
-            // document.getElementById('error-message').classList.remove('hidden');
+            console.error('Full Error:', error);
+            document.getElementById('error-message').innerHTML = `
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                    ${error.message} - <a href="pay.html" class="underline">Return to payments</a>
+                </div>
+            `;
             document.getElementById('submit-button').disabled = true;
         }
     }
 
-    // Initialize with proper parameter name
+ async function handleFormSubmission(event) {
+    event.preventDefault();
+    const submitButton = document.getElementById('submit-button');
+    const spinner = document.getElementById('spinner');
+    
+    try {
+        submitButton.disabled = true;
+        spinner.classList.remove('hidden');
+
+        const token = verifyToken();
+        if (!token) return;
+
+        const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/SubmitObjection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                vehicleEntryId: parseInt(vehicleEntryId),
+                Description: document.getElementById('objection-explanation').value
+            })
+        });
+
+        const responseText = await response.text();
+        if (!response.ok) {
+            console.error('Server response:', responseText);
+            throw new Error(`Submission failed (${response.status}): ${responseText}`);
+        }
+
+        document.getElementById('confirmation-message').classList.remove('hidden');
+        setTimeout(() => window.location.href = 'pay.html', 2000);
+
+    } catch (error) {
+        // console.error('Full error:', error);
+        document.getElementById('error-message').innerHTML = `
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                ${error.message}
+            </div>
+        `;
+        document.getElementById('error-message').classList.remove('hidden');
+    } finally {
+        submitButton.disabled = false;
+        spinner.classList.add('hidden');
+    }
+}
+     // Initialize page
     document.addEventListener('DOMContentLoaded', () => {
-        // First check authentication
         if (!verifyToken()) return;
         
-        // Then fetch data
+        document.getElementById('confirmation-checkbox').addEventListener('change', (e) => {
+            document.getElementById('submit-button').disabled = !e.target.checked;
+        });
+
+        document.getElementById('objection-form').addEventListener('submit', handleFormSubmission);
+        
+        // Initial data fetch
         fetchVehicleEntry();
-
-      
-      
     });
-
-  
-
-
-
-  // Initialize page
-  document.addEventListener('DOMContentLoaded', () => {
-      fetchVehicleEntry();
-      
-      // Form validation
-      const confirmationCheckbox = document.getElementById('confirmation-checkbox');
-      confirmationCheckbox.addEventListener('change', () => {
-          document.getElementById('submit-button').disabled = !confirmationCheckbox.checked;
-      });
-
-      // Form submission
-      // document.getElementById('objection-form').addEventListener('submit', handleSubmit);
-  });
-</script>
-
-<script>
-  document.getElementById('objection-form').addEventListener('submit', async (event) => {
-      event.preventDefault(); // Prevent default form submission
-
-      // Show loading state
-      const submitButton = document.getElementById('submit-button');
-      const spinner = document.getElementById('spinner');
-      const submitText = document.getElementById('submit-text');
-      submitButton.disabled = true;
-      submitText.classList.add('hidden');
-      spinner.classList.remove('hidden');
-
-      // Collect form data
-      const objectionData = {
-          vehicleEntryId: parseInt(new URLSearchParams(window.location.search).get('feeId')),
-          Description: document.getElementById('objection-explanation').value
-      };
-
-      try {
-          // Get authentication token
-          const token = JSON.parse(localStorage.getItem('token'))?.result;
-
-          const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/SubmitObjection', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify(objectionData)
-          });
-
-          // Handle response
-          // if (!response.ok) {
-          //     const errorDetails = await response.json();
-          //     console.error('Error details:', errorDetails);
-          //     throw new Error(`Submission failed: ${errorDetails.title || response.status}`);
-          // }
-
-          // Show success message
-          document.getElementById('confirmation-message').classList.remove('hidden');
-          setTimeout(() => {
-              window.location.href = 'pay.html';
-          }, 2000);
-
-      } catch (error) {
-          // console.error('Submission error:', error);
-          // document.getElementById('error-message').innerHTML = `
-          //     <div class="text-center p-4">
-          //         <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-2"></i>
-          //         <p class="font-bold">${error.message}</p>
-          //     </div>`;
-          // document.getElementById('error-message').classList.remove('hidden');
-          document.getElementById('confirmation-message').classList.remove('hidden');
-          setTimeout(() => {
-              window.location.href = 'pay.html';
-          }, 5000);
-      } finally {
-          // Reset UI state
-          submitButton.disabled = false;
-          submitText.classList.remove('hidden');
-          spinner.classList.add('hidden');
-          document.getElementById('confirmation-checkbox').checked = false;
-      }
-  });
 </script>
 
 </body>

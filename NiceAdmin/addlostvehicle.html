@@ -82,120 +82,122 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.querySelector("form");
-      
-      form.addEventListener("submit", (event) => {
-        let isValid = true;
-  
-        // License Plate Validation
-        const licensePlate = document.getElementById("licensePlate");
-        const licensePlateRegex = /^[A-Z0-9-]{1,10}$/; // Example format
-        if (!licensePlateRegex.test(licensePlate.value)) {
-          licensePlate.classList.add("is-invalid");
-          isValid = false;
-        } else {
-          licensePlate.classList.remove("is-invalid");
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Token Handling and Validation
+    let authToken;
+    try {
+        const tokenString = localStorage.getItem('token');
+        if (!tokenString) {
+            window.location.href = 'pages-login.html';
+            return;
         }
-  
-        // Vehicle Type Validation
-        const vehicleType = document.getElementById("vehicleType");
-      
-  
-        // Last Seen Location Validation
-        const lastSeenLocation = document.getElementById("lastSeenLocation");
-        if (lastSeenLocation.value.trim() === "") {
-          lastSeenLocation.classList.add("is-invalid");
-          isValid = false;
-        } else {
-          lastSeenLocation.classList.remove("is-invalid");
+
+        // Handle token format
+        try {
+            const tokenObj = JSON.parse(tokenString);
+            authToken = tokenObj?.result || tokenObj?.token || tokenObj;
+        } catch {
+            authToken = tokenString;
         }
-  
-        // Reported Date Validation
-        const reportedDate = document.getElementById("reportedDate");
-        if (!reportedDate.value) {
-          reportedDate.classList.add("is-invalid");
-          isValid = false;
-        } else {
-          reportedDate.classList.remove("is-invalid");
+
+        if (!authToken || typeof authToken !== 'string') {
+            throw new Error('Invalid token format');
         }
-  
-        // Prevent submission if any field is invalid
-        if (!isValid) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      });
-    });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.querySelector("form");
-      
-      form.addEventListener("submit", async (event) => {
+        console.log("Token verified:", authToken.slice(0, 20) + "...");
+    } catch (error) {
+        console.error("Authentication error:", error);
+        localStorage.removeItem('token');
+        window.location.href = 'pages-login.html';
+        return;
+    }
+
+    // 2. Form Handling
+    const form = document.querySelector("form");
+    const loading = document.getElementById('loading');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
         let isValid = true;
-    
+
         // Clear previous validation
         form.classList.remove('was-validated');
         document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-    
-        // License Plate Validation
+
+        // Form Elements
         const licensePlate = document.getElementById("licensePlate");
-        const licensePlateValue = licensePlate.value;
-        // const licensePlateRegex = /^[A-Z0-9-]{1,10}$/i; // Case-insensitive check
-       
-    
-        // Reported Date Validation
         const reportedDate = document.getElementById("reportedDate");
-        const reportedDateValue = reportedDate.value;
-        if (!reportedDateValue) {
-          reportedDate.classList.add("is-invalid");
-          isValid = false;
+
+        // Validation Checks
+        // License Plate Validation
+        const licensePlateRegex = /^[A-Z0-9-]{1,20}$/i; // Adjusted to match API requirements
+        if (!licensePlateRegex.test(licensePlate.value)) {
+            licensePlate.classList.add("is-invalid");
+            isValid = false;
         }
-    
+
+        // Date Validation
+        if (!reportedDate.value) {
+            reportedDate.classList.add("is-invalid");
+            isValid = false;
+        }
+
         if (!isValid) {
-          event.stopPropagation();
-          form.classList.add('was-validated');
-          return;
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
         }
-    
+
         try {
-          document.getElementById('loading').style.display = 'block';
-document.getElementById('submitBtn').disabled = true;
-          const response = await fetch('http://gatehub.runasp.net/api/Admin/AddLostVehicle', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              reportedDate: reportedDateValue,
-              isFound: false, // Hardcoded as per requirements
-              plateNumber: licensePlateValue
-            })
-          });
-    
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to add lost vehicle');
-          }
-    
-          // Clear form on success
-          form.reset();
-          alert('Lost vehicle added successfully!');
-          
+            // Show loading state
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+
+            const response = await fetch('http://gatehub.runasp.net/api/Admin/AddLostVehicle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    reportedDate: reportedDate.value,
+                    isFound: false, // Default to false for new entries
+                    plateNumber: licensePlate.value.trim().toUpperCase()
+                })
+            });
+
+            const responseText = await response.text();
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'pages-login.html';
+                    return;
+                }
+                
+                try {
+                    const errorData = JSON.parse(responseText);
+                    throw new Error(errorData.message || 'Failed to add lost vehicle');
+                } catch {
+                    throw new Error(`Server error: ${response.status} - ${responseText}`);
+                }
+            }
+
+            // Clear form on success
+            form.reset();
+            alert('Lost vehicle added successfully!');
+
         } catch (error) {
-          console.error('Submission error:', error);
-          alert(`Error: ${error.message}`);
+            console.error('Submission error:', error);
+            alert(`Error: ${error.message}`);
+        } finally {
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
         }
-        finally {
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('submitBtn').disabled = false;
-}
-      });
     });
-    </script>
+});
+</script>
   
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

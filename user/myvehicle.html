@@ -104,159 +104,170 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8" id="mainContent">
         <!-- Vehicle Details Card -->
-        <div class="vehicle-card">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">
-                    <i class="fas fa-car mr-3 text-blue-600"></i>
-                    My Vehicle Details
-                </h2>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="vehicleDetails">
-                <!-- Data will be populated by JavaScript -->
-            </div>
+           <div id="loading" class="text-center py-8 hidden">
+            <i class="fas fa-spinner fa-spin text-blue-600 text-3xl"></i>
+            <p class="mt-2 text-gray-600">Loading vehicle data...</p>
         </div>
-
-        <!-- Fees and Violations History -->
-        <div class="vehicle-card">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-history mr-3 text-blue-600"></i>
-                Payment History & Violations
-            </h2>
-
-            <div class="overflow-x-auto">
-                <table class="history-table">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-4 py-3 text-left">Date</th>
-                            <th class="px-4 py-3 text-left">Type</th>
-                            <th class="px-4 py-3 text-left">Fee</th>
-                            <th class="px-4 py-3 text-left">Fine</th>
-                            <th class="px-4 py-3 text-left">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="paymentHistory">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Summary Section -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4" id="summarySection">
-                <!-- Data will be populated by JavaScript -->
-            </div>
-        </div>
+        
+    
+                <div id="vehiclesContainer" class="space-y-6"></div>
     </main>
 
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Token verification
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loadingElement = document.getElementById('loading');
+        const container = document.getElementById('vehiclesContainer');
+        
+        // Show loading indicator
+        loadingElement.classList.remove('hidden');
+        container.innerHTML = '';
+
+        try {
+            // Token handling (same as before)
             const tokenString = localStorage.getItem('token');
             if (!tokenString) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            try {
-                const token = JSON.parse(tokenString)?.result;
-                if (!token) throw new Error('Invalid token');
-
-                // Fetch vehicle data
-                const response = await fetch('http://gatehub.runasp.net/api/Admin/GetVehicleById/1', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) throw new Error('Failed to fetch vehicle data');
-                const vehicleData = await response.json();
-
-                // Update vehicle details
-                const vehicleDetails = document.getElementById('vehicleDetails');
-                vehicleDetails.innerHTML = `
-                    <div>
-                        <p class="text-sm text-gray-600">Plate Number</p>
-                        <p class="font-medium">${vehicleData.plateNumber}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">License Start</p>
-                        <p class="font-medium">${new Date(vehicleData.licenseStart).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">License End</p>
-                        <p class="font-medium">${new Date(vehicleData.licenseEnd).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Model</p>
-                        <p class="font-medium">${vehicleData.modelCompany} - ${vehicleData.modelDescription}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Color</p>
-                        <p class="font-medium">${vehicleData.color}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Vehicle Type</p>
-                        <p class="font-medium">${vehicleData.type}</p>
-                    </div>
-                `;
-
-                // Update payment history
-                const paymentHistory = document.getElementById('paymentHistory');
-                let totalFees = 0;
-                let paidAmount = 0;
-                let pendingPayments = 0;
-
-                paymentHistory.innerHTML = vehicleData.vehicleEntries.map(entry => {
-                    const total = entry.feeValue + entry.fineValue;
-                    totalFees += total;
-                    
-                    if (entry.isPaid) {
-                        paidAmount += total;
-                    } else {
-                        pendingPayments += total;
-                    }
-
-                    return `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3">${new Date(entry.date).toLocaleDateString()}</td>
-                            <td class="px-4 py-3">${entry.fineType}</td>
-                            <td class="px-4 py-3">$${entry.feeValue.toFixed(2)}</td>
-                            <td class="px-4 py-3">$${entry.fineValue.toFixed(2)}</td>
-                            <td class="px-4 py-3">
-                                <span class="status-badge ${entry.isPaid ? 'status-paid' : 'status-pending'}">
-                                    ${entry.isPaid ? 'Paid' : 'Pending'}
-                                </span>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-                // Update summary section
-                const summarySection = document.getElementById('summarySection');
-                summarySection.innerHTML = `
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p class="text-sm text-gray-600">Total Fees</p>
-                        <p class="text-xl font-bold">$${totalFees.toFixed(2)}</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <p class="text-sm text-gray-600">Paid Amount</p>
-                        <p class="text-xl font-bold">$${paidAmount.toFixed(2)}</p>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <p class="text-sm text-gray-600">Pending Payments</p>
-                        <p class="text-xl font-bold">$${pendingPayments.toFixed(2)}</p>
-                    </div>
-                `;
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to load vehicle data. Please try again later.');
+            const token = JSON.parse(tokenString)?.result || JSON.parse(tokenString);
+            if (!token || typeof token !== 'string') {
+                throw new Error('Invalid token format');
             }
+
+            // Fetch from new API endpoint
+            const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/GetAllVehicles', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const vehicles = await response.json();
+
+            // Generate vehicle cards
+            vehicles.forEach(vehicle => {
+                const vehicleCard = document.createElement('div');
+                vehicleCard.className = 'vehicle-card';
+                vehicleCard.innerHTML = `
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-car mr-3 text-blue-600"></i>
+                            ${vehicle.plateNumber}
+                        </h2>
+                        <span class="status-badge ${vehicle.type === 'أجرة' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
+                            ${vehicle.type}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">License Start</p>
+                            <p class="font-medium">${new Date(vehicle.licenseStart).toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">License End</p>
+                            <p class="font-medium">${new Date(vehicle.licenseEnd).toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Model</p>
+                            <p class="font-medium">${vehicle.modelCompany} - ${vehicle.modelDescription}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Color</p>
+                            <p class="font-medium">${vehicle.color}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">RFID</p>
+                            <p class="font-medium">${vehicle.rfid}</p>
+                        </div>
+                    </div>
+
+                    ${vehicle.vehicleEntries.length > 0 ? `
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-history mr-3 text-blue-600"></i>
+                            Payment History
+                        </h3>
+
+                        <div class="overflow-x-auto">
+                            <table class="history-table">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-4 py-3 text-left">Date</th>
+                                        <th class="px-4 py-3 text-left">Type</th>
+                                        <th class="px-4 py-3 text-left">Fee</th>
+                                        <th class="px-4 py-3 text-left">Fine</th>
+                                        <th class="px-4 py-3 text-left">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${vehicle.vehicleEntries.map(entry => `
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3">${new Date(entry.date).toLocaleDateString()}</td>
+                                            <td class="px-4 py-3">${entry.fineType || 'Toll Fee'}</td>
+                                            <td class="px-4 py-3">$${entry.feeValue.toFixed(2)}</td>
+                                            <td class="px-4 py-3">$${entry.fineValue.toFixed(2)}</td>
+                                            <td class="px-4 py-3">
+                                                <span class="status-badge ${entry.isPaid ? 'status-paid' : 'status-pending'}">
+                                                    ${entry.isPaid ? 'Paid' : 'Pending'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Summary Section -->
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${generateSummary(vehicle.vehicleEntries)}
+                        </div>
+                    </div>` : '<p class="mt-6 text-gray-500">No payment history available</p>'}
+                `;
+
+                container.appendChild(vehicleCard);
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load vehicle data. Please try again later.');
+        } finally {
+            loadingElement.classList.add('hidden');
+        }
+    });
+
+    function generateSummary(entries) {
+        let totalFees = 0;
+        let paidAmount = 0;
+        let pendingPayments = 0;
+
+        entries.forEach(entry => {
+            const total = entry.feeValue + entry.fineValue;
+            totalFees += total;
+            entry.isPaid ? (paidAmount += total) : (pendingPayments += total);
         });
+
+        return `
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600">Total Fees</p>
+                <p class="text-xl font-bold">$${totalFees.toFixed(2)}</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600">Paid Amount</p>
+                <p class="text-xl font-bold">$${paidAmount.toFixed(2)}</p>
+            </div>
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-600">Pending Payments</p>
+                <p class="text-xl font-bold">$${pendingPayments.toFixed(2)}</p>
+            </div>
+        `;
+    }
     </script>
 </body>
 </html>

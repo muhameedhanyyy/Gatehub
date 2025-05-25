@@ -114,159 +114,159 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Token handling and validation
+    let authToken;
+    try {
+        const tokenString = localStorage.getItem('token');
+        if (!tokenString) {
+            throw new Error('No token found');
+        }
+
+        const tokenObj = JSON.parse(tokenString);
+        authToken = tokenObj?.result || tokenObj?.token || tokenObj;
+        
+        if (!authToken || typeof authToken !== 'string' || !authToken.startsWith('eyJ')) {
+            throw new Error('Invalid token format');
+        }
+        console.log("Token verified:", authToken.slice(0, 20) + "...");
+    } catch (e) {
+        console.error("Authentication error:", e);
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Lost Vehicles Functionality
     const form = document.getElementById('lostVehicleForm');
     const errorDiv = document.getElementById('vehicleNotFoundError');
+    const tableBody = document.querySelector('#lostVehiclesTable tbody');
+    let allLostVehicles = [];
 
+    // Load initial data
+    async function loadLostVehicles() {
+        try {
+            document.getElementById('loading').style.display = 'block';
+            const response = await fetch('http://gatehub.runasp.net/api/Admin/getallLostVehicles', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            allLostVehicles = await response.json();
+            populateTable(allLostVehicles);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load lost vehicle data: ' + error.message);
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    }
+
+    // Populate table with data
+    function populateTable(vehicles) {
+        tableBody.innerHTML = vehicles.map((vehicle, index) => `
+            <tr data-vehicle-id="${vehicle.id}">
+                <th scope="row">${index + 1}</th>
+                <td>${vehicle.plateNumber}</td>
+                <td>${new Date(vehicle.reportedDate).toLocaleDateString()}</td>
+                <td>
+                    <span class="badge ${vehicle.isFound ? 'bg-success' : 'bg-danger'}">
+                        ${vehicle.isFound ? 'Recovered' : 'Active'}
+                    </span>
+                </td>
+                <td>
+                    ${!vehicle.isFound ? 
+                    `<button class="btn btn-sm btn-success mark-found-btn px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
+                        Mark as Found
+                    </button>` : ''}
+                </td>
+            </tr>
+        `).join('');
+
+        // Add event listeners to recovery buttons
+        document.querySelectorAll('.mark-found-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const row = e.target.closest('tr');
+                const vehicleId = parseInt(row.dataset.vehicleId);
+                const vehicle = allLostVehicles.find(v => v.id === vehicleId);
+
+                if (!vehicle) return;
+
+                if (confirm('Mark this vehicle as found?')) {
+                    try {
+                        const response = await fetch('http://gatehub.runasp.net/api/Admin/RecoverVehicle', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${authToken}`
+                            },
+                            body: JSON.stringify({
+                                plateNum: vehicle.plateNumber
+                            })
+                        });
+
+                        if (!response.ok) {
+                            if (response.status === 401) {
+                                handleAuthError();
+                                return;
+                            }
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || `API request failed: ${response.status}`);
+                        }
+
+                        vehicle.isFound = true;
+                        vehicle.reportedDate = new Date().toISOString();
+                        populateTable(allLostVehicles);
+                        alert('Vehicle recovered successfully!');
+                    } catch (error) {
+                        console.error('Recovery Error:', error);
+                        alert(`Recovery failed: ${error.message}`);
+                    }
+                }
+            });
+        });
+    }
+
+    // Search functionality
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         event.stopPropagation();
         
         if (form.checkValidity()) {
-            const plate = document.getElementById('vehiclePlate').value.trim().toUpperCase();
-            let found = false;
-
-            // Clear previous highlights
-            document.querySelectorAll('#lostVehiclesTable tbody tr').forEach(row => {
-                row.classList.remove('table-success');
-            });
-
-            // Search in table
-            document.querySelectorAll('#lostVehiclesTable tbody tr').forEach(row => {
-                const rowPlate = row.cells[1].textContent.trim().toUpperCase();
-                if (rowPlate === plate) {
-                    found = true;
-                    row.classList.add('table-success');
-                    errorDiv.style.display = 'none';
-                }
-            });
-
-            if (!found) {
+            const searchTerm = document.getElementById('vehiclePlate').value.trim().toLowerCase();
+            const filtered = allLostVehicles.filter(vehicle => 
+                vehicle.plateNumber.toLowerCase().includes(searchTerm));
+            
+            if (filtered.length > 0) {
+                populateTable(filtered);
+                errorDiv.style.display = 'none';
+            } else {
+                tableBody.innerHTML = '';
                 errorDiv.style.display = 'block';
             }
         }
-        
         form.classList.add('was-validated');
-    }, false);
+    });
+
+    // Handle authentication errors
+    function handleAuthError() {
+        localStorage.removeItem('token');
+        alert('Session expired. Please login again.');
+        window.location.href = 'login.html';
+    }
+
+    // Initial load
+    loadLostVehicles();
 });
-</script>
-
-
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('lostVehicleForm');
-      const errorDiv = document.getElementById('vehicleNotFoundError');
-      const tableBody = document.querySelector('#lostVehiclesTable tbody');
-      let allLostVehicles = [];
-
-      // Load initial data
-      async function loadLostVehicles() {
-          try {
-              document.getElementById('loading').style.display = 'block';
-              const response = await fetch('http://gatehub.runasp.net/api/Admin/getallLostVehicles');
-              if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-              allLostVehicles = await response.json();
-              populateTable(allLostVehicles);
-          } catch (error) {
-              console.error('Error:', error);
-              alert('Failed to load lost vehicle data: ' + error.message);
-          } finally {
-              document.getElementById('loading').style.display = 'none';
-          }
-      }
-
-      // Populate table with data
-      function populateTable(vehicles) {
-          tableBody.innerHTML = vehicles.map((vehicle, index) => `
-              <tr data-vehicle-id="${vehicle.id}">
-                  <th scope="row">${index + 1}</th>
-                  <td>${vehicle.plateNumber}</td>
-                  <td>${new Date(vehicle.reportedDate).toLocaleDateString()}</td>
-                  <td>
-                      <span class="badge ${vehicle.isFound ? 'bg-success' : 'bg-danger'}">
-                          ${vehicle.isFound ? 'Recovered' : 'Active'}
-                      </span>
-                  </td>
-                  <td>
-                      ${!vehicle.isFound ? 
-                      `<button class="btn btn-sm btn-success mark-found-btn px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105">
-                          Mark as Found
-                      </button>` : ''}
-                  </td>
-              </tr>
-          `).join('');
-
-          // Add event listeners to recovery buttons
-          document.querySelectorAll('.mark-found-btn').forEach(button => {
-              button.addEventListener('click', async (e) => {
-                  const row = e.target.closest('tr');
-                  const vehicleId = parseInt(row.dataset.vehicleId);
-                  const vehicle = allLostVehicles.find(v => v.id === vehicleId);
-
-                  if (!vehicle) return;
-
-                  if (confirm('Mark this vehicle as found?')) {
-                      try {
-                          // Call recovery API
-                          const response = await fetch('http://gatehub.runasp.net/api/Admin/RecoverVehicle', {
-                              method: 'POST',
-                              headers: {
-                                  'Content-Type': 'application/json',
-                                  // Add authorization headers if required:
-                                  // 'Authorization': 'Bearer YOUR_TOKEN'
-                              },
-                              body: JSON.stringify({
-                                  plateNum: vehicle.plateNumber
-                              })
-                          });
-
-                          if (!response.ok) {
-                              const errorData = await response.json();
-                              throw new Error(errorData.message || `API request failed: ${response.status}`);
-                          }
-                          console.log(response)
-                          // Update local state after successful API call
-                          vehicle.isFound = true;
-                          vehicle.reportedDate = new Date().toISOString();
-                          
-                          // Refresh table display
-                          populateTable(allLostVehicles);
-                          alert('Vehicle recovered successfully!');
-                      } catch (error) {
-                          console.error('Recovery Error:', error);
-                          alert(`Recovery failed: ${error.message}`);
-                      }
-                  }
-              });
-          });
-      }
-
-      // Search functionality
-      form.addEventListener('submit', function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          
-          if (form.checkValidity()) {
-              const searchTerm = document.getElementById('vehiclePlate').value.trim().toLowerCase();
-              const filtered = allLostVehicles.filter(vehicle => 
-                  vehicle.plateNumber.toLowerCase().includes(searchTerm));
-              
-              if (filtered.length > 0) {
-                  populateTable(filtered);
-                  errorDiv.style.display = 'none';
-              } else {
-                  tableBody.innerHTML = '';
-                  errorDiv.style.display = 'block';
-              }
-          }
-          form.classList.add('was-validated');
-      });
-
-      // Initial load
-      loadLostVehicles();
-  });
 </script>
 
 

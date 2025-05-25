@@ -243,26 +243,15 @@
                     <div class="col-lg-9 col-md-8">Mohamed Hany</div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Company</div>
-                    <div class="col-lg-9 col-md-8">GateHub</div>
-                  </div>
+                
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Job</div>
                     <div class="col-lg-9 col-md-8">Employee</div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Country</div>
-                    <div class="col-lg-9 col-md-8">Egypt</div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Address</div>
-                    <div class="col-lg-9 col-md-8">Minya</div>
-                  </div>
-
+                 
+                 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Phone</div>
                     <div class="col-lg-9 col-md-8">01026394535</div>
@@ -317,6 +306,86 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Token Handling and Validation
+        const tokenString = localStorage.getItem('token');
+        if (!tokenString) {
+            window.location.href = 'pages-login.html';
+            return;
+        }
+
+        // Parse token
+        let token;
+        try {
+            const tokenObj = JSON.parse(tokenString);
+            token = tokenObj?.result || tokenObj?.token || tokenObj;
+        } catch {
+            token = tokenString;
+        }
+
+        if (!token || typeof token !== 'string') {
+            localStorage.removeItem('token');
+            window.location.href = 'pages-login.html';
+            return;
+        }
+
+        // Fetch profile data
+        const response = await fetch('http://gatehub.runasp.net/api/Admin/Profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const profileData = await response.json();
+
+        // Update profile information
+        // Update header
+        document.querySelector('.nav-profile span').textContent = profileData.name;
+        
+        // Update profile overview
+        const updateField = (labelText, value) => {
+            const labelDiv = Array.from(document.querySelectorAll('.label')).find(
+                div => div.textContent.trim() === labelText
+            );
+            if (labelDiv) {
+                labelDiv.nextElementSibling.textContent = value || 'N/A';
+            }
+        };
+
+        updateField('Full Name', profileData.name);
+        updateField('Job', 'Admin'); // Static value based on role
+        updateField('Phone', profileData.natId);
+        updateField('Email', profileData.email);
+
+        // Update profile dropdown
+        const profileDropdown = document.querySelector('.dropdown-header');
+        if (profileDropdown) {
+            profileDropdown.querySelector('h6').textContent = profileData.name;
+            profileDropdown.querySelector('span').textContent = 'Admin';
+        }
+
+    } catch (error) {
+        console.error('Profile loading error:', error);
+        alert('Failed to load profile data: ' + error.message);
+    }
+});
+</script>
+
+
+
+
 
 </body>
 

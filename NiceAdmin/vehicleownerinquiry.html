@@ -100,7 +100,7 @@
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Owner Name</th>
+                        <th scope="col">Owner license</th>
                         <th scope="col">National ID</th>
                         <th scope="col">Phone Number</th>
                         <th scope="col">Registered Vehicles</th>
@@ -148,139 +148,128 @@
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Token handling and validation
+    let authToken;
+    try {
+        const tokenString = localStorage.getItem('token');
+        if (!tokenString) {
+            throw new Error('No token found');
+        }
+
+        const tokenObj = JSON.parse(tokenString);
+        authToken = tokenObj?.result || tokenObj?.token || tokenObj;
+        
+        if (!authToken || typeof authToken !== 'string' || !authToken.startsWith('eyJ')) {
+            throw new Error('Invalid token format');
+        }
+        console.log("Token verified:", authToken.slice(0, 20) + "...");
+    } catch (e) {
+        console.error("Authentication error:", e);
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+    }
+
     const form = document.getElementById('ownerInquiryForm');
     const errorDiv = document.getElementById('ownerNotFoundError');
+    const ownerTableBody = document.querySelector('#ownerTable tbody');
+    const vehiclesTableBody = document.querySelector('#vehiclesTable tbody');
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
         event.stopPropagation();
         
         if (form.checkValidity()) {
-            const ownerName = document.getElementById('ownerName').value.trim();
-            const nationalID = document.getElementById('ownerNationalID').value.trim();
-            let found = false;
-
-            // Check owner table
-            document.querySelectorAll('#ownerTable tbody tr').forEach(row => {
-                const rowName = row.cells[1].textContent.trim();
-                const rowID = row.cells[2].textContent.trim();
+            try {
+                const nationalID = document.getElementById('ownerNationalID').value.trim();
+                const encodedNatID = encodeURIComponent(nationalID);
+                const response = await fetch(
+                    `http://gatehub.runasp.net/api/Admin/GetOwnerWithVehicles?natId=${encodedNatID}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    }
+                );
                 
-                if (rowName === ownerName && rowID === nationalID) {
-                    found = true;
-                    row.classList.add('table-success');
-                    errorDiv.style.display = 'none';
-                } else {
-                    row.classList.remove('table-success');
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        localStorage.removeItem('token');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    if (response.status === 404) {
+                        throw new Error('Owner not found');
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            });
 
-            if (!found) {
+                const ownerData = await response.json();
+                
+                // Clear previous results
+                ownerTableBody.innerHTML = '';
+                vehiclesTableBody.innerHTML = '';
+                errorDiv.style.display = 'none';
+
+                // Populate Owner Details
+                ownerTableBody.innerHTML = `
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>${ownerData.license || 'N/A'}</td>
+                        <td>${nationalID}</td>
+                        <td>${ownerData.phoneNumber || 'N/A'}</td>
+                        <td>${ownerData.vehicles?.length || 0}</td>
+                        <td>EGP ${ownerData.balance?.toLocaleString() || 0}</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                    </tr>
+                `;
+
+                // Populate Vehicles Table
+                if (ownerData.vehicles?.length) {
+                    ownerData.vehicles.forEach((vehicle, index) => {
+                        vehiclesTableBody.innerHTML += `
+                            <tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${vehicle.plateNumber || 'N/A'}</td>
+                                <td>${vehicle.type || 'N/A'}</td>
+                                <td>${vehicle.color || 'N/A'}</td>
+                                <td>${vehicle.modelCompany || 'N/A'}</td>
+                                <td>${vehicle.rfid || 'N/A'}</td>
+                                <td>
+                                    <span class="badge ${new Date(vehicle.licenseEnd) > new Date() ? 'bg-success' : 'bg-danger'}">
+                                        ${new Date(vehicle.licenseEnd) > new Date() ? 'Valid' : 'Expired'}
+                                    </span>
+                                </td>
+                                <td>${vehicle.licenseStart.slice(0,10)} - ${vehicle.licenseEnd.slice(0,10)}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+            } catch (error) {
+                console.error('Search failed:', error);
+                errorDiv.textContent = error.message;
                 errorDiv.style.display = 'block';
-                // Hide vehicles table if owner not found
-                document.querySelectorAll('#vehiclesTable tbody tr').forEach(row => {
-                    row.style.display = 'none';
-                });
-            } else {
-                // Show vehicles table when owner is found
-                document.querySelectorAll('#vehiclesTable tbody tr').forEach(row => {
-                    row.style.display = '';
-                });
+                ownerTableBody.innerHTML = '';
+                vehiclesTableBody.innerHTML = '';
+                
+                if (error.message.includes('401')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                }
             }
         }
         
         form.classList.add('was-validated');
     }, false);
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('ar-EG', options);
+    }
 });
 </script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('ownerInquiryForm');
-      const errorDiv = document.getElementById('ownerNotFoundError');
-      const ownerTableBody = document.querySelector('#ownerTable tbody');
-      const vehiclesTableBody = document.querySelector('#vehiclesTable tbody');
-  
-      form.addEventListener('submit', async function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          
-          if (form.checkValidity()) {
-              try {
-                  const nationalID = document.getElementById('ownerNationalID').value.trim();
-                  const encodedNatID = encodeURIComponent(nationalID);
-                  const response = await fetch(`http://gatehub.runasp.net/api/Admin/GetOwnerWithVehicles?natId=${encodedNatID}`);
-                  
-                  if (!response.ok) {
-                      if (response.status === 404) {
-                          throw new Error('Owner not found');
-                      }
-                      throw new Error(`HTTP error! status: ${response.status}`);
-                  }
-  
-                  const ownerData = await response.json();
-                  
-                  // Clear previous results
-                  ownerTableBody.innerHTML = '';
-                  vehiclesTableBody.innerHTML = '';
-                  errorDiv.style.display = 'none';
-  
-                  // Populate Owner Details
-                  ownerTableBody.innerHTML = `
-                      <tr>
-                          <th scope="row">1</th>
-                          <td>${ownerData.license || 'N/A'}</td>
-                          <td>${nationalID}</td>
-                          <td>${ownerData.phoneNumber || 'N/A'}</td>
-                          <td>${ownerData.vehicles?.length || 0}</td>
-                          <td>EGP ${ownerData.balance?.toLocaleString() || 0}</td>
-                          <td><span class="badge bg-success">Active</span></td>
-                         
-                      </tr>
-                  `;
-  
-                  // Populate Vehicles Table
-                  if (ownerData.vehicles?.length) {
-                      ownerData.vehicles.forEach((vehicle, index) => {
-                          vehiclesTableBody.innerHTML += `
-                              <tr>
-                                  <th scope="row">${index + 1}</th>
-                                  <td>${vehicle.plateNumber || 'N/A'}</td>
-                                  <td>${vehicle.type || 'N/A'}</td>
-                                  <td>${vehicle.color || 'N/A'}</td>
-                                  <td>${vehicle.modelCompany || 'N/A'}</td>
-                                  <td>${vehicle.rfid || 'N/A'}</td>
-                                  <td>
-                                      <span class="badge ${new Date(vehicle.licenseEnd) > new Date() ? 'bg-success' : 'bg-danger'}">
-                                          ${new Date(vehicle.licenseEnd) > new Date() ? 'Valid' : 'Expired'}
-                                      </span>
-                                  </td>
-                                  <td>${vehicle.licenseStart.slice(0,10)} - ${vehicle.licenseEnd.slice(0,10)}</td>
-                                
-                              </tr>
-                          `;
-                      });
-                  }
-  
-              } catch (error) {
-                  console.error('Search failed:', error);
-                  errorDiv.textContent = error.message;
-                  errorDiv.style.display = 'block';
-                  ownerTableBody.innerHTML = '';
-                  vehiclesTableBody.innerHTML = '';
-              }
-              
-          }
-          
-          form.classList.add('was-validated');
-      }, false);
-  
-      function formatDate(dateString) {
-          if (!dateString) return 'N/A';
-          const options = { year: 'numeric', month: 'short', day: 'numeric' };
-          return new Date(dateString).toLocaleDateString('ar-EG', options);
-      }
-  });
-  </script>
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>

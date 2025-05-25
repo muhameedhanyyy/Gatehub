@@ -83,94 +83,68 @@
 
                   <!-- Form -->
                   <form class="row g-3 needs-validation" novalidate>
-                    <div class="col-md-6">
-                      <label for="ownerName" class="form-label">Full Name</label>
-                      <input type="text" name="name" class="form-control" id="ownerName" placeholder="Enter full name" required>
+                    <div class="col-md-12">
+                      <label for="fullName" class="form-label">Full Name</label>
+                      <input type="text" name="fullName" class="form-control" id="fullName" placeholder="Enter full name" required>
                       <div class="invalid-feedback">Please enter the owner's full name.</div>
                     </div>
 
-                    <div class="col-md-6">
-                      <label for="gender" class="form-label">Gender</label>
-                      <select name="gender" class="form-select" id="gender" required>
-                        <option value="" disabled selected>Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
-                      <div class="invalid-feedback">Please select a gender.</div>
+                        <div class="col-md-12">
+                      <label for="natId" class="form-label">National ID</label>
+                      <input type="text" name="natId" class="form-control" id="natId" placeholder="Enter national ID" required>
+                      <div class="invalid-feedback">Please enter the national ID.</div>
                     </div>
 
-                    <div class="col-md-6">
+
+                     <div class="col-md-12">
+                      <label for="phoneNumber" class="form-label">Phone Number</label>
+                      <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="e.g., +201234567890" required>
+                      <div class="invalid-feedback">Please enter a valid phone number.</div>
+                    </div>
+
+
+
+                     <div class="col-md-12">
+                      <label for="address" class="form-label">address</label>
+                      <input type="text" name="address" class="form-control" id="address" placeholder="Enter address" required>
+                      <div class="invalid-feedback">Please enter the address.</div>
+                    </div>
+
+
+                     <div class="col-md-12">
+                      <label for="license" class="form-label">license </label>
+                      <input type="text" name="license" class="form-control" id="license" placeholder="Enter  number" required>
+                      <div class="invalid-feedback">Please enter the license .</div>
+                    </div>
+
+
+
+                     <div class="col-md-12">
                       <label for="birthDate" class="form-label">Birth Date</label>
                       <input type="date" name="birthDate" class="form-control" id="birthDate" required>
                       <div class="invalid-feedback">Please enter the birth date.</div>
                     </div>
 
-                    <div class="col-md-6">
-                      <label for="phoneNumber" class="form-label">Phone Number</label>
-                      <input type="text" name="phone" class="form-control" id="phoneNumber" placeholder="e.g., +201234567890" required>
-                      <div class="invalid-feedback">Please enter a valid phone number.</div>
-                    </div>
+
+
 
                     <div class="col-md-12">
-                      <label for="address" class="form-label">Address</label>
-                      <input type="text" name="address" class="form-control" id="address" placeholder="Enter address" required>
-                      <div class="invalid-feedback">Please enter the address.</div>
+                      <label for="gender" class="form-label">gender</label>
+                      <select name="gender" class="form-select" id="gender" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a gender.</div>
                     </div>
-
-                    <div class="col-md-6">
-                      <label for="nationalId" class="form-label">National ID</label>
-                      <input type="text" name="nationalId" class="form-control" id="nationalId" placeholder="Enter national ID" required>
-                      <div class="invalid-feedback">Please enter the national ID.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="password" class="form-label">Password</label>
+                
+                    <div class="col-md-12">
+                      <label for="password" class="form-label">password</label>
                       <input type="password" name="password" class="form-control" id="password" placeholder="Enter a password" required>
                       <div class="invalid-feedback">Please enter a password.</div>
                     </div>
 
-                    <div class="col-md-6">
-                      <label for="license" class="form-label">License Plate</label>
-                      <input type="text" name="license" class="form-control" id="license" placeholder="Enter plate number" required>
-                      <div class="invalid-feedback">Please enter the license plate.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="licenseStart" class="form-label">License Start Date</label>
-                      <input type="date" name="licenseStart" class="form-control" id="licenseStart" required>
-                      <div class="invalid-feedback">Please enter the license start date.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="licenseEnd" class="form-label">License End Date</label>
-                      <input type="date" name="licenseEnd" class="form-control" id="licenseEnd" required>
-                      <div class="invalid-feedback">Please enter the license end date.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="rfid" class="form-label">RFID</label>
-                      <input type="text" name="rfid" class="form-control" id="rfid" placeholder="Enter RFID tag" required>
-                      <div class="invalid-feedback">Please enter the RFID tag.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="vehicleType" class="form-label">Vehicle Type</label>
-                      <input type="text" name="vehicleType" class="form-control" id="vehicleType" placeholder="e.g., Sedan, SUV" required>
-                      <div class="invalid-feedback">Please enter the vehicle type.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="model" class="form-label">Model Description</label>
-                      <input type="text" name="model" class="form-control" id="model" placeholder="Enter model" required>
-                      <div class="invalid-feedback">Please enter the vehicle model.</div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <label for="color" class="form-label">Color</label>
-                      <input type="text" name="color" class="form-control" id="color" placeholder="Enter color" required>
-                      <div class="invalid-feedback">Please enter the vehicle color.</div>
-                    </div>
-
+                    
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Add Vehicle Owner</button>
                     </div>
@@ -191,6 +165,97 @@
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
+
+
+
+<script>
+document.querySelector('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return;
+  }
+
+  // 1. Retrieve token with proper checks
+  const tokenString = localStorage.getItem('token');
+  if (!tokenString) {
+    console.error("No token found - redirecting to login");
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // 2. Parse with error handling
+  let tokenObj;
+  try {
+    tokenObj = JSON.parse(tokenString);
+  } catch (e) {
+    console.error("Failed to parse token:", e);
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // 3. Extract the actual token with validation
+  const token = tokenObj?.result || tokenObj?.token || tokenObj;
+  
+  if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+    console.error("Invalid token format:", token);
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  console.log("Token verified:", token.slice(0, 20) + "...");
+
+  // Format birth date to ISO string
+  const birthDateValue = document.getElementById('birthDate').value;
+  const birthDateISO = birthDateValue ? `${birthDateValue}T00:00:00.000Z` : null;
+
+  // Create request payload
+  const payload = {
+    fullName: document.getElementById('fullName').value,
+    natId: document.getElementById('natId').value,
+    phoneNumber: document.getElementById('phoneNumber').value,
+    address: document.getElementById('address').value,
+    license: document.getElementById('license').value,
+    birthDate: birthDateISO,
+    gender: document.getElementById('gender').value,
+    password: document.getElementById('password').value,
+    deviceToken: "string"
+  };
+
+  try {
+    const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/register-vehicle-owner', {
+      method: 'POST',
+      headers: {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Added authorization header
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert('Registration successful!');
+      form.reset();
+      form.classList.remove('was-validated');
+    } else {
+      alert(`Error: ${data.message || 'Unknown error occurred'}`);
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+    alert('Network error. Please try again.');
+  }
+});
+</script>
+
+
+
 
 </body>
 

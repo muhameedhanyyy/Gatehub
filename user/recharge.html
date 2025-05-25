@@ -123,25 +123,39 @@
         </div>
     </main>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Token verification (same as working code)
-            const token = (function verifyToken() {
-                const tokenString = localStorage.getItem('token');
-                if (!tokenString) {
-                    window.location.href = 'login.html';
-                    return null;
-                }
-    
-                try {
-                    const tokenObj = JSON.parse(tokenString);
-                    if (!tokenObj?.result?.startsWith('eyJ')) throw new Error();
-                    return tokenObj.result;
-                } catch (e) {
-                    localStorage.removeItem('token');
-                    window.location.href = 'login.html';
-                    return null;
-                }
-            })();
+       console.log('Token:', localStorage.getItem('token')); // Should show your JWT token
+        document.addEventListener('DOMContentLoaded', async () => {
+            /// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
+
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
+            
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
     
             if (!token) return;
     

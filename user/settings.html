@@ -403,7 +403,44 @@
 </div>
     </main>
     <script>
+
+       
         document.addEventListener('DOMContentLoaded', () => {
+              // 1. Retrieve token with proper checks
+    const tokenString = localStorage.getItem('token');
+
+    if (!tokenString) {
+        console.error("No token found - redirecting to login");
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // 2. Handle both string and object token formats
+    let token;
+    try {
+        // First try to parse as JSON (if it's an object)
+        const tokenObj = JSON.parse(tokenString);
+        // Check if it has a result property (API format) or use the whole object
+        token = tokenObj?.result || tokenObj?.token || tokenObj;
+        
+        // If parsing succeeded but we got null/undefined, treat as invalid
+        if (!token) throw new Error("Parsed token is empty");
+    } catch (e) {
+        // If JSON parse fails, assume it's a raw token string
+        token = tokenString;
+    }
+
+    // 3. Final validation
+    if (!token || typeof token !== 'string') {
+        console.error("Invalid token format:", token);
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Remove the JWT prefix check as it might vary
+    console.log("Token verified:", token.slice(0, 20) + "...");
+
             // Password Update Validation
             const updatePasswordBtn = document.getElementById('update-password-btn');
             const currentPassword = document.getElementById('current-password');
@@ -532,28 +569,7 @@
         </script>
 
 
-        <script>
-            function confirmSignOut() {
-    // Call logout API
-    fetch('http://gatehub.runasp.net/api/VehicleOwner/logout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            // Add authorization header if needed
-            // 'Authorization': 'Bearer ' + token
-        }
-    })
-    .then(response => {
-        // Always redirect even if logout fails
-        window.location.href = 'login.html';
-    })
-    .catch(error => {
-        console.error('Logout error:', error);
-        window.location.href = 'login.html';
-    });
-}
-
-        </script>
+ 
 
 <script>
 
@@ -613,7 +629,7 @@ try {
 }
 
 // 3. Extract the actual token with validation
-const token = tokenObj?.result;
+    token = tokenObj?.result || tokenObj?.token || tokenObj;
 if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
     console.error("Invalid token format:", token);
     localStorage.removeItem('token');
@@ -621,10 +637,11 @@ if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
     return;
 }
 
+
+const token = localStorage.getItem('token');
 console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
-    
         try {
-            const token = localStorage.getItem('token');
+            
             const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/ChangePassword', {
                 method: 'POST',
                 headers: {
@@ -689,6 +706,43 @@ console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
         }
     }
     </script>
-        
+          <script>
+function confirmSignOut() {
+    // Retrieve token from storage
+    const token = localStorage.getItem('token');
+    
+    // Check if token exists
+  
+
+    
+
+    // Call logout API
+    fetch('http://gatehub.runasp.net/api/VehicleOwner/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Clear client-side authentication
+        localStorage.removeItem('token');
+        // Redirect to login page
+        window.location.href = 'login.html';
+    })
+    .catch(error => {
+        console.error('Logout error:', error);
+        // Force logout even if API call fails
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    });
+}
+</script>
 </body>
 </html>

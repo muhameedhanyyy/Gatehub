@@ -213,6 +213,12 @@
                       <div class="invalid-feedback">Please enter a password.</div>
                     </div>
 
+                     <div class="col-12">
+                      <label for="natId" class="form-label">National ID</label>
+                      <input  type="text" name="natId" class="form-control" id="natId" required>
+                      <div class="invalid-feedback">Please Enter a National ID.</div>
+                  </div>
+
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Add a new vehicle </button>
                     </div>
@@ -249,6 +255,51 @@
   <script src="assets/js/main.js"></script>
 
   <script>
+
+        document.addEventListener('DOMContentLoaded', async () => {
+ /// 1. Retrieve token with proper checks
+            const tokenString = localStorage.getItem('token');
+
+            if (!tokenString) {
+                console.error("No token found - redirecting to login");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Parse with error handling
+            let tokenObj;
+            try {
+                tokenObj = JSON.parse(tokenString);
+            } catch (e) {
+                console.error("Failed to parse token:", e);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            // 3. Extract the actual token with validation
+        token = tokenObj?.result || tokenObj?.token || tokenObj;     
+            
+            if (!token || typeof token !== 'string' || !token.startsWith('eyJ')) {
+                console.error("Invalid token format:", token);
+                localStorage.removeItem('token');
+                window.location.href = 'pages-login.html';
+                return;
+            }
+
+            console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
+    });
+
+
+
+
+
+
+
+
+
+
+
     document.getElementById('addvehicleForm').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent default form submission
   
@@ -262,14 +313,16 @@
               color: document.getElementById('color').value,
               type: document.getElementById('type').value,
               rfid: document.getElementById('rfid').value,
-              vehicleOwnerId:1
+              natId : document.getElementById('natId').value,
       };
   
       try {
         const response = await fetch('http://gatehub.runasp.net/api/Admin/Add-vehicle', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+           'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+            
           },
           body: JSON.stringify(gateData),
         });

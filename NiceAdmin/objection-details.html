@@ -78,6 +78,55 @@
         </div>
     </div>
     <script>
+
+            document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Retrieve token with proper checks
+    const tokenString = localStorage.getItem('token');
+
+    if (!tokenString) {
+        console.error("No token found - redirecting to login");
+        window.location.href = 'pages-login.html';
+        return;
+    }
+
+    // 2. Handle both string and object token formats
+    let token;
+    try {
+        // First try to parse as JSON (if it's an object)
+        const tokenObj = JSON.parse(tokenString);
+        // Check if it has a result property (API format) or use the whole object
+        token = tokenObj?.result || tokenObj?.token || tokenObj;
+        
+        // If parsing succeeded but we got null/undefined, treat as invalid
+        if (!token) throw new Error("Parsed token is empty");
+    } catch (e) {
+        // If JSON parse fails, assume it's a raw token string
+        token = tokenString;
+    }
+
+    // 3. Final validation
+    if (!token || typeof token !== 'string') {
+        console.error("Invalid token format:", token);
+        localStorage.removeItem('token');
+        window.location.href = 'pages-login.html';
+        return;
+    }
+
+    // Remove the JWT prefix check as it might vary
+    console.log("Token verified:", token.slice(0, 20) + "...");
+    });
+
+
+
+
+
+
+
+
+
+
+
+
         async function loadObjectionDetails() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -86,7 +135,6 @@
                 if (!objectionId) throw new Error('No objection specified');
     
                 const token = JSON.parse(localStorage.getItem('token'))?.result;
-                if (!token) window.location.href = '/login';
     
                 // First get all objections
                 const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {
@@ -137,7 +185,6 @@
                 if (!objectionId) throw new Error('No objection specified');
                 
                 const token = JSON.parse(localStorage.getItem('token'))?.result;
-                if (!token) window.location.href = '/login';
     
                 // Fetch all objections
                 const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {

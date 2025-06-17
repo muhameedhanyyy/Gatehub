@@ -227,7 +227,7 @@
 
         // SignalR Connection
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://gatehub.runasp.net/vehicleHub", {
+            .withUrl("https://gatehub.runasp.net/vehicleHub", {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets,
                 withCredentials: false // Explicitly disable credentials

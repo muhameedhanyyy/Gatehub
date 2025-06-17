@@ -226,8 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       // Determine API endpoint based on role
       const apiUrl = role === 'gatestaff' 
-      ? 'http://gatehub.runasp.net/api/GateStaff/login'
-      : 'http://gatehub.runasp.net/api/Admin/login';
+      ? 'https://gatehub.runasp.net/api/GateStaff/login'
+      : 'https://gatehub.runasp.net/api/Admin/login';
       
       const deviceToken = localStorage.getItem('deviceToken') || null;
 

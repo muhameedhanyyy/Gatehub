@@ -137,7 +137,7 @@
                 const token = JSON.parse(localStorage.getItem('token'))?.result;
     
                 // First get all objections
-                const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {
+                const response = await fetch('https://gatehub.runasp.net/api/Admin/Objections', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
     
@@ -187,7 +187,7 @@
                 const token = JSON.parse(localStorage.getItem('token'))?.result;
     
                 // Fetch all objections
-                const response = await fetch('http://gatehub.runasp.net/api/Admin/Objections', {
+                const response = await fetch('https://gatehub.runasp.net/api/Admin/Objections', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
     
@@ -248,8 +248,8 @@
     
                 // API endpoint selection
                 const endpoint = action === 'accept' 
-                    ? `http://gatehub.runasp.net/api/Admin/AcceptObjection/${objectionId}`
-                    : `http://gatehub.runasp.net/api/Admin/RejectObjection/${objectionId}`;
+                    ? `https://gatehub.runasp.net/api/Admin/AcceptObjection/${objectionId}`
+                    : `https://gatehub.runasp.net/api/Admin/RejectObjection/${objectionId}`;
     
                 const response = await fetch(endpoint, {
                     method: 'POST',

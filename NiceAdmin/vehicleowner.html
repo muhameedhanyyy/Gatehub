@@ -261,7 +261,7 @@
 
             if (!tokenString) {
                 console.error("No token found - redirecting to login");
-                window.location.href = 'login.html';
+                window.location.href = 'pages-login.html';
                 return;
             }
 
@@ -317,7 +317,7 @@
       };
       console.log(gateData);
       try {
-        const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/register-vehicle-owner', {
+        const response = await fetch('https://gatehub.runasp.net/api/VehicleOwner/register-vehicle-owner', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

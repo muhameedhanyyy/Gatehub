@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (e) {
         console.error("Authentication error:", e);
         localStorage.removeItem('token');
-        window.location.href = 'login.html';
+        window.location.href = 'pages-login.html';
         return;
     }
 
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadLostVehicles() {
         try {
             document.getElementById('loading').style.display = 'block';
-            const response = await fetch('http://gatehub.runasp.net/api/Admin/getallLostVehicles', {
+            const response = await fetch('https://gatehub.runasp.net/api/Admin/getallLostVehicles', {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (confirm('Mark this vehicle as found?')) {
                     try {
-                        const response = await fetch('http://gatehub.runasp.net/api/Admin/RecoverVehicle', {
+                        const response = await fetch('https://gatehub.runasp.net/api/Admin/RecoverVehicle', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function handleAuthError() {
         localStorage.removeItem('token');
         alert('Session expired. Please login again.');
-        window.location.href = 'login.html';
+        window.location.href = 'pages-login.html';
     }
 
     // Initial load

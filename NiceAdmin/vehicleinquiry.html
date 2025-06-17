@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (e) {
     console.error("Authentication error:", e);
     localStorage.removeItem('token');
-    window.location.href = 'login.html';
+    window.location.href = 'pages-login.html';
     return;
   }
 
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!licensePlate) return;
 
       const encodedPlate = encodeURIComponent(licensePlate);
-      const apiUrl = `http://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}`;
+      const apiUrl = `https://gatehub.runasp.net/api/Admin/GetVehicleByPlateNumberWithOwner?plateNum=${encodedPlate}`;
 
       const response = await fetch(apiUrl, {
         headers: {
@@ -294,7 +294,7 @@ document.getElementById('editOwnerBtn').addEventListener('click', () => {
     };
 
     const response = await fetch(
-        `http://gatehub.runasp.net/api/Admin/EditVehicle?vehicleId=${vehicleId}`,
+        `https://gatehub.runasp.net/api/Admin/EditVehicle?vehicleId=${vehicleId}`,
         {
           method: 'PATCH',
           headers: {
@@ -330,7 +330,7 @@ document.getElementById('saveOwnerBtn').addEventListener('click', async () => {
     };
 
      const response = await fetch(
-        `http://gatehub.runasp.net/api/Admin/update-vehicle-owner?OwnerId=${ownerId}`,
+        `https://gatehub.runasp.net/api/Admin/update-vehicle-owner?OwnerId=${ownerId}`,
         {
           method: 'PATCH',
           headers: {

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Information</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Using CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .profile-card {
@@ -186,7 +188,7 @@
             console.log("Token verified:", token.slice(0, 20) + "..."); // Log partial token
 
             try {
-                const response = await fetch('http://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
+                const response = await fetch('https://gatehub.runasp.net/api/VehicleOwner/VOProfile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -279,12 +281,12 @@
         }
 
         function getTransactionIcon(paymentType) {
-            const iconMap = {
-                'Balance Recharge': '<i class="fas fa-wallet"></i>',
-                'Vehicle Entry Payment': '<i class="fas fa-toll"></i>',
-                'Fee and Fine': '<i class="fas fa-exclamation-triangle"></i>',
-                'Balance Payment': '<i class="fas fa-money-bill-transfer"></i>'
-            };
+           const iconMap = {
+    'Balance Recharge': '<i class="fas fa-wallet"></i>',
+    'Vehicle Entry Payment': '<i class="fas fa-road"></i>',
+    'Fee and Fine': '<i class="fas fa-exclamation-circle"></i>',
+    'Balance Payment': '<i class="fas fa-money-bill-wave"></i>'
+    };
             return iconMap[paymentType] || '<i class="fas fa-receipt"></i>';
         }
     </script>

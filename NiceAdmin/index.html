@@ -72,12 +72,11 @@ table td, table th {
       <ul class="d-flex align-items-center">
           <li class="nav-item dropdown pe-3">
               <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                  <img src="../../photo_2024-11-11_16-06-50.jpg" alt="Profile" class="rounded-circle">
-                  <span class="d-none d-md-block dropdown-toggle ps-2">Mohamed Hany</span>
+                  <span class="d-none d-md-block dropdown-toggle ps-2">ahmed gamal</span>
               </a>
               <ul class="dropdown-menu">
                   <li class="dropdown-header">
-                      <h6>Mohamed Hany</h6>
+                      <h6>ahmed gamal</h6>
                       <span>Admin</span>
                   </li>
                   <li>
@@ -417,7 +416,7 @@ table td, table th {
 
             if (!tokenString) {
                 console.error("No token found - redirecting to login");
-                window.location.href = 'login.html';
+                window.location.href = 'pages-login.html';
                 return;
             }
 
@@ -449,7 +448,7 @@ table td, table th {
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
   try {
-   const response = await fetch('http://gatehub.runasp.net/api/Admin/logout', {
+   const response = await fetch('https://gatehub.runasp.net/api/Admin/logout', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -491,7 +490,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   // Add this script section before closing body tag
   async function fetchVehicleData() {
     try {
-      const response = await fetch('http://gatehub.runasp.net/api/Admin/VehicleCount',{
+      const response = await fetch('https://gatehub.runasp.net/api/Admin/VehicleCount',{
           method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -520,7 +519,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   <script>
     async function fetchRevenueData() {
       try {
-        const response = await fetch('http://gatehub.runasp.net/api/Admin/TotalRevenue', {
+        const response = await fetch('https://gatehub.runasp.net/api/Admin/TotalRevenue', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -550,7 +549,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
 <script>
   async function fetchLostVehicleData() {
     try {
-      const response = await fetch('http://gatehub.runasp.net/api/Admin/LostVehicleCount', {
+      const response = await fetch('https://gatehub.runasp.net/api/Admin/LostVehicleCount', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -587,7 +586,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
     try {
      
   
-      const response = await fetch('http://gatehub.runasp.net/api/Admin/DailyReport', {
+      const response = await fetch('https://gatehub.runasp.net/api/Admin/DailyReport', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -695,7 +694,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     
       // 4. Fetch data
-      const response = await fetch('http://gatehub.runasp.net/api/Admin/RecentCars', {
+      const response = await fetch('https://gatehub.runasp.net/api/Admin/RecentCars', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -780,7 +779,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return diffH + " hr";
     }
 
-    fetch("http://gatehub.runasp.net/api/Admin/GetRecentLostVehicleAlerts", {
+    fetch("https://gatehub.runasp.net/api/Admin/GetRecentLostVehicleAlerts", {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -820,7 +819,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("DOMContentLoaded", async () => {
         try {
             // Fetch data from API
-            const response = await fetch('http://gatehub.runasp.net/api/Admin/TopGatesToday', {
+            const response = await fetch('https://gatehub.runasp.net/api/Admin/TopGatesToday', {
                 headers: {
                         'Authorization': `Bearer ${token}`,
                 }
